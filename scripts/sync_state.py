@@ -207,7 +207,6 @@ def main() -> None:
         sys.exit(1)
 
     latest_sha_short = commits[0].split()[0]
-    latest_msg = " ".join(commits[0].split()[1:]) if len(commits[0].split()) > 1 else ""
 
     phase, phase_name = derive_phase_from_commits(commits)
 
@@ -221,8 +220,6 @@ def main() -> None:
     derived = {
         "phase": phase,
         "phase_name": phase_name,
-        "last_commit": latest_sha_short,
-        "last_commit_msg": latest_msg,
         "tasks_completed": completed,
         "tasks_remaining": remaining,
         "next_task": next_task,
@@ -232,11 +229,6 @@ def main() -> None:
     existing = load_state()
     drift = []
 
-    if existing.get("last_commit") != latest_sha_short:
-        drift.append(
-            f"commit: stored={existing.get('last_commit')}, "
-            f"actual={latest_sha_short}"
-        )
     if existing.get("phase") != phase:
         drift.append(
             f"phase: stored={existing.get('phase')}, "
