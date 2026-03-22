@@ -173,7 +173,7 @@ def revert_phase_on_reject(state: dict) -> bool:
 def advance_phase_if_done(state: dict) -> bool:
     """Check if current phase exit passes AND validation is not REJECT.
     Returns True if phase advanced.
-    
+
     2x2 grid:
         PP (phase exit PASS + validation PASS) → advance (only true pass)
         PF (phase exit PASS + validation FAIL) → BLOCK, do not advance
@@ -195,7 +195,10 @@ def advance_phase_if_done(state: dict) -> bool:
     if not exit_passes:
         if verdict == "PASS":
             # FP: impossible state — tests fail but validation passes
-            print(f"ANOMALY: FP state detected — phase exit fails but validation is PASS", file=sys.stderr)
+            print(
+                "ANOMALY: FP state — exit fails but validation PASS",
+                file=sys.stderr,
+            )
             print(f"  Phase exit: {exit_cmd}", file=sys.stderr)
         return False
 
@@ -410,7 +413,11 @@ def print_sync_report(
         print(f"VALIDATION={verdict}")
         if verdict == "REJECT":
             # Summarize failed criteria
-            failed = [c for c in validation.get("criteria", []) if c.get("status") == "FAIL"]
+            failed = [
+                c
+                for c in validation.get("criteria", [])
+                if c.get("status") == "FAIL"
+            ]
             print(f"VALIDATION_FAIL_COUNT={len(failed)}")
             for c in failed:
                 print(f"  FAIL: {c.get('id', '?')} — {c.get('name', '?')}")
@@ -437,7 +444,11 @@ def print_sync_report(
     elif verdict == "PASS" and not exit_passes:
         print("VALIDATION_STATE=FP")
     else:
-        print(f"VALIDATION_STATE=INDETERMINATE (validation={verdict}, exit={'PASS' if exit_passes else 'FAIL'})")
+        v_exit = "PASS" if exit_passes else "FAIL"
+        print(
+            f"VALIDATION_STATE=INDETERMINATE"
+            f" (validation={verdict}, exit={v_exit})"
+        )
 
     # Test discovery — what test files exist for this phase
     print("")
