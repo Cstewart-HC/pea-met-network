@@ -8,7 +8,7 @@
   "last_commit_msg": "infra: deduplicate state tracking, add gate-first loop protocol",
   "status": "paused",
   "blocker": null,
-  "updated_at": "2026-03-22T14:04:45.090034+00:00",
+  "updated_at": "2026-03-22T14:04:49.809013+00:00",
   "tasks_completed": [
     "add-stanhope-hourly-cache-fetch",
     "record-stanhope-download-provenance-for",
