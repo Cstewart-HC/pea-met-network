@@ -1,19 +1,19 @@
 # Implementation Plan
 
 ## Current Milestone
-Phase 2 — Scrub
+Phase 4 — Model: Reference + FWI
 
 ## Current Objective
-Build the first cleaned-data path on top of the normalized ingestion layer.
-The immediate goal is reproducible hourly and daily resampling for station
-telemetry using the now-normalized schema families.
+Implement cached Stanhope reference ingestion with provenance and anti-429
+behavior as the first bounded step toward reference benchmarking and FWI
+validation.
 
 ## Immediate Next Tasks
-- [x] implement hourly resampling on normalized station records
-- [x] implement daily resampling on normalized station records
-- [x] define aggregation rules per variable family
-- [x] add tests for hourly and daily resampling behavior
-- [x] write first cleaned output contract for processed data
+- [x] add Stanhope hourly cache fetch scaffolding with local reuse
+- [x] record Stanhope download provenance for cached files
+- [x] encode anti-429 behavior with coarse monthly fetches and delay hooks
+- [ ] script bounded multi-month or multi-year Stanhope cache materialization
+- [ ] normalize cached Stanhope hourly data into project reference schema
 
 ## Queued Tasks
 - [ ] implement imputation audit framework
@@ -22,16 +22,17 @@ telemetry using the now-normalized schema families.
 - [x] prove real-file normalization-to-resampling path on canonical CSV
 - [x] add bounded canonical CSV normalization loader
 - [x] expose first-class hourly and daily resampling helpers
-- [ ] ingest and cache Stanhope reference data
+- [ ] script bounded multi-month or multi-year Stanhope cache materialization
+- [ ] normalize cached Stanhope hourly data into project reference schema
 - [ ] define FWI-ready cleaned daily contract
 - [x] validate repo-wide lint and tests before milestone commit
 
 ## Validation Expectations
 For current scope:
-- resampling should be reproducible from normalized inputs
-- timestamp buckets should be timezone-stable and UTC-based
-- aggregation rules should be explicit and testable
-- no silent variable loss during resampling
+- repeated Stanhope requests should reuse local cache when present
+- coarse monthly fetches and explicit delay hooks should minimize API load
+- provenance records should be inspectable for each downloaded cache file
+- rate-limit failures should stop cleanly without partial cache writes
 
 ## Blockers
 - none currently
@@ -64,7 +65,7 @@ Completed and verified:
 
 The next sprint should begin with resampling, not more planning.
 
-## Sprint Update (2026-03-22 05:56:52 UTC)
-- Milestone in progress: hourly and daily resampling on normalized station data.
-- Sprint mode: 5-loop Ralph-style, one bounded task per loop, observation-first diary updates each loop.
-- Current verified start: repo has existing uncommitted work touching plan/docs/src/tests; proceed carefully from working tree as found.
+## Sprint Update (2026-03-22 08:09:54 UTC)
+- Milestone in progress: Phase 4 Stanhope reference ingestion bootstrap.
+- Verified target status: no existing Stanhope ingestion/cache module or tests were present; only spec/docs and legacy source notes existed.
+- Current loop result: added a bounded hourly cache fetch helper with cache reuse, provenance logging, and explicit HTTP 429 handling.
