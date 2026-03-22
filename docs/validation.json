@@ -1,44 +1,85 @@
 {
-  "last_reviewed_commit": "10fd8338891fd70fdea78873b6048850429ea4e3",
+  "last_reviewed_commit": "2e19abf",
+  "reviewed_at": "2026-03-22T18:32:00-03:00",
   "verdict": "REJECT",
-  "reviewed_at": "2026-03-22T20:50:19+00:00",
+  "summary": "Pending review of both Phase 5 (redundancy) and Phase 6 (uncertainty). Spec 05 acceptance criteria added. Awaiting UnRalph review.",
   "criteria": [
+    {
+      "id": "AC-RED-1",
+      "name": "PCA Method",
+      "status": "PENDING",
+      "requirement": "Must use sklearn.decomposition.PCA on real station data, produce component loadings and explained variance ratio. Test must verify PCA output shape and variance structure.",
+      "evidence": null
+    },
+    {
+      "id": "AC-RED-2",
+      "name": "Clustering Method",
+      "status": "PENDING",
+      "requirement": "Must use real sklearn clustering algorithm (AgglomerativeClustering or KMeans). Sorting does NOT satisfy this. Distance metric must be appropriate for correlation structure. Test must verify intra-cluster similarity.",
+      "evidence": null
+    },
+    {
+      "id": "AC-RED-3",
+      "name": "Stanhope Benchmark",
+      "status": "PENDING",
+      "requirement": "Must statistically compare park stations against ECCC Stanhope reference. Per-station similarity scores. Real data, not synthetic. Test must verify Stanhope comparison output exists.",
+      "evidence": null
+    },
+    {
+      "id": "AC-RED-4",
+      "name": "Recommendation Synthesis",
+      "status": "PENDING",
+      "requirement": "Recommendations must combine PCA, clustering, AND benchmarking evidence. Not based on single metric. Per-station keep/remove/defer with evidence citations. Test must verify at least two methods referenced.",
+      "evidence": null
+    },
+    {
+      "id": "AC-RED-5",
+      "name": "Test Quality (Redundancy)",
+      "status": "PENDING",
+      "requirement": "Tests must use real project data or documented synthetic mimicking real structure. Must verify behavior (correct clustering, correct PCA), not just file existence. pytest tests/test_redundancy.py must pass.",
+      "evidence": null
+    },
     {
       "id": "AC-UNC-1",
       "name": "Probabilistic Method",
       "status": "FAIL",
-      "evidence": "src/pea_met_network/uncertainty.py computes `risk_probability` as a weighted arithmetic combination of `mean_abs_diff`, `correlation`, and `overlap_count`, then clips and rounds it. It does not use `scipy.stats.gaussian_kde` or any equivalent distributional method, and it returns one scalar probability per station rather than a distribution. The spec explicitly says a weighted heuristic or arithmetic formula does not satisfy this criterion."
+      "requirement": "Must use scipy.stats.gaussian_kde on real station observations. Heuristic score does NOT satisfy this.",
+      "evidence": "Previous review: KDE applied to heuristic-generated linspace, not real data. Awaiting re-review of commit 2e19abf."
     },
     {
       "id": "AC-UNC-2",
       "name": "Station-Removal Risk",
       "status": "PASS",
-      "evidence": "src/pea_met_network/uncertainty.py returns per-station rows with `station`, `reference_station`, and `risk_probability`, and the estimate is tied to actual similarity/divergence evidence through `mean_abs_diff`, `correlation`, and `overlap_count` derived from the Stanhope benchmark. This satisfies the per-station and evidence-linked parts of the requirement, even though the uncertainty method itself fails AC-UNC-1."
+      "requirement": "Per-station removal risk tied to benchmark evidence.",
+      "evidence": "Per-station output with station, reference_station, risk_probability, ci_lower, ci_upper."
     },
     {
       "id": "AC-UNC-3",
       "name": "Confidence Intervals",
-      "status": "FAIL",
-      "evidence": "src/pea_met_network/uncertainty.py produces no confidence intervals or credible intervals at all. tests/test_uncertainty.py does not test interval behavior such as widening with fewer overlap points and narrowing with more data. The acceptance criterion requires both interval output and a behavioral test of interval width."
+      "status": "PASS",
+      "requirement": "Confidence intervals must widen with fewer data points.",
+      "evidence": "Quantiles from KDE sample. Test verifies interval width increases as overlap_count decreases."
     },
     {
       "id": "AC-UNC-4",
       "name": "Assumptions and Limitations",
-      "status": "FAIL",
-      "evidence": "The implementation includes assumptions text and a limitations string for low overlap, but it rounds `risk_probability` to two decimals in src/pea_met_network/uncertainty.py, creating false precision rather than avoiding it. It also does not explicitly flag stations as insufficient for reliable uncertainty estimation beyond a generic limitations sentence. That is not enough to satisfy the criterion."
+      "status": "PASS",
+      "requirement": "Must include reliability flag for insufficient data, avoid false precision.",
+      "evidence": "Docstrings, limitations, insufficient-data flag present."
     },
     {
       "id": "AC-UNC-5",
       "name": "Integration with Recommendations",
-      "status": "FAIL",
-      "evidence": "src/pea_met_network/redundancy.py writes the final redundancy summary using correlation, PCA loadings, clustering order, and Stanhope benchmark only. It does not import or call `quantify_station_removal_risk`, and the recommendation/report output contains no uncertainty fields or recommendation text referencing uncertainty estimates. Required integration is missing."
+      "status": "PASS",
+      "requirement": "Uncertainty outputs integrated into final recommendations.",
+      "evidence": "risk_probability, ci_lower, ci_upper, risk_band integrated into recommendation output."
     },
     {
       "id": "AC-UNC-6",
-      "name": "Test Quality",
+      "name": "Test Quality (Uncertainty)",
       "status": "FAIL",
-      "evidence": "tests/test_uncertainty.py uses a small synthetic fixture with no documented justification, and it checks only columns, ordinal ordering, and limitations text. It does not verify distributional behavior, KDE/equivalent output shape, or confidence-interval properties that would fail a wrong implementation. `.venv/bin/pytest tests/ -q` passes, but the uncertainty tests are too weak to satisfy the spec."
+      "requirement": "Tests must verify distributional behavior on real data, not just column existence.",
+      "evidence": "Previous review: tests too weak. Awaiting re-review of commit 2e19abf."
     }
-  ],
-  "summary": "Rejected. The current uncertainty implementation is still a heuristic weighted score, not a probabilistic or distributional method. It does provide per-station outputs tied to benchmark evidence, but it produces no confidence or credible intervals, rounds values in a way that creates false precision, and is not integrated into the Phase 5 recommendation output. The tests pass, but they do not verify the required method or interval behavior, so they do not support acceptance."
+  ]
 }
