@@ -150,3 +150,48 @@ def test_materialize_stanhope_hourly_range_fetches_each_month(
     assert len(client.calls) == 2
     assert (tmp_path / "stanhope_hourly_2024_03.csv").exists()
     assert (tmp_path / "stanhope_hourly_2024_04.csv").exists()
+
+
+
+def test_normalize_stanhope_hourly_maps_reference_columns(
+    tmp_path: Path,
+) -> None:
+    from pea_met_network.stanhope_cache import normalize_stanhope_hourly
+
+    source_path = tmp_path / "stanhope_hourly_2024_03.csv"
+    source_path.write_text(
+        "Date/Time (LST),Temp (°C),Temp Flag,Dew Point Temp (°C),"
+        "Dew Point Temp Flag,Rel Hum (%),Rel Hum Flag,"
+        "Wind Dir (10s deg),Wind Dir Flag,Wind Spd (km/h),"
+        "Wind Spd Flag,Visibility (km),Visibility Flag,"
+        "Stn Press (kPa),Stn Press Flag,Hmdx,Hmdx Flag,"
+        "Wind Chill,Wind Chill Flag,Weather\n"
+        "2024-03-01 00:00,1.2,,0.4,,88,,27,,13,,24.1,,100.8,,0,,-5,,Rain\n"
+    )
+
+    frame = normalize_stanhope_hourly(source_path)
+
+    expected = {
+        "station",
+        "timestamp_utc",
+        "air_temperature_c",
+        "dew_point_c",
+        "relative_humidity_pct",
+        "wind_direction_tens_deg",
+        "wind_direction_deg",
+        "wind_speed_kmh",
+        "visibility_km",
+        "station_pressure_kpa",
+        "humidex",
+        "wind_chill_c",
+        "weather_text",
+        "source_file",
+        "schema_family",
+    }
+
+    assert expected.issubset(frame.columns)
+    assert frame.iloc[0]["station"] == "stanhope"
+    assert str(frame.iloc[0]["timestamp_utc"]) == "2024-03-01 04:00:00+00:00"
+    assert frame.iloc[0]["wind_direction_deg"] == 270
+    assert frame.iloc[0]["weather_text"] == "Rain"
+    assert frame.iloc[0]["schema_family"] == "stanhope_hourly_eccc"

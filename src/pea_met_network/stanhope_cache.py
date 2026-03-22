@@ -8,6 +8,8 @@ from pathlib import Path
 from urllib.error import HTTPError
 from urllib.request import urlopen
 
+import pandas as pd
+
 STANHOPE_STATION_ID = "8300590"
 STANHOPE_CLIMATE_ID = "1108299"
 STANHOPE_WEATHERCAN_STATION_ID = 6545
@@ -210,3 +212,67 @@ def fetch_stanhope_hourly_month(
     records.append(asdict(record))
     _save_provenance(cache_dir, records)
     return cache_path, "downloaded"
+
+
+STANHOPE_COLUMN_RENAMES = {
+    "Temp (°C)": "air_temperature_c",
+    "Temp Flag": "air_temperature_flag",
+    "Dew Point Temp (°C)": "dew_point_c",
+    "Dew Point Temp Flag": "dew_point_flag",
+    "Rel Hum (%)": "relative_humidity_pct",
+    "Rel Hum Flag": "relative_humidity_flag",
+    "Wind Dir (10s deg)": "wind_direction_tens_deg",
+    "Wind Dir Flag": "wind_direction_flag",
+    "Wind Spd (km/h)": "wind_speed_kmh",
+    "Wind Spd Flag": "wind_speed_flag",
+    "Visibility (km)": "visibility_km",
+    "Visibility Flag": "visibility_flag",
+    "Stn Press (kPa)": "station_pressure_kpa",
+    "Stn Press Flag": "station_pressure_flag",
+    "Hmdx": "humidex",
+    "Hmdx Flag": "humidex_flag",
+    "Wind Chill": "wind_chill_c",
+    "Wind Chill Flag": "wind_chill_flag",
+    "Weather": "weather_text",
+}
+
+
+def _stanhope_timestamp_utc(frame: pd.DataFrame) -> pd.Series:
+    timestamp_text = frame["Date/Time (LST)"].astype(str).str.strip()
+    timestamp = pd.to_datetime(timestamp_text, format="%Y-%m-%d %H:%M")
+    return timestamp.dt.tz_localize("America/Halifax").dt.tz_convert("UTC")
+
+
+def normalize_stanhope_hourly(
+    source_path: Path,
+    station: str = "stanhope",
+) -> pd.DataFrame:
+    frame = pd.read_csv(source_path)
+    rename_map = {
+        column: STANHOPE_COLUMN_RENAMES[column]
+        for column in frame.columns
+        if column in STANHOPE_COLUMN_RENAMES
+    }
+    renamed = frame.rename(columns=rename_map)
+
+    normalized = pd.DataFrame(
+        {
+            "station": station,
+            "timestamp_utc": _stanhope_timestamp_utc(frame),
+        }
+    )
+
+    for column in rename_map.values():
+        if column in {"weather_text"}:
+            normalized[column] = renamed[column].astype("string")
+            continue
+        normalized[column] = pd.to_numeric(renamed[column], errors="coerce")
+
+    if "wind_direction_tens_deg" in normalized.columns:
+        normalized["wind_direction_deg"] = (
+            normalized["wind_direction_tens_deg"] * 10
+        )
+
+    normalized["source_file"] = str(source_path)
+    normalized["schema_family"] = "stanhope_hourly_eccc"
+    return normalized
