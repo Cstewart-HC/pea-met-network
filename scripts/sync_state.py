@@ -20,6 +20,7 @@ Usage:
 from __future__ import annotations
 
 import json
+import re
 import subprocess
 import sys
 from datetime import datetime, timezone
@@ -232,6 +233,33 @@ def advance_phase_if_done(state: dict) -> bool:
     return True
 
 
+def reset_state_files_if_dirty() -> list[str]:
+    """Reset ralph-state.json and validation.json from HEAD if dirty.
+
+    These files are owned by sync_state.py / UnRalph / pre-commit hook.
+    Ralph should never modify them. If they're dirty, the working tree
+    has stale state that will cause incorrect decisions.
+    """
+    messages = []
+    for state_file in [STATE_FILE, VALIDATION_FILE]:
+        if not state_file.exists():
+            continue
+        rel = str(state_file.relative_to(REPO_ROOT))
+        result = subprocess.run(
+            ["git", "-C", str(REPO_ROOT), "diff", "--quiet", rel],
+            capture_output=True,
+            text=True,
+        )
+        if result.returncode != 0:
+            subprocess.run(
+                ["git", "-C", str(REPO_ROOT), "checkout", "--", rel],
+                capture_output=True,
+                text=True,
+            )
+            messages.append(f"RESET: {rel} reverted from HEAD")
+    return messages
+
+
 def report_working_tree() -> list[str]:
     """Report uncommitted changes without cleaning."""
     result = subprocess.run(
@@ -386,6 +414,46 @@ def handle_check_only(state: dict) -> None:
     sys.exit(0)
 
 
+def validate_blocker(state: dict) -> tuple[bool, str | None]:
+    """Check if a set blocker is still valid.
+
+    Runs the relevant check scoped to the file mentioned in the
+    blocker text. Returns (still_valid, reason).
+    """
+    blocker = state.get("blocker")
+    if not blocker:
+        return False, None
+
+    blocker_lower = blocker.lower()
+    files_mentioned = re.findall(r"[\w/\-]+\.py", blocker)
+
+    if "ruff" in blocker_lower:
+        if files_mentioned:
+            targets = " ".join(files_mentioned)
+        else:
+            targets = "."
+        passed, output = run_cmd(f".venv/bin/ruff check {targets}")
+        if passed:
+            return False, f"ruff now passes on {targets}"
+
+    if "pytest" in blocker_lower or "test" in blocker_lower:
+        if files_mentioned:
+            test_files = [f for f in files_mentioned if "test_" in f]
+            if test_files:
+                targets = " ".join(test_files)
+            else:
+                targets = "."
+        else:
+            targets = "."
+        passed, output = run_cmd(
+            f".venv/bin/pytest {targets} -q --tb=short 2>&1"
+        )
+        if passed:
+            return False, f"pytest now passes on {targets}"
+
+    return True, blocker
+
+
 def print_sync_report(
     state: dict, head_sha: str, phase_advanced: bool
 ) -> None:
@@ -472,7 +540,22 @@ def main() -> None:
     write_only = "--write" in args
     view_arg = parse_view_arg(argv)
 
+    # Step 0: Reset state files from HEAD if dirty
+    reset_messages = reset_state_files_if_dirty()
+    for msg in reset_messages:
+        print(msg, file=sys.stderr)
+
     state = load_state()
+
+    # Auto-clear stale blockers (scoped to mentioned files)
+    still_valid, reason = validate_blocker(state)
+    if not still_valid and state.get("blocker"):
+        print(
+            f"BLOCKER_CLEARED reason=\"{reason}\"",
+            file=sys.stderr,
+        )
+        state["blocker"] = None
+        save_state(state)
 
     if handle_view_mode(view_arg, state):
         return
