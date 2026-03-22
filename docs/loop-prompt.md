@@ -6,7 +6,7 @@ mechanically, and commit. Nothing more.
 
 ## Hard Constraint: Stateless Execution
 
-You have 15 iterations maximum. This is not a soft limit.
+You have 25 iterations maximum. This is not a soft limit.
 You are stateless — you get one shot per loop invocation.
 No retry loops. No "let me try again" chains. No multi-pass
 strategies that burn iterations.
@@ -15,9 +15,9 @@ Plan before you code. Write the implementation once. Run
 verification once. If it passes, commit. If it fails, fix once,
 re-verify once. If it still fails, set a blocker and stop.
 
-Budget: ~5 iterations for planning + reading, ~5 for implementation,
-~5 for verification + commit + diary + standup. If you're on
-iteration 10 and not yet committing, you are out of time.
+Budget: ~8 iterations for planning + reading, ~10 for implementation,
+~7 for verification + commit + diary + standup. If you're on
+iteration 18 and not yet committing, you are out of time.
 
 ## Startup
 
