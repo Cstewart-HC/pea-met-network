@@ -31,11 +31,19 @@ iteration 18 and not yet committing, you are out of time.
 3. If a blocker is set in ralph-state.json:
    - Report it. Stop.
 
-4. If GATE_STATUS=ALREADY_PASSES:
+5. Check WORKING_TREE from sync_state.py output:
+   - WORKING_TREE=CLEAN: proceed normally.
+   - WORKING_TREE=DIRTY: you have leftover work from a previous run.
+     Evaluate the uncommitted files. If the work is valid and useful,
+     continue from where it left off. If it's garbage or broken,
+     discard it (`git checkout . && git clean -fd`) and start fresh.
+     This is your decision — use judgment.
+
+6. If GATE_STATUS=ALREADY_PASSES:
    - The task is already done but not marked. Mark it done in
      ralph-state.json, commit, advance to next task.
 
-5. Otherwise: proceed with the task.
+7. Otherwise: proceed with the task.
 
 ## Task Execution
 

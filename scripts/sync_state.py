@@ -347,8 +347,29 @@ def handle_run_gates(state: dict, head_sha: str) -> None:
             print(f"  OK: {label} gate={gate_label}")
 
 
+def report_working_tree() -> list[str]:
+    """Report uncommitted changes without cleaning. Returns list of lines."""
+    result = subprocess.run(
+        ["git", "-C", str(REPO_ROOT), "status", "--porcelain"],
+        capture_output=True,
+        text=True,
+    )
+    lines = []
+    if result.stdout.strip():
+        lines.append("WORKING_TREE=DIRTY")
+        for entry in result.stdout.strip().split("\n"):
+            lines.append(f"  {entry}")
+    else:
+        lines.append("WORKING_TREE=CLEAN")
+    return lines
+
+
 def print_sync_report(state: dict, head_sha: str) -> None:
     """Print the standard sync_state summary fields."""
+    # Working tree status first — Ralph needs to know if there's leftover work
+    for line in report_working_tree():
+        print(line)
+
     phase = state.get("phase", "?")
     phases = state.get("phases", {})
     phase_name = phases.get(str(phase), {}).get("name", "unknown")
