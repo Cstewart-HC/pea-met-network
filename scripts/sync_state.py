@@ -1,26 +1,20 @@
 #!/usr/bin/env python3
 """
-sync_state.py — Ralph loop state synchronizer.
+sync_state.py — Ralph loop state synchronizer (spec-driven).
 
-Runs at the START of every loop iteration. Reads ralph-state.json,
-checks gates, reports current state. The JSON is the single source
-of truth — this script never derives state from git messages.
+Discovers tests, runs them, reports pass/fail. The test suite IS
+the task list. Ralph reads specs, writes tests, implements.
 
 Usage:
     python scripts/sync_state.py
-        Full sync: check gates, report state, write JSON
+        Full sync: discover tests, report state, write JSON
     python scripts/sync_state.py --check-only
-        Print state, exit 1 if gate drift detected
-    python scripts/sync_state.py --run-gates
-        Check all gates, report pass/fail
+        Print state, exit 1 if phase exit fails unexpectedly
     python scripts/sync_state.py --write
         Write JSON only (for pre-commit hook)
     python scripts/sync_state.py --view plan
-        Generate plan summary from JSON
     python scripts/sync_state.py --view decisions
-        Generate decisions log from JSON
     python scripts/sync_state.py --view status
-        Generate status summary from JSON
 """
 
 from __future__ import annotations
@@ -33,6 +27,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 STATE_FILE = REPO_ROOT / "docs" / "ralph-state.json"
+TESTS_DIR = REPO_ROOT / "tests"
 
 
 def git(*args: str) -> str:
@@ -53,27 +48,25 @@ def get_head_sha() -> str:
     return git("rev-parse", "--short", "HEAD")
 
 
-def run_gate(gate_cmd: str | None) -> tuple[bool, str]:
-    """Run a verification gate command. Returns (passed, output)."""
-    if not gate_cmd:
-        return False, "no gate defined"
+def run_cmd(cmd: str, timeout: int = 60) -> tuple[bool, str]:
+    """Run a shell command. Returns (passed, output)."""
     try:
         result = subprocess.run(
-            gate_cmd,
+            cmd,
             shell=True,
             cwd=str(REPO_ROOT),
             capture_output=True,
             text=True,
-            timeout=60,
+            timeout=timeout,
         )
-        output = result.stdout.strip()[:200]
+        output = result.stdout.strip()[:300]
         if result.returncode != 0 and result.stderr.strip():
-            output = result.stderr.strip()[:200]
+            output = result.stderr.strip()[:300]
         return result.returncode == 0, output
     except subprocess.TimeoutExpired:
-        return False, "gate timed out (60s)"
+        return False, f"timed out ({timeout}s)"
     except Exception as e:
-        return False, str(e)[:200]
+        return False, str(e)[:300]
 
 
 def load_state() -> dict:
@@ -90,74 +83,82 @@ def save_state(state: dict) -> None:
     state["updated_at"] = datetime.now(
         timezone.utc
     ).astimezone().isoformat()
-    tmp = STATE_FILE.with_suffix(".tmp")
+    tmp = STATE_FILE.with_suffix("..tmp")
     tmp.write_text(json.dumps(state, indent=2) + "\n")
     tmp.replace(STATE_FILE)
 
 
-def get_next_task(state: dict) -> dict | None:
-    """Find the first pending task whose dependencies are all done."""
-    done_ids = {
-        t["id"]
-        for t in state.get("tasks", [])
-        if t.get("status") == "done"
-    }
-    for task in state.get("tasks", []):
-        if task.get("status") != "pending":
-            continue
-        deps = task.get("depends", [])
-        if all(d in done_ids for d in deps):
-            return task
-    return None
+def discover_tests() -> list[str]:
+    """Find all test files in tests/ directory."""
+    if not TESTS_DIR.exists():
+        return []
+    return sorted(
+        str(p.relative_to(REPO_ROOT))
+        for p in TESTS_DIR.glob("test_*.py")
+    )
 
 
-def check_all_gates(state: dict) -> list[dict]:
-    """Run all gates, return list of results."""
-    results = []
-    for task in state.get("tasks", []):
-        gate_cmd = task.get("gate", "")
-        gate_ok, gate_out = run_gate(gate_cmd)
-        results.append(
-            {
-                "id": task["id"],
-                "status": task.get("status", "?"),
-                "gate_passes": gate_ok,
-                "gate_output": gate_out,
-                "gate_cmd": gate_cmd,
-            }
-        )
-    return results
+def run_test_file(test_file: str) -> tuple[bool, str]:
+    """Run a single test file with pytest. Returns (passed, output)."""
+    cmd = f".venv/bin/pytest {test_file} -q --tb=short 2>&1"
+    return run_cmd(cmd, timeout=120)
 
 
-def detect_drift(state: dict) -> list[str]:
-    """Check for state/gate drift."""
-    drift = []
-    results = check_all_gates(state)
-    for r in results:
-        if r["status"] == "done" and not r["gate_passes"]:
-            drift.append(f"DRIFT: {r['id']} marked done but gate FAILS")
-            drift.append(f"  gate: {r['gate_cmd']}")
-            drift.append(f"  output: {r['gate_output']}")
-        elif r["status"] == "pending" and r["gate_passes"]:
-            drift.append(f"UNMARKED: {r['id']} marked pending but gate PASSES")
-    return drift
+def check_phase_exit(state: dict) -> tuple[bool, str, str]:
+    """Run the current phase's exit criteria.
+    Returns (passes, gate_cmd, output)."""
+    phases = state.get("phases", {})
+    phase = str(state.get("phase", "?"))
+    phase_info = phases.get(phase, {})
+    exit_gate = phase_info.get("exit", "")
+
+    if not exit_gate:
+        return True, "(no exit gate defined)", ""
+
+    passes, output = run_cmd(exit_gate, timeout=120)
+    return passes, exit_gate, output
 
 
-def auto_correct_drift(state: dict) -> bool:
-    """Correct task status drift from current gate results."""
-    results = check_all_gates(state)
-    changed = False
-    for r in results:
-        task = next(
-            t for t in state["tasks"] if t["id"] == r["id"]
-        )
-        if r["status"] == "done" and not r["gate_passes"]:
-            task["status"] = "pending"
-            changed = True
-        elif r["status"] == "pending" and r["gate_passes"]:
-            task["status"] = "done"
-            changed = True
-    return changed
+def advance_phase_if_done(state: dict) -> bool:
+    """Check if current phase exit passes, advance to next if so."""
+    passes, _, _ = check_phase_exit(state)
+    if not passes:
+        return False
+
+    phases = state.get("phases", {})
+    current = str(state.get("phase", "?"))
+    phase_info = phases.get(current, {})
+    phase_info["status"] = "done"
+
+    # Find next not_started phase
+    for p_num in sorted(phases.keys(), key=int):
+        if phases[p_num].get("status") == "not_started":
+            state["phase"] = int(p_num)
+            phases[p_num]["status"] = "active"
+            if current in phases:
+                phases[current]["status"] = "done"
+            return True
+
+    # All phases done
+    phase_info["status"] = "done"
+    return True
+
+
+def report_working_tree() -> list[str]:
+    """Report uncommitted changes without cleaning."""
+    result = subprocess.run(
+        ["git", "-C", str(REPO_ROOT), "status", "--porcelain"],
+        capture_output=True,
+        text=True,
+    )
+    lines = []
+    if result.stdout.strip():
+        lines.append("WORKING_TREE=DIRTY")
+        for entry in result.stdout.strip().split("\n"):
+            lines.append(f"  {entry}")
+    else:
+        lines.append("WORKING_TREE=CLEAN")
+    return lines
 
 
 def render_plan(state: dict) -> str:
@@ -172,47 +173,19 @@ def render_plan(state: dict) -> str:
     lines.append("# Implementation Plan (generated)")
     lines.append("")
     lines.append(f"## Current Phase: {phase} — {phase_name}")
-    lines.append(f"Exit criteria: {phase_exit}")
+    lines.append(f"Exit criteria: `{phase_exit}`")
     lines.append("")
 
     lines.append("## Phase Roadmap")
     lines.append("")
-    lines.append("| Phase | Name | Status |")
-    lines.append("|---|---|---|")
+    lines.append("| Phase | Name | Status | Exit Criteria |")
+    lines.append("|---|---|---|---|")
     for p_num, p_info in phases.items():
-        p_int = int(p_num)
-        if p_int < phase:
-            p_status = "done"
-        elif p_int == phase:
-            p_status = "in progress"
-        else:
-            p_status = "not started"
         name = p_info.get("name", "?")
-        lines.append(f"| {p_num} | {name} | {p_status} |")
+        status = p_info.get("status", "?")
+        exit_c = p_info.get("exit", "")
+        lines.append(f"| {p_num} | {name} | {status} | `{exit_c}` |")
     lines.append("")
-
-    lines.append("## Tasks")
-    lines.append("")
-
-    tasks = state.get("tasks", [])
-    done = [t for t in tasks if t.get("status") == "done"]
-    pending = [t for t in tasks if t.get("status") == "pending"]
-
-    if done:
-        lines.append("### Completed")
-        for t in done:
-            lines.append(f"- [x] {t.get('description', t['id'])}")
-            lines.append(f"  gate: `{t.get('gate', '')}`")
-        lines.append("")
-
-    if pending:
-        lines.append("### Pending")
-        for t in pending:
-            deps = t.get("depends", [])
-            dep_str = f" (depends: {', '.join(deps)})" if deps else ""
-            lines.append(f"- [ ] {t.get('description', t['id'])}{dep_str}")
-            lines.append(f"  gate: `{t.get('gate', '')}`")
-        lines.append("")
 
     decisions = state.get("decisions", [])
     if decisions:
@@ -263,15 +236,8 @@ def render_status(state: dict) -> str:
     phase_info = phases.get(str(phase), {})
     phase_name = phase_info.get("name", "unknown")
 
-    tasks = state.get("tasks", [])
-    done = sum(1 for t in tasks if t.get("status") == "done")
-    pending = sum(1 for t in tasks if t.get("status") == "pending")
-    total = done + pending
-
-    next_task = get_next_task(state)
-
     lines.append(f"Phase: {phase} — {phase_name}")
-    lines.append(f"Tasks: {done}/{total} done, {pending} remaining")
+    lines.append(f"Exit: `{phase_info.get('exit', '')}`")
     iteration = state.get("iteration", "?")
     max_per_day = state.get("max_per_day", "?")
     lines.append(f"Iteration: {iteration}/{max_per_day}")
@@ -284,12 +250,15 @@ def render_status(state: dict) -> str:
         lines.append("Blocker: none")
 
     lines.append("")
-    if next_task:
-        lines.append(f"Next: {next_task['id']}")
-        lines.append(f"  {next_task.get('description', '')}")
-        lines.append(f"  gate: {next_task.get('gate', '')}")
-    else:
-        lines.append("Next: no eligible tasks")
+    lines.append("## Test Suite")
+    lines.append("")
+    test_files = discover_tests()
+    for tf in test_files:
+        passes, output = run_test_file(tf)
+        label = "PASS" if passes else "FAIL"
+        lines.append(f"  {label}: {tf}")
+        if not passes:
+            lines.append(f"    {output[:100]}")
 
     return "\n".join(lines)
 
@@ -319,90 +288,52 @@ def handle_view_mode(view_arg: str | None, state: dict) -> bool:
 
 
 def handle_check_only(state: dict) -> None:
-    """Run drift detection and exit."""
-    drift = detect_drift(state)
-    if drift:
-        print("DRIFT DETECTED:")
-        for item in drift:
-            print(f"  {item}")
+    """Run phase exit check and exit."""
+    passes, gate_cmd, output = check_phase_exit(state)
+    if not passes:
+        print(f"Phase exit FAILS: {gate_cmd}")
+        print(f"  {output}")
         sys.exit(1)
-
-    print("No drift detected.")
+    print("Phase exit passes.")
     sys.exit(0)
 
 
-def handle_run_gates(state: dict, head_sha: str) -> None:
-    """Run all gates and print a compact summary."""
-    print(f"COMMIT={head_sha}")
-    for result in check_all_gates(state):
-        label = f"{result['id']} [{result['status']}]"
-        gate_label = "PASS" if result["gate_passes"] else "FAIL"
-        if result["status"] == "done" and not result["gate_passes"]:
-            print(f"  DRIFT: {label} gate={gate_label}")
-            print(f"    gate: {result['gate_cmd']}")
-            print(f"    output: {result['gate_output']}")
-        elif result["status"] == "pending" and result["gate_passes"]:
-            print(f"  UNMARKED: {label} gate={gate_label}")
-        else:
-            print(f"  OK: {label} gate={gate_label}")
-
-
-def report_working_tree() -> list[str]:
-    """Report uncommitted changes without cleaning. Returns list of lines."""
-    result = subprocess.run(
-        ["git", "-C", str(REPO_ROOT), "status", "--porcelain"],
-        capture_output=True,
-        text=True,
-    )
-    lines = []
-    if result.stdout.strip():
-        lines.append("WORKING_TREE=DIRTY")
-        for entry in result.stdout.strip().split("\n"):
-            lines.append(f"  {entry}")
-    else:
-        lines.append("WORKING_TREE=CLEAN")
-    return lines
-
-
-def print_sync_report(state: dict, head_sha: str) -> None:
+def print_sync_report(
+    state: dict, head_sha: str, phase_advanced: bool
+) -> None:
     """Print the standard sync_state summary fields."""
-    # Working tree status first — Ralph needs to know if there's leftover work
+    # Working tree status
     for line in report_working_tree():
         print(line)
 
-    phase = state.get("phase", "?")
     phases = state.get("phases", {})
-    phase_name = phases.get(str(phase), {}).get("name", "unknown")
-    done = sum(1 for t in state["tasks"] if t.get("status") == "done")
-    pending = sum(1 for t in state["tasks"] if t.get("status") == "pending")
+    phase = state.get("phase", "?")
+    phase_info = phases.get(str(phase), {})
+    phase_name = phase_info.get("name", "unknown")
 
     print(f"PHASE={phase}")
     print(f"PHASE_NAME={phase_name}")
     print(f"COMMIT={head_sha}")
-    print(f"TASKS_DONE={done}")
-    print(f"TASKS_LEFT={pending}")
 
-    next_task = get_next_task(state)
-    if next_task:
-        print(f"NEXT_TASK={next_task['id']}")
-        print(f"NEXT_TASK_DESC={next_task['description']}")
-        gate_cmd = next_task.get("gate", "")
-        print(f"GATE_CMD={gate_cmd}")
-        if gate_cmd:
-            gate_ok, gate_out = run_gate(gate_cmd)
-            if gate_ok:
-                print("GATE_STATUS=ALREADY_PASSES")
-            else:
-                print("GATE_STATUS=NOT_YET")
-                if gate_out:
-                    print(f"GATE_OUTPUT={gate_out}")
-        deps = next_task.get("depends", [])
-        if deps:
-            print(f"DEPENDS={','.join(deps)}")
+    if phase_advanced:
+        print("PHASE_ADVANCED=true")
+
+    # Phase exit check
+    exit_passes, exit_cmd, exit_output = check_phase_exit(state)
+    print(f"PHASE_EXIT={'PASS' if exit_passes else 'FAIL'}")
+    print(f"PHASE_EXIT_CMD={exit_cmd}")
+    if not exit_passes and exit_output:
+        print(f"PHASE_EXIT_OUTPUT={exit_output[:200]}")
+
+    # Test discovery — what test files exist for this phase
+    print("")
+    print("## Test Discovery")
+    test_files = discover_tests()
+    if not test_files:
+        print("  No test files found in tests/")
     else:
-        print("NEXT_TASK=NONE")
-        if pending == 0:
-            print("ALL_TASKS_COMPLETE=true")
+        for tf in test_files:
+            print(f"  {tf}")
 
     blocker = state.get("blocker")
     if blocker:
@@ -413,7 +344,6 @@ def main() -> None:
     argv = sys.argv[1:]
     args = set(argv)
     check_only = "--check-only" in args
-    run_gates_only = "--run-gates" in args
     write_only = "--write" in args
     view_arg = parse_view_arg(argv)
 
@@ -423,9 +353,9 @@ def main() -> None:
         return
 
     if write_only:
-        changed = auto_correct_drift(state)
-        if changed:
-            save_state(state)
+        # Pre-commit hook: just check if phase should advance
+        advance_phase_if_done(state)
+        save_state(state)
         return
 
     head_sha = get_head_sha()
@@ -433,18 +363,12 @@ def main() -> None:
     if check_only:
         handle_check_only(state)
 
-    if run_gates_only:
-        handle_run_gates(state, head_sha)
-        return
-
-    changed = auto_correct_drift(state)
-    if changed:
-        print("DRIFT_CORRECTED: state updated to match gate results")
+    phase_advanced = advance_phase_if_done(state)
 
     state["iteration"] = state.get("iteration", 0) + 1
     state["status"] = "running"
     save_state(state)
-    print_sync_report(state, head_sha)
+    print_sync_report(state, head_sha, phase_advanced)
 
 
 if __name__ == "__main__":
