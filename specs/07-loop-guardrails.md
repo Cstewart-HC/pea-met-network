@@ -85,6 +85,43 @@ Standup-style check-ins should surface:
 - current milestone
 - blockers or decisions needed
 
+## Sprint Dependency Protocol
+
+### Before any sprint begins work, it MUST verify its prerequisites.
+
+Each milestone/sprint has an explicit prerequisite list.
+The sprint agent must:
+1. read the prerequisite checklist below
+2. verify each prerequisite exists in the repo (code, tests, artifacts)
+3. if ANY prerequisite is missing:
+   - do NOT begin work
+   - report a dependency blocker
+   - list which prerequisites are unmet
+   - suggest which sprint must run first
+
+### Prerequisite Checks
+
+| Sprint / Milestone | Prerequisites | How to Verify |
+|---|---|---|
+| Imputation | `src/pea_met_network/resampling.py` exists and has tests | `test_resampling` passes |
+| Cleaned outputs | Imputation module exists with tests | `test_imputation` passes |
+| Stanhope cache | Repo scaffold, specs exist | file existence check |
+| Benchmark alignment | Cleaned station outputs + Stanhope reference | processed CSVs exist |
+| FWI input contract | Cleaned daily outputs for Cavendish + Greenwich | daily CSVs exist |
+| FWI moisture codes | FWI input contract defined | spec + contract exist |
+| FWI full chain | Moisture codes validated | FFMC/DMC/DC tests pass |
+| Redundancy (PCA) | Cleaned outputs + Stanhope benchmark | benchmark artifacts exist |
+| Redundancy (clustering) | Cleaned outputs + Stanhope benchmark | benchmark artifacts exist |
+| Uncertainty analysis | Redundancy results exist | cluster/PCA outputs exist |
+
+### Out-of-Order Protection
+
+If a sprint fires before its prerequisites are satisfied:
+- it MUST stop immediately
+- it MUST NOT attempt to implement the missing prerequisites itself
+- it MUST report which sprint should run first
+- this prevents work duplication and conflicting commits
+
 ## Repository topology guardrail
 
 The repository root must remain clean and predictable.
