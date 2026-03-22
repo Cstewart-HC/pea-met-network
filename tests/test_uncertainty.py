@@ -5,7 +5,10 @@ from pathlib import Path
 import pandas as pd
 
 from pea_met_network.redundancy import benchmark_to_stanhope
-from pea_met_network.uncertainty import quantify_station_removal_risk
+from pea_met_network.uncertainty import (
+    _distribution_samples,
+    quantify_station_removal_risk,
+)
 
 
 def _sample_similarity_frame() -> pd.DataFrame:
@@ -185,9 +188,45 @@ def test_quantify_station_removal_risk_uses_real_observation_samples() -> None:
     assert benchmark["mean_abs_diff"].nunique() > 1
     assert benchmark["correlation"].nunique() > 1
     assert lowest_diff["risk_probability"] < highest_diff["risk_probability"]
+    assert lowest_diff["ci_lower"] < highest_diff["ci_lower"]
     assert lowest_diff["ci_upper"] < highest_diff["ci_upper"]
     assert risk["assumptions"].str.contains(
         "observation-derived",
         case=False,
     ).all()
+
+
+def test_quantify_station_removal_risk_kde_samples_follow_observed_signal(
+) -> None:
+    benchmark = _real_observation_benchmark()
+
+    low_signal = benchmark.loc[
+        benchmark["mean_abs_diff"].idxmin()
+    ]
+    high_signal = benchmark.loc[
+        benchmark["mean_abs_diff"].idxmax()
+    ]
+
+    low_samples = _distribution_samples(
+        mean_abs_diff=float(low_signal["mean_abs_diff"]),
+        correlation=float(low_signal["correlation"]),
+        overlap_count=int(low_signal["overlap_count"]),
+        sample_size=512,
+    )
+    high_samples = _distribution_samples(
+        mean_abs_diff=float(high_signal["mean_abs_diff"]),
+        correlation=float(high_signal["correlation"]),
+        overlap_count=int(high_signal["overlap_count"]),
+        sample_size=512,
+    )
+
+    assert low_samples.shape == (512,)
+    assert high_samples.shape == (512,)
+    assert pd.Series(low_samples).between(0.0, 1.0).all()
+    assert pd.Series(high_samples).between(0.0, 1.0).all()
+    assert low_samples.std() > 0.0
+    assert high_samples.std() > 0.0
+    assert low_samples.mean() < high_samples.mean()
+    assert low_samples.min() < low_samples.max()
+    assert high_samples.min() < high_samples.max()
 
