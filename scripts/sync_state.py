@@ -3,24 +3,22 @@
 sync_state.py — Ralph loop state synchronizer.
 
 Runs at the START of every loop iteration. Derives ground truth from
-git history and the implementation plan, then updates ralph-state.json.
+git history and the JSON state file, then updates ralph-state.json.
+
+Gates are defined in ralph-state.json — machine-readable, no markdown parsing.
 
 Usage:
-    python scripts/sync_state.py [--check-only]
+    python scripts/sync_state.py [--check-only | --run-gates | --write]
 
-    --check-only   Print derived state without writing JSON.
-                   Exit 0 if in sync, exit 1 if drift detected.
-
-The loop MUST run this before doing any work. It returns:
-  1. Current phase (derived from git + plan)
-  2. Next task with its gate command
-  3. Whether any drift was detected and corrected
+    (no flags)      Print derived state, check gates, write JSON.
+    --check-only    Print state without writing. Exit 1 if drift.
+    --run-gates     Run all pending task gates, report results.
+    --write         Write JSON only (for pre-commit hook).
 """
 
 from __future__ import annotations
 
 import json
-import re
 import subprocess
 import sys
 from datetime import datetime, timezone
@@ -28,8 +26,6 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 STATE_FILE = REPO_ROOT / "docs" / "ralph-state.json"
-PLAN_FILE = REPO_ROOT / "IMPLEMENTATION_PLAN.md"
-DIARY_DIR = REPO_ROOT / "docs" / "diary"
 
 
 def git(*args: str) -> str:
@@ -45,28 +41,14 @@ def git(*args: str) -> str:
     return result.stdout.strip()
 
 
-def git_log(oneline: bool = True, n: int = 20) -> list[str]:
+def git_log(n: int = 20) -> list[str]:
     """Get recent commit messages."""
-    flag = "--oneline" if oneline else "--format=%H %s"
-    output = git("log", flag, f"-{n}")
+    output = git("log", "--oneline", f"-{n}")
     return output.splitlines() if output else []
 
 
 def derive_phase_from_commits(commits: list[str]) -> tuple[int, str]:
-    """
-    Derive the current phase from commit message prefixes.
-
-    Convention: commits use scope prefixes like:
-      audit:    → Phase 1 (Obtain)
-      scrub:    → Phase 2 (Scrub)
-      explore:  → Phase 3 (Explore)
-      model:    → Phase 4 (Model: Reference + FWI)
-      redund:   → Phase 5 (Model: Redundancy)
-      interp:   → Phase 6 (Interpret)
-      chore/scaffold/data → Phase 1
-
-    Returns (phase_number, phase_name).
-    """
+    """Derive the current phase from commit message prefixes."""
     phase_keywords = {
         1: {"audit", "data", "scaffold", "chore"},
         2: {"scrub", "clean", "normali", "resamp", "imput"},
@@ -94,79 +76,10 @@ def derive_phase_from_commits(commits: list[str]) -> tuple[int, str]:
     return latest_phase, phase_names[latest_phase]
 
 
-def parse_plan_tasks(plan_text: str) -> tuple[list[str], list[str]]:
-    """
-    Parse IMPLEMENTATION_PLAN.md to find completed and remaining tasks.
-
-    Returns (completed_task_ids, remaining_task_ids).
-    """
-    completed = []
-    remaining = []
-    current_task_id = None
-
-    for line in plan_text.splitlines():
-        # Match task lines: "- [x] ..." or "- [ ] ..."
-        m = re.match(r"- \[([ x])\] (.+)", line)
-        if m:
-            status, desc = m.group(1), m.group(2)
-            task_id = _slugify(desc)
-            if status == "x":
-                completed.append(task_id)
-            else:
-                remaining.append(task_id)
-            current_task_id = task_id
-        elif current_task_id and line.strip().startswith("gate:"):
-            pass  # gate lives on the task, already captured
-
-    return completed, remaining
-
-
-def _slugify(text: str) -> str:
-    """Create a short task identifier from description."""
-    words = re.findall(r"[a-zA-Z0-9]+", text.lower())
-    return "-".join(words[:5]) if words else "unknown"
-
-
-def find_next_task(plan_text: str) -> dict | None:
-    """
-    Find the first unchecked task in the implementation plan.
-
-    Returns dict with 'description', 'gate', 'depends' or None.
-    """
-    lines = plan_text.splitlines()
-    for i, line in enumerate(lines):
-        if re.match(r"- \[ \] ", line):
-            desc = re.sub(r"^- \[ \] ", "", line).strip()
-            gate = None
-            depends = []
-
-            # Look ahead for gate and depends lines
-            for j in range(i + 1, min(i + 4, len(lines))):
-                ahead = lines[j].strip()
-                if ahead.startswith("gate:"):
-                    gate = ahead.split(":", 1)[1].strip()
-                elif ahead.startswith("depends:"):
-                    raw = ahead.split(":", 1)[1].strip().strip("[]")
-                    depends = [
-                        d.strip().strip("'\"")
-                        for d in raw.split(",")
-                        if d.strip()
-                    ]
-                elif ahead.startswith("- ["):
-                    break  # next task
-
-            return {
-                "description": desc,
-                "gate": gate,
-                "depends": depends,
-            }
-    return None
-
-
-def run_gate(gate_cmd: str | None) -> bool:
-    """Run a verification gate command. Returns True if it passes."""
+def run_gate(gate_cmd: str | None) -> tuple[bool, str]:
+    """Run a verification gate command. Returns (passed, output)."""
     if not gate_cmd:
-        return False
+        return False, "no gate defined"
     try:
         result = subprocess.run(
             gate_cmd,
@@ -174,11 +87,16 @@ def run_gate(gate_cmd: str | None) -> bool:
             cwd=str(REPO_ROOT),
             capture_output=True,
             text=True,
-            timeout=30,
+            timeout=60,
         )
-        return result.returncode == 0
-    except (subprocess.TimeoutExpired, Exception):
-        return False
+        output = result.stdout.strip()[:200]
+        if result.returncode != 0 and result.stderr.strip():
+            output = result.stderr.strip()[:200]
+        return result.returncode == 0, output
+    except subprocess.TimeoutExpired:
+        return False, "gate timed out (60s)"
+    except Exception as e:
+        return False, str(e)[:200]
 
 
 def load_state() -> dict:
@@ -194,11 +112,32 @@ def save_state(state: dict) -> None:
     state["updated_at"] = datetime.now(
         timezone.utc
     ).astimezone().isoformat()
-    STATE_FILE.write_text(json.dumps(state, indent=2) + "\n")
+    tmp = STATE_FILE.with_suffix(".tmp")
+    tmp.write_text(json.dumps(state, indent=2) + "\n")
+    tmp.replace(STATE_FILE)
+
+
+def get_next_task(state: dict) -> dict | None:
+    """Find the first pending task whose dependencies are all done."""
+    done_ids = {
+        t["id"]
+        for t in state.get("tasks", [])
+        if t.get("status") == "done"
+    }
+    for task in state.get("tasks", []):
+        if task.get("status") != "pending":
+            continue
+        deps = task.get("depends", [])
+        if all(d in done_ids for d in deps):
+            return task
+    return None
 
 
 def main() -> None:
-    check_only = "--check-only" in sys.argv
+    args = set(sys.argv[1:])
+    check_only = "--check-only" in args
+    run_gates_only = "--run-gates" in args
+    write_only = "--write" in args
 
     # --- Derive ground truth from git ---
     commits = git_log()
@@ -207,35 +146,25 @@ def main() -> None:
         sys.exit(1)
 
     latest_sha_short = commits[0].split()[0]
-
     phase, phase_name = derive_phase_from_commits(commits)
 
-    # --- Parse implementation plan ---
-    plan_text = PLAN_FILE.read_text() if PLAN_FILE.exists() else ""
-    completed, remaining = parse_plan_tasks(plan_text)
-    next_task = find_next_task(plan_text)
+    # --- Load existing state ---
+    state = load_state()
 
-    # --- Build derived state ---
-    today = datetime.now().astimezone().strftime("%Y-%m-%T")
-    derived = {
-        "phase": phase,
-        "phase_name": phase_name,
-        "tasks_completed": completed,
-        "tasks_remaining": remaining,
-        "next_task": next_task,
-    }
+    if write_only:
+        # Pre-commit hook: just re-derive phase and save
+        state["phase"] = phase
+        state["phase_name"] = phase_name
+        save_state(state)
+        return
 
-    # --- Load existing state and detect drift ---
-    existing = load_state()
+    # --- Detect drift ---
     drift = []
+    if state.get("phase") != phase:
+        drift.append(f"phase: stored={state.get('phase')}, derived={phase}")
+    if state.get("phase_name") != phase_name:
+        drift.append(f"phase_name: stored={state.get('phase_name')}, derived={phase_name}")
 
-    if existing.get("phase") != phase:
-        drift.append(
-            f"phase: stored={existing.get('phase')}, "
-            f"derived={phase}"
-        )
-
-    # --- Output ---
     if check_only:
         if drift:
             print("DRIFT DETECTED:")
@@ -245,21 +174,54 @@ def main() -> None:
         else:
             print("State is in sync.")
             print(f"  Phase: {phase} — {phase_name}")
-            print(f"  Last commit: {latest_sha_short}")
-            if next_task:
-                print(f"  Next task: {next_task['description']}")
+            print(f"  Commit: {latest_sha_short}")
             sys.exit(0)
 
-    # --- Update state ---
-    existing.update(derived)
-    save_state(existing)
+    # --- Update phase from git ---
+    state["phase"] = phase
+    state["phase_name"] = phase_name
+
+    # --- Find next task ---
+    next_task = get_next_task(state)
+
+    # --- Run gates mode ---
+    if run_gates_only:
+        print(f"COMMIT={latest_sha_short}")
+        print(f"PHASE={phase}")
+        print(f"PHASE_NAME={phase_name}")
+        print()
+        for task in state.get("tasks", []):
+            status = task.get("status", "?")
+            gate_cmd = task.get("gate", "")
+            gate_ok, gate_out = run_gate(gate_cmd)
+            actual = "PASS" if gate_ok else "FAIL"
+            if status == "done" and not gate_ok:
+                print(f"  DRIFT: {task['id']} marked done but gate FAILS")
+                print(f"    gate: {gate_cmd}")
+                print(f"    output: {gate_out}")
+            elif status == "pending" and gate_ok:
+                print(f"  UNMARKED: {task['id']} marked pending but gate PASSES")
+                print(f"    gate: {gate_cmd}")
+            else:
+                print(f"  OK: {task['id']} [{status}] gate={actual}")
+        return
+
+    # --- Normal sync: check next task's gate ---
+    done_count = sum(
+        1 for t in state.get("tasks", []) if t.get("status") == "done"
+    )
+    pending_count = sum(
+        1 for t in state.get("tasks", []) if t.get("status") == "pending"
+    )
+
+    save_state(state)
 
     # --- Print summary for the loop to consume ---
     print(f"PHASE={phase}")
     print(f"PHASE_NAME={phase_name}")
     print(f"COMMIT={latest_sha_short}")
-    print(f"TASKS_DONE={len(completed)}")
-    print(f"TASKS_LEFT={len(remaining)}")
+    print(f"TASKS_DONE={done_count}")
+    print(f"TASKS_LEFT={pending_count}")
 
     if drift:
         print("DRIFT_CORRECTED:")
@@ -267,21 +229,25 @@ def main() -> None:
             print(f"  {d}")
 
     if next_task:
-        print(f"NEXT_TASK={next_task['description']}")
-        if next_task["gate"]:
-            # Check if the gate already passes (task may be done
-            # but not marked)
-            gate_ok = run_gate(next_task["gate"])
+        print(f"NEXT_TASK={next_task['id']}")
+        print(f"NEXT_TASK_DESC={next_task['description']}")
+        gate_cmd = next_task.get("gate", "")
+        print(f"GATE_CMD={gate_cmd}")
+        if gate_cmd:
+            gate_ok, gate_out = run_gate(gate_cmd)
             if gate_ok:
                 print("GATE_STATUS=ALREADY_PASSES")
             else:
                 print("GATE_STATUS=NOT_YET")
-            print(f"GATE_CMD={next_task['gate']}")
-        if next_task["depends"]:
-            print(f"DEPENDS={','.join(next_task['depends'])}")
+                if gate_out:
+                    print(f"GATE_OUTPUT={gate_out}")
+        deps = next_task.get("depends", [])
+        if deps:
+            print(f"DEPENDS={','.join(deps)}")
     else:
         print("NEXT_TASK=NONE")
-        print("ALL_TASKS_COMPLETE=true")
+        if pending_count == 0:
+            print("ALL_TASKS_COMPLETE=true")
 
 
 if __name__ == "__main__":
