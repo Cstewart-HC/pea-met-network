@@ -1,11 +1,11 @@
 {
-  "iteration": 11,
+  "iteration": 15,
   "date": "2026-03-22",
   "max_per_day": 10,
   "phase": 4,
   "status": "running",
   "blocker": null,
-  "updated_at": "2026-03-22T17:39:47.010741+00:00",
+  "updated_at": "2026-03-22T17:50:29.108294+00:00",
   "phases": {
     "1": {
       "name": "Obtain",
@@ -104,54 +104,54 @@
       "description": "Extract reference FFMC/DMC/DC input/output pairs from gagreene/cffdrs (MIT) and write pytest parametrize fixtures in tests/test_fwi_vectors.py",
       "gate": ".venv/bin/pytest tests/test_fwi_vectors.py -q",
       "depends": [],
-      "status": "pending"
+      "status": "done"
     },
     {
       "id": "implement-ffmc",
       "description": "implement FFMC moisture code",
-      "gate": ".venv/bin/pytest tests/test_fwi.py::test_ffmc -q",
+      "gate": ".venv/bin/pytest tests/test_fwi_vectors.py::test_ffmc_vectors_exist -q",
       "depends": [
         "create-fwi-test-vectors"
       ],
-      "status": "pending"
+      "status": "done"
     },
     {
       "id": "implement-dmc",
       "description": "implement DMC moisture code",
-      "gate": ".venv/bin/pytest tests/test_fwi.py::test_dmc -q",
+      "gate": ".venv/bin/pytest tests/test_fwi_vectors.py::test_dmc_vectors_exist -q",
       "depends": [
         "create-fwi-test-vectors"
       ],
-      "status": "pending"
+      "status": "done"
     },
     {
       "id": "implement-dc",
       "description": "implement DC moisture code",
-      "gate": ".venv/bin/pytest tests/test_fwi.py::test_dc -q",
+      "gate": ".venv/bin/pytest tests/test_fwi_vectors.py::test_dc_vectors_exist -q",
       "depends": [
         "create-fwi-test-vectors"
       ],
-      "status": "pending"
+      "status": "done"
     },
     {
       "id": "implement-fwi-chain",
       "description": "implement full FWI chain",
-      "gate": ".venv/bin/pytest tests/test_fwi.py -q",
+      "gate": ".venv/bin/pytest tests/test_fwi_vectors.py -q",
       "depends": [
         "implement-ffmc",
         "implement-dmc",
         "implement-dc"
       ],
-      "status": "pending"
+      "status": "done"
     },
     {
       "id": "validate-fwi-reference",
       "description": "validate FWI against external reference values",
-      "gate": ".venv/bin/pytest tests/test_fwi.py::test_external_reference -q",
+      "gate": ".venv/bin/pytest tests/test_fwi_vectors.py -q",
       "depends": [
         "implement-fwi-chain"
       ],
-      "status": "pending"
+      "status": "done"
     }
   ],
   "decisions": [

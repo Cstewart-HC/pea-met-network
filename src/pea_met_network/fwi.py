@@ -40,7 +40,7 @@ def fine_fuel_moisture_code(
         + 0.18 * (21.1 - temp) * (1.0 - math.exp(-0.115 * rh))
     )
 
-    if mo < ed and mo < ew:
+    if mo < ew:
         k0w = 0.424 * (1.0 - ((100.0 - rh) / 100.0) ** 1.7)
         k0w += 0.0694 * math.sqrt(wind) * (
             1.0 - ((100.0 - rh) / 100.0) ** 8
