@@ -1,66 +1,94 @@
 # pea-met-network
 
-This repository is an experiment in analytics. It is controlled almost autonomously by an AI agent on a loop using moltis. The goal is to see if the agent looping over and over ala the Ralph Wiggum Technique can complete a data analytics project to a satisfactoy degree.
+This repository is an experiment in AI-assisted analytics development.
+It applies a visible Ralph-style loop to a DATA-3210 semester project for
+Parks Canada Agency (PEI Field Unit).
 
+The goal is to determine weather-station redundancy across Prince Edward
+Island National Park and automate Canadian Fire Weather Index (FWI)
+calculation for localized wildfire risk management.
+
+## Project status
+The project is past initial planning and data audit work and has entered
+real ingestion implementation.
+
+Implemented so far:
+- planning stack and working agreement
+- repository quality rails and shape enforcement
+- raw data inventory and schema audit
+- raw manifest loader and schema recognition
+- timestamp normalization across observed schema families
+- deterministic local virtual environment workflow
+
+See `docs/status.md` for the current checkpoint summary.
+
+## Assignment context
 **DATA-3210: Advanced Concepts in Data — Semester Project**
 
 Client: Parks Canada Agency (PEI Field Unit)
 
-## Overview
+Required themes:
+- Python-based data pipeline and QA/QC
+- station redundancy analysis using PCA and/or clustering
+- FWI calculation and validation
+- probabilistic uncertainty quantification
 
-Parks Canada operates five autonomous weather stations across Prince Edward Island National Park. This project determines station redundancy and automates Fire Weather Index (FWI) calculation for wildfire risk management.
+## Repository structure
 
-## Project Structure
-
-```
+```text
 pea-met-network/
 ├── data/
-│   ├── raw/           # Ingested raw CSVs
-│   ├── processed/     # Cleaned, standardized datasets
-│   └── external/      # ECCC Stanhope reference data
-├── src/
-│   ├── fwi.py         # FWI calculation module
-│   ├── redundancy.py  # PCA/clustering analysis
-│   └── uncertainty.py # KDE uncertainty quantification
-├── notebooks/
-│   └── analysis.ipynb # EDA + visualizations
-├── tests/
+│   ├── raw/
+│   ├── processed/
+│   └── external/
 ├── docs/
+├── notebooks/
 ├── specs/
-├── cleaning.py        # Data pipeline entry point
+├── src/
+├── tests/
 ├── IMPLEMENTATION_PLAN.md
-├── PROMPT.md
-└── AGENTS.md
+├── Makefile
+├── README.md
+├── pyproject.toml
+├── requirements.txt
+└── requirements-dev.txt
 ```
 
 ## Setup
 
 ```bash
 python3 -m venv .venv
-source .venv/bin/activate
+. .venv/bin/activate
 pip install -r requirements.txt
+pip install -r requirements-dev.txt
 ```
 
-## Pipeline
+Or use:
 
 ```bash
-python cleaning.py                    # Ingest & clean data
-python -m src.fwi                     # Calculate FWI
-jupyter notebook notebooks/analysis.ipynb  # EDA & visualization
-pytest tests/                         # Run test suite
+make install
 ```
 
-## Stations
+## Quality checks
 
-| Station | Source | Role |
-|---|---|---|
-| Cavendish | PCA | Primary FWI target |
-| Stanley Bridge | PCA | Redundancy analysis |
-| Tracadie | PCA | Redundancy analysis |
-| Greenwich | PCA | Primary FWI target |
-| North Rustico | PCA | Redundancy analysis |
-| Stanhope (8300590) | ECCC | Reference station |
+```bash
+make lint
+make test
+make check
+```
 
----
+## Current implementation path
+1. Obtain: inventory and schema grounding
+2. Scrub: ingestion, normalization, resampling, imputation
+3. Explore: notebook and QA/QC summaries
+4. Model: Stanhope reference, FWI, redundancy analysis
+5. Interpret: uncertainty and recommendation outputs
 
-*Automated development via Ralph Loop methodology.*
+## Notes on autonomy
+This repository is being developed with observation by default.
+Manual and scheduled loops should leave visible artifacts:
+- diary entries
+- progress markers or standup summaries
+- verifiable commits
+
+No black-box runs.

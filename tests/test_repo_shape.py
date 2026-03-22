@@ -9,6 +9,8 @@ ALLOWED_ROOT_FILES = {
     ".gitignore",
     "IMPLEMENTATION_PLAN.md",
     "cleaning.py",
+    "Makefile",
+    "requirements-dev.txt",
 }
 
 ALLOWED_ROOT_DIRS = {

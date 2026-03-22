@@ -1,32 +1,37 @@
 # Implementation Plan
 
 ## Current Milestone
-Phase 1 — Obtain
+Phase 2 — Scrub
 
 ## Current Objective
-Create a trustworthy data inventory and schema audit so later pipeline
-work is grounded in the actual files, stations, and date coverage.
+Build the first cleaned-data path on top of the normalized ingestion layer.
+The immediate goal is reproducible hourly and daily resampling for station
+telemetry using the now-normalized schema families.
 
 ## Immediate Next Tasks
-- [ ] inspect project data layout and identify canonical raw data paths
-- [ ] generate a raw file inventory artifact with station, file type,
-      and path information
-- [ ] map files to stations and approximate date coverage
-- [ ] identify CSV vs Excel-family parsing needs
-- [ ] record major schema unknowns and anomalies
+- [x] implement hourly resampling on normalized station records
+- [x] implement daily resampling on normalized station records
+- [x] define aggregation rules per variable family
+- [x] add tests for hourly and daily resampling behavior
+- [x] write first cleaned output contract for processed data
 
 ## Queued Tasks
-- [ ] scaffold Python package under `src/pea_met_network/`
-- [ ] add project quality config (`pyproject.toml`) with Ruff rules
-- [ ] add initial pytest scaffolding
-- [ ] implement inventory loader utilities
-- [ ] draft cleaning pipeline entrypoint contract
+- [ ] implement imputation audit framework
+- [ ] encode conservative missing-data handling rules
+- [x] produce first cleaned hourly and daily datasets
+- [x] prove real-file normalization-to-resampling path on canonical CSV
+- [x] add bounded canonical CSV normalization loader
+- [x] expose first-class hourly and daily resampling helpers
+- [ ] ingest and cache Stanhope reference data
+- [ ] define FWI-ready cleaned daily contract
+- [x] validate repo-wide lint and tests before milestone commit
 
 ## Validation Expectations
 For current scope:
-- inventory scripts should run reproducibly
-- generated artifacts should be inspectable
-- no cleaning assumptions should be baked in yet
+- resampling should be reproducible from normalized inputs
+- timestamp buckets should be timezone-stable and UTC-based
+- aggregation rules should be explicit and testable
+- no silent variable loss during resampling
 
 ## Blockers
 - none currently
@@ -40,20 +45,26 @@ For current scope:
 - enforce hard line length 80, style target 50
 - enforce McCabe hard cap 15, target less than 10
 - diary entries should use factual + reflective Option C style
+- manual and scheduled loop runs must be observable by default
+- native Python FWI implementation remains the target approach
 
 ## Notes to Future Loops
-Do not jump ahead into modeling until inventory and schema understanding
-exist. Early certainty here prevents fake progress later.
+The ingestion groundwork is now real: audit, manifest loading, schema
+recognition, and cross-family timestamp normalization exist. Build forward
+from that baseline. Do not reopen settled foundation work unless tests or
+artifacts prove a real defect.
 
-## Decision Log — 2026-03-22
+## Pre-autonomy checkpoint
+Completed and verified:
+- initial data inventory and schema audit
+- planning stack and quality rails
+- raw manifest loader and schema recognition
+- timestamp normalization for primary schema family
+- timestamp normalization across remaining schema families
 
-- Confirmed `cffdrs` is R-only and removed it from Python dependency assumptions.
-- Chosen path: implement FWI natively in `src/pea_met_network/` with small typed functions.
-- `gagreene/cffdrs` will be used as an MIT-licensed Python reference and possible test oracle.
-- `cffdrs/cffdrs_r` will be used as an authoritative behavioral reference only; do not copy from GPL-2 sources into project code.
+The next sprint should begin with resampling, not more planning.
 
-## Next FWI-related prerequisite tasks
-
-1. Inspect station file schemas and identify the exact columns needed for daily FWI inputs.
-2. Define the cleaned daily dataset contract required by the FWI module.
-3. Add FWI validation fixtures/tests only after the cleaned daily contract exists.
+## Sprint Update (2026-03-22 05:56:52 UTC)
+- Milestone in progress: hourly and daily resampling on normalized station data.
+- Sprint mode: 5-loop Ralph-style, one bounded task per loop, observation-first diary updates each loop.
+- Current verified start: repo has existing uncommitted work touching plan/docs/src/tests; proceed carefully from working tree as found.
