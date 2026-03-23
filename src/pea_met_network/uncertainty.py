@@ -26,28 +26,51 @@ def _clip_probability(value: float) -> float:
     return float(np.clip(value, 0.0, 1.0))
 
 
-def _distribution_samples(
+def _sample_upper_bound(observations: np.ndarray) -> float:
+    finite = np.asarray(observations, dtype=float)
+    finite = finite[np.isfinite(finite)]
+    finite = finite[finite >= 0.0]
+    if finite.size == 0:
+        return 1.0
+
+    empirical_q95 = float(np.quantile(finite, 0.95))
+    empirical_max = float(np.max(finite))
+    return max(empirical_q95, empirical_max)
+
+
+def _synthetic_observations(
     *,
     mean_abs_diff: float,
     correlation: float,
     overlap_count: int,
+) -> np.ndarray:
+    support = max(int(overlap_count), 8)
+    decorrelation = 1.0 - float(np.clip(correlation, 0.0, 1.0))
+    center = float(mean_abs_diff)
+    spread = max(0.03, center * 0.2) + (0.6 * decorrelation)
+    spread *= np.sqrt(24.0 / max(float(overlap_count), 24.0))
+    offsets = np.linspace(-1.0, 1.0, support)
+    samples = center + (offsets * spread)
+    return np.clip(samples, 0.0, 1.0)
+
+
+def _distribution_samples(
+    *,
+    observations: np.ndarray,
     sample_size: int = 256,
 ) -> np.ndarray:
-    divergence = min(mean_abs_diff / 1.5, 1.0)
-    decorrelation = 1.0 - max(min(correlation, 1.0), 0.0)
-    center = _clip_probability((0.6 * divergence) + (0.4 * decorrelation))
+    observed = np.asarray(observations, dtype=float)
+    finite = observed[np.isfinite(observed)]
+    finite = finite[finite >= 0.0]
+    if finite.size == 0:
+        return np.full(sample_size, 0.5)
+    if finite.size == 1 or np.allclose(finite, finite[0]):
+        value = float(finite[0])
+        return np.full(sample_size, value)
 
-    support = max(overlap_count, 2)
-    spread = min(0.35, max(0.03, 0.85 / np.sqrt(support)))
-    offsets = np.linspace(-1.0, 1.0, support)
-    observation_risks = np.clip(center + (offsets * spread), 0.0, 1.0)
-
-    if np.allclose(observation_risks, observation_risks[0]):
-        return np.full(sample_size, observation_risks[0])
-
-    kde = gaussian_kde(observation_risks)
+    kde = gaussian_kde(finite)
     sampled = kde.resample(sample_size, seed=0).reshape(-1)
-    return np.clip(sampled, 0.0, 1.0)
+
 
 
 def quantify_station_removal_risk(
@@ -55,13 +78,20 @@ def quantify_station_removal_risk(
 ) -> pd.DataFrame:
     rows: list[dict[str, object]] = []
     for row in benchmark.to_dict(orient="records"):
+        observations = row.get("observations")
+        if observations is None:
+            observations = _synthetic_observations(
+                mean_abs_diff=float(row["mean_abs_diff"]),
+                correlation=float(row["correlation"]),
+                overlap_count=int(row["overlap_count"]),
+            )
         samples = _distribution_samples(
-            mean_abs_diff=float(row["mean_abs_diff"]),
-            correlation=float(row["correlation"]),
-            overlap_count=int(row["overlap_count"]),
+            observations=np.asarray(observations, dtype=float),
         )
-        probability = float(np.mean(samples))
+        probability = _clip_probability(float(np.mean(samples)))
         ci_lower, ci_upper = np.quantile(samples, [0.1, 0.9])
+        ci_lower = _clip_probability(float(ci_lower))
+        ci_upper = _clip_probability(float(ci_upper))
         rows.append(
             {
                 "station": row["station"],
@@ -73,8 +103,10 @@ def quantify_station_removal_risk(
                 "assumptions": (
                     "Distributional uncertainty is estimated with "
                     "scipy.stats.gaussian_kde over observation-derived "
-                    "risk samples tied to divergence, correlation, and "
-                    "overlap support."
+                    "station-reference divergence samples; when benchmark "
+                    "fixtures omit raw observations, a documented synthetic "
+                    "distribution is generated from mean difference, "
+                    "correlation, and overlap support."
                 ),
                 "limitations": _limitations(int(row["overlap_count"])),
             }

@@ -94,15 +94,15 @@ def benchmark_to_stanhope(
         if station == reference_station:
             continue
         pair = pd.concat([matrix[station], reference], axis=1).dropna()
+        divergence = (pair.iloc[:, 0] - pair.iloc[:, 1]).abs()
         rows.append(
             {
                 "station": station,
                 "reference_station": reference_station,
                 "overlap_count": int(len(pair)),
-                "mean_abs_diff": float(
-                    (pair.iloc[:, 0] - pair.iloc[:, 1]).abs().mean()
-                ),
+                "mean_abs_diff": float(divergence.mean()),
                 "correlation": float(pair.iloc[:, 0].corr(pair.iloc[:, 1])),
+                "observations": divergence.to_numpy(dtype=float),
             }
         )
     return pd.DataFrame(rows)

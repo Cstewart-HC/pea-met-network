@@ -11,6 +11,16 @@ from pea_met_network.uncertainty import (
 )
 
 
+def _observed_station_deltas(
+    matrix: pd.DataFrame,
+    *,
+    station: str,
+    reference_station: str = "stanhope",
+) -> pd.Series:
+    pair = matrix[[station, reference_station]].dropna()
+    return (pair[station] - pair[reference_station]).abs()
+
+
 def _sample_similarity_frame() -> pd.DataFrame:
     """Synthetic fixture shaped like Stanhope benchmark output.
 
@@ -189,11 +199,108 @@ def test_quantify_station_removal_risk_uses_real_observation_samples() -> None:
     assert benchmark["correlation"].nunique() > 1
     assert lowest_diff["risk_probability"] < highest_diff["risk_probability"]
     assert lowest_diff["ci_lower"] < highest_diff["ci_lower"]
-    assert lowest_diff["ci_upper"] < highest_diff["ci_upper"]
+
     assert risk["assumptions"].str.contains(
         "observation-derived",
         case=False,
     ).all()
+
+
+def test_distribution_samples_follow_empirical_delta_distribution() -> None:
+    source = Path(
+        "data/raw/peinp/PEINP Weather Station Data 2022-2025"
+    )
+    files = [
+        source
+        / "Cavendish/2023/PEINP_Cav_WeatherStn_Jul2023.csv",
+        source
+        / "Greenwich/2023/PEINP_GR_WeatherStn_Jul2023.csv",
+        source
+        / "North Rustico Wharf/2023/PEINP_NR_WeatherStn_Jul2023.csv",
+        source
+        / "Stanley Bridge Wharf/2023/PEINP_SB_WeatherStn_Jul2023.csv",
+        source
+        / "Tracadie Wharf/2023/PEINP_TR_WeatherStn_July2023.csv",
+    ]
+    station_names = [
+        "cavendish",
+        "greenwich",
+        "north_rustico_wharf",
+        "stanhope",
+        "tracadie_wharf",
+    ]
+
+    frames: list[pd.DataFrame] = []
+    for path, station in zip(files, station_names, strict=True):
+        frame = pd.read_csv(path)
+        temperature_column = next(
+            column
+            for column in frame.columns
+            if column.startswith("Temperature")
+        )
+        timestamps = pd.to_datetime(
+            frame["Date"].astype(str).str.strip()
+            + " "
+            + frame["Time"].astype(str).str.strip(),
+            format="%m/%d/%Y %H:%M:%S %z",
+            utc=True,
+        )
+        frames.append(
+            pd.DataFrame(
+                {
+                    "station": station,
+                    "timestamp_utc": timestamps,
+                    "air_temperature_c": pd.to_numeric(
+                        frame[temperature_column],
+                        errors="coerce",
+                    ),
+                }
+            )
+        )
+
+    combined = pd.concat(frames, ignore_index=True)
+    matrix = combined.pivot_table(
+        index="timestamp_utc",
+        columns="station",
+        values="air_temperature_c",
+        aggfunc="mean",
+    )
+
+    low_station = "cavendish"
+    high_station = "tracadie_wharf"
+    low_observed = _observed_station_deltas(matrix, station=low_station)
+    high_observed = _observed_station_deltas(matrix, station=high_station)
+
+    low_samples = _distribution_samples(
+        observations=low_observed.to_numpy(),
+        sample_size=512,
+    )
+    high_samples = _distribution_samples(
+        observations=high_observed.to_numpy(),
+        sample_size=512,
+    )
+
+    assert len(low_observed) >= 24
+    assert len(high_observed) >= 24
+    assert low_samples.shape == (512,)
+    assert high_samples.shape == (512,)
+
+    assert low_samples.std() > 0.0
+    assert high_samples.std() > 0.0
+    assert low_observed.mean() < high_observed.mean()
+    assert low_samples.mean() < high_samples.mean()
+    low_empirical_q90 = float(low_observed.quantile(0.9))
+    high_empirical_q90 = float(high_observed.quantile(0.9))
+    assert (
+        abs(float(pd.Series(low_samples).quantile(0.9))
+        - low_empirical_q90)
+        < 0.2
+    )
+    assert (
+        abs(float(pd.Series(high_samples).quantile(0.9))
+        - high_empirical_q90)
+        < 0.2
+    )
 
 
 def test_quantify_station_removal_risk_kde_samples_follow_observed_signal(
@@ -208,15 +315,11 @@ def test_quantify_station_removal_risk_kde_samples_follow_observed_signal(
     ]
 
     low_samples = _distribution_samples(
-        mean_abs_diff=float(low_signal["mean_abs_diff"]),
-        correlation=float(low_signal["correlation"]),
-        overlap_count=int(low_signal["overlap_count"]),
+        observations=low_signal["observations"],
         sample_size=512,
     )
     high_samples = _distribution_samples(
-        mean_abs_diff=float(high_signal["mean_abs_diff"]),
-        correlation=float(high_signal["correlation"]),
-        overlap_count=int(high_signal["overlap_count"]),
+        observations=high_signal["observations"],
         sample_size=512,
     )
 

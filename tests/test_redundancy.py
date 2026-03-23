@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 
 from pea_met_network.redundancy import (
@@ -15,6 +16,13 @@ from pea_met_network.redundancy import (
 
 
 def _sample_frame() -> pd.DataFrame:
+    """Synthetic fixture mimicking real PEINP station data structure.
+
+    Provides 4 hourly timestamps to simulate basic temporal variation,
+    4 stations (3 park + 1 reference), with correlated temperature readings
+    scaled to mimic real °C values. Stations have small differences to
+    simulate good correlation with the reference stanhope.
+    """
     timestamps = pd.date_range(
         "2024-03-01 00:00:00+00:00",
         periods=4,
@@ -22,8 +30,8 @@ def _sample_frame() -> pd.DataFrame:
     )
     return pd.DataFrame(
         {
-            "timestamp_utc": list(timestamps) * 3,
-            "station": ["alpha"] * 4 + ["beta"] * 4 + ["stanhope"] * 4,
+            "timestamp_utc": list(timestamps) * 4,
+            "station": ["alpha"] * 4 + ["beta"] * 4 + ["gamma"] * 4 + ["stanhope"] * 4,
             "air_temperature_c": [
                 1.0,
                 2.0,
@@ -33,6 +41,10 @@ def _sample_frame() -> pd.DataFrame:
                 2.1,
                 3.1,
                 4.1,
+                4.0,
+                3.0,
+                2.0,
+                1.0,
                 0.9,
                 1.9,
                 2.9,
@@ -87,8 +99,37 @@ def test_cluster_station_order_groups_similar_stations() -> None:
 
     order = cluster_station_order(matrix)
 
-    assert set(order) == {"alpha", "beta", "stanhope"}
-    assert len(order) == 3
+    assert set(order) == {"alpha", "beta", "gamma", "stanhope"}
+    assert len(order) == 4
+
+    # Verify clustering behavior: stations in same cluster are more similar
+    corr = pairwise_station_correlation(matrix)
+    distance = 1 - corr
+
+    # Use AgglomerativeClustering to get labels
+    clustering = AgglomerativeClustering(
+        n_clusters=2,
+        metric="precomputed",
+        linkage="average",
+    )
+    labels = clustering.fit_predict(distance)
+
+    # Compute intra and inter cluster distances
+    intra_distances = []
+    inter_distances = []
+    for i in range(len(matrix.columns)):
+        for j in range(i + 1, len(matrix.columns)):
+            dist = distance.iloc[i, j]
+            if labels[i] == labels[j]:
+                intra_distances.append(dist)
+            else:
+                inter_distances.append(dist)
+
+    avg_intra = np.mean(intra_distances) if intra_distances else 0
+    avg_inter = np.mean(inter_distances) if inter_distances else 0
+
+    # Intra-cluster distances should be smaller than inter-cluster
+    assert avg_intra < avg_inter
 
 
 def test_benchmark_to_stanhope_summarizes_distance_and_overlap() -> None:
@@ -103,12 +144,14 @@ def test_benchmark_to_stanhope_summarizes_distance_and_overlap() -> None:
         "overlap_count",
         "mean_abs_diff",
         "correlation",
+        "observations",
     }
     alpha_row = benchmark.loc[benchmark["station"] == "alpha"].iloc[0]
     assert alpha_row["reference_station"] == "stanhope"
     assert alpha_row["overlap_count"] == 4
     assert alpha_row["mean_abs_diff"] < 0.2
     assert alpha_row["correlation"] > 0.99
+    assert np.allclose(alpha_row["observations"], [0.1, 0.1, 0.1, 0.1])
 
 
 def test_build_station_recommendations_references_uncertainty() -> None:
