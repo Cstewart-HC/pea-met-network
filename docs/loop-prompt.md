@@ -48,7 +48,8 @@ iteration 18 and not yet committing, you are out of time.
    - WORKING_TREE=DIRTY: you have leftover work from a previous run.
      Evaluate the uncommitted files. If the work is valid and useful,
      continue from where it left off. If it's garbage or broken,
-     discard it (`git checkout . && git clean -fd`) and start fresh.
+     evaluate what to keep vs discard selectively (`git checkout -- <file>`).
+     Never run `git clean -fd` — it destroys untracked files irreversibly.
      This is your decision — use judgment.
 
 ## Spec-Driven Task Selection
@@ -105,6 +106,15 @@ this template:
 
 The diary is an append-only audit log. You never read it for state.
 Do not write prose. Do not editorialize. Stick to the template.
+
+## Repo Ownership
+
+You own the entire codebase. If you see lint errors, test failures,
+or bugs in ANY file, they are your responsibility — regardless of
+whether you touched that file in this iteration.
+
+Do not write off issues as "pre-existing" or "not my changes."
+Fix them. If you can't fix them, set a blocker explaining why.
 
 ## Anti-Patterns (violations will cause problems)
 
