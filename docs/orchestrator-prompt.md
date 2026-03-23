@@ -37,7 +37,12 @@ Apply these rules IN ORDER:
 1. **Circuit breaker tripped** → STOP. Send an escalation via `send_message` to the DM channel with the trip reason. Print the trip reason and exit.
    Do not run Ralph or Lisa. Human intervention required.
 
-2. **New commits since last Lisa review** → Run Lisa.
+2. **New commits since last Lisa review** → Check if any touch `src/` or `tests/`:
+   ```bash
+   git log --oneline ${LAST_REVIEWED}..HEAD -- src/ tests/
+   ```
+   - If there ARE commits touching `src/` or `tests/` → **Run Lisa** (code needs review).
+   - If there are NO such commits (docs/specs/infra only) → **Fall through to Rule 3**. Do not review docs-only commits.
    Ralph committed work that hasn't been reviewed yet.
 
 3. **No new commits + verdict is REJECT** → Run Ralph.
