@@ -1,44 +1,44 @@
 {
-  "last_reviewed_commit": "dd4e051",
-  "verdict": "PASS",
-  "reviewed_at": "2026-03-23T12:15:00-03:00",
+  "last_reviewed_commit": "cf85f65",
+  "verdict": "REJECT",
+  "reviewed_at": "2026-03-23T12:45:00-03:00",
   "criteria": [
     {
-      "id": "AC-UNC-1",
-      "name": "Probabilistic Method",
-      "status": "PASS",
-      "evidence": "No code changes since last review. uncertainty.py::_distribution_samples uses scipy.stats.gaussian_kde on finite observation arrays, produces 256-sample distribution via kde.resample(). Handles edge cases (empty, single-value, constant arrays) with documented fallbacks. No heuristic scoring present."
+      "id": "AC-REM-1",
+      "name": "FWI tests validate outputs against reference vectors",
+      "status": "FAIL",
+      "evidence": "tests/test_fwi_vectors.py defines FFMC_VECTORS, DMC_VECTORS, DC_VECTORS with expected output values, but test functions (test_ffmc_vectors_exist, test_dmc_vectors_exist, test_dc_vectors_exist) only assert previous_code >= 0 and expected >= 0. No test calls fine_fuel_moisture_code, duff_moisture_code, or drought_code and compares the result to the expected value within tolerance. The expected values are dead data — never used for assertion."
     },
     {
-      "id": "AC-UNC-2",
-      "name": "Station-Removal Risk",
-      "status": "PASS",
-      "evidence": "No code changes since last review. quantify_station_removal_risk iterates benchmark rows, produces per-station risk_probability (mean of KDE samples), ci_lower, ci_upper, risk_band. Probability is clipped to [0,1]. Tied to station divergence evidence via benchmark mean_abs_diff and correlation."
+      "id": "AC-REM-2",
+      "name": "DMC and DC implementations in fwi.py",
+      "status": "FAIL",
+      "evidence": "src/pea_met_network/fwi.py contains only fine_fuel_moisture_code. No duff_moisture_code or drought_code functions exist. DMC_VECTORS and DC_VECTORS in tests reference expected values but have no implementation to test against."
     },
     {
-      "id": "AC-UNC-3",
-      "name": "Confidence Intervals",
-      "status": "PASS",
-      "evidence": "No code changes since last review. CI computed as np.quantile(samples, [0.1, 0.9]). test_quantify_station_removal_risk_intervals_widen_with_less_overlap verifies alpha(120 overlap) < beta(72) < gamma(12) interval width ordering. KDE bandwidth naturally widens with fewer/less-structured data points."
+      "id": "AC-REM-3",
+      "name": "Imputation framework with audit trail",
+      "status": "FAIL",
+      "evidence": "src/pea_met_network/imputation.py does not exist. tests/test_imputation.py does not exist. No imputation code anywhere in the project. Spec requires configurable strategy (short-gap interpolation, long-gap preserve missingness) and audit trail (station, variable, time range, method, count affected)."
     },
     {
-      "id": "AC-UNC-4",
-      "name": "Assumptions and Limitations",
-      "status": "PASS",
-      "evidence": "No code changes since last review. assumptions column documents KDE method and synthetic fallback. _limitations() flags stations with overlap_count < 24 as 'Insufficient overlap for reliable uncertainty estimation'. No false precision claimed."
+      "id": "AC-REM-4",
+      "name": "QA/QC summary artifacts",
+      "status": "FAIL",
+      "evidence": "src/pea_met_network/qa_qc.py does not exist. tests/test_qa_qc.py does not exist. No QA/QC automation anywhere. Spec requires missingness by station/variable, duplicate timestamp detection, out-of-range value detection, and coverage summary."
     },
     {
-      "id": "AC-UNC-5",
-      "name": "Integration with Recommendations",
-      "status": "PASS",
-      "evidence": "No code changes since last review. redundancy.py::build_station_recommendations calls quantify_station_removal_risk(benchmark) and merges via inner join on [station, reference_station]. _recommendation_from_row uses risk_band and ci_upper. _build_evidence_string includes uncertainty band and CI range."
+      "id": "AC-REM-5",
+      "name": "Loader handles multiple schema families",
+      "status": "FAIL",
+      "evidence": "normalized_loader.py::load_normalized_station_csv calls recognize_schema but only uses its result to set a column value (schema_family). The timestamp parsing hardcodes format='%m/%d/%Y %H:%M:%S %z' regardless of schema family. The manifest recognizes 4 schema families but only one timestamp format is handled. Other families would fail silently with no NotImplementedError. The test only covers minimal_date_time_family."
     },
     {
-      "id": "AC-UNC-6",
-      "name": "Test Quality",
-      "status": "PASS",
-      "evidence": "No code changes since last review. 8 tests pass. Tests verify distributional behavior: interval widening (test 2), Q90 tracking against empirical quantiles (test 7), KDE sample shape and bounds (test 8). Real data used in tests 6-8 (reads actual PEINP CSVs). Synthetic fixture in tests 1-5 has documented docstring with justification."
+      "id": "AC-REM-6",
+      "name": "Explore notebook smoke test",
+      "status": "FAIL",
+      "evidence": "tests/test_explore_smoke.py does not exist. No automated verification that the Phase 3 explore notebook is executable or that its imports succeed. If the notebook broke, no test would catch it."
     }
   ],
-  "summary": "PASS. No source code or test changes since last review. The only commit (dd4e051) was the previous UnRalph verdict update. All 6 phase-6 acceptance criteria remain satisfied. All 8 uncertainty tests pass. last_reviewed_commit updated to current HEAD to prevent re-review loop."
+  "summary": "REJECT — all 6 phase-7 acceptance criteria fail. The two new commits (cf85f65, 9993937) since last review contain only orchestrator infra changes and the previous UnRalph verdict — no source code or test changes. No remediation work has been started: imputation.py, qa_qc.py, and test_explore_smoke.py do not exist; fwi.py is missing DMC and DC implementations; test_fwi_vectors.py asserts non-negativity instead of calling functions and comparing outputs; normalized_loader.py hardcodes a single timestamp format. The exit command fails immediately because 3 of 5 required test files are missing."
 }
