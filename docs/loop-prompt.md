@@ -69,8 +69,9 @@ Rules:
 - Always write the test FIRST. Then implement.
 - **Greenfield work (VERDICT=PASS or NONE):** One test + one implementation per loop. Do not batch.
 - **Fix mode (VERDICT=REJECT):** You may fix MULTIPLE rejected criteria in a single loop.
-  For each failing criterion: write/fix the test, implement, verify, commit.
-  This saves hours of idle time between loops. Commit each fix separately.
+  For each failing criterion: write/fix the test, implement, verify, **commit immediately**.
+  Do NOT wait until all fixes are done before committing. Each fix gets its own commit.
+  This ensures partial progress is preserved even if you run out of iterations.
 - Tests must be meaningful — test behavior, not file existence.
 - Use `.venv/bin/pytest tests/test_<name>.py -q` to verify.
 
@@ -131,7 +132,7 @@ Fix them. If you can't fix them, set a blocker explaining why.
 - Do NOT modify ralph-state.json's phase manually — sync_state.py handles it
 - Do NOT write file-existence gates — test behavior
 - Do NOT batch multiple greenfield tasks in one loop (VERDICT=PASS/NONE)
-- You MAY batch multiple REJECT fixes in one loop — commit each separately
+- You MAY batch multiple REJECT fixes in one loop — commit each immediately after verification
 - Do NOT read the diary for state
 - Do NOT modify docs/validation.json. Ever.
 - Do NOT implement before writing a test
