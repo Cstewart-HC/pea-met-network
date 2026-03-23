@@ -4,6 +4,14 @@ from __future__ import annotations
 
 import pytest
 
+from pea_met_network.fwi import (
+    drought_code,
+    duff_moisture_code,
+    fine_fuel_moisture_code,
+)
+
+TOLERANCE = 0.01
+
 FFMC_VECTORS = [
     pytest.param(
         85.0,
@@ -69,33 +77,55 @@ DC_VECTORS = [
 
 
 @pytest.mark.parametrize(("previous_code", "weather", "expected"), FFMC_VECTORS)
-def test_ffmc_vectors_exist(
+def test_ffmc_vectors(
     previous_code: float,
     weather: dict[str, float],
     expected: float,
 ) -> None:
-    assert previous_code >= 0.0
-    assert set(weather) == {"temp", "rh", "wind", "rain"}
-    assert expected >= 0.0
+    result = fine_fuel_moisture_code(
+        ffmc0=previous_code,
+        temp=weather["temp"],
+        rh=weather["rh"],
+        wind=weather["wind"],
+        rain=weather["rain"],
+    )
+    assert abs(result - expected) < TOLERANCE, (
+        f"FFMC mismatch: got {result}, expected {expected}"
+    )
 
 
 @pytest.mark.parametrize(("previous_code", "weather", "expected"), DMC_VECTORS)
-def test_dmc_vectors_exist(
+def test_dmc_vectors(
     previous_code: float,
     weather: dict[str, float],
     expected: float,
 ) -> None:
-    assert previous_code >= 0.0
-    assert set(weather) == {"temp", "rh", "rain", "month", "lat"}
-    assert expected >= 0.0
+    result = duff_moisture_code(
+        dmc0=previous_code,
+        temp=weather["temp"],
+        rh=weather["rh"],
+        rain=weather["rain"],
+        month=int(weather["month"]),
+        lat=weather["lat"],
+    )
+    assert abs(result - expected) < TOLERANCE, (
+        f"DMC mismatch: got {result}, expected {expected}"
+    )
 
 
 @pytest.mark.parametrize(("previous_code", "weather", "expected"), DC_VECTORS)
-def test_dc_vectors_exist(
+def test_dc_vectors(
     previous_code: float,
     weather: dict[str, float],
     expected: float,
 ) -> None:
-    assert previous_code >= 0.0
-    assert set(weather) == {"temp", "rain", "month", "lat"}
-    assert expected >= 0.0
+    result = drought_code(
+        dc0=previous_code,
+        temp=weather["temp"],
+        rain=weather["rain"],
+        month=int(weather["month"]),
+        lat=weather["lat"],
+    )
+    assert abs(result - expected) < TOLERANCE, (
+        f"DC mismatch: got {result}, expected {expected}"
+    )
