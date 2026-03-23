@@ -1,43 +1,43 @@
 {
-  "last_reviewed_commit": "8adf2cc42aec8aa397335854053864abbf96d543",
-  "verdict": "REJECT",
-  "reviewed_at": "2026-03-22T21:50:00-03:00",
+  "last_reviewed_commit": "bbfc2123900f7a2617d24187f7e427d2a44ed1c9",
+  "verdict": "PASS",
+  "reviewed_at": "2026-03-23T10:22:25-03:00",
   "criteria": [
     {
       "id": "AC-RED-1",
       "name": "PCA Method",
       "status": "PASS",
-      "evidence": "redundancy.py:44-77 — pca_station_loadings uses sklearn.decomposition.PCA(n_components=min(2, n)) on z-scored station matrix (dropna rows, zscore columns). Produces per-station loadings, component labels (PC1/PC2), and explained_variance_ratio. Operates on whatever data is passed (the caller controls data source). test_pca_station_loadings_returns_station_weights verifies output columns, station set, component labels, and variance ratio >= 0. Meets spec."
+      "evidence": "redundancy.py:44-77 — pca_station_loadings uses sklearn.decomposition.PCA(n_components=min(2, n)) on z-scored station matrix (dropna rows, zscore columns). Produces per-station loadings, component labels (PC1/PC2), and explained_variance_ratio. Test verifies output columns, station set, component labels, and variance ratio >= 0. Meets spec."
     },
     {
       "id": "AC-RED-2",
       "name": "Clustering Method",
-      "status": "FAIL",
-      "evidence": "redundancy.py:80-101 — cluster_station_order correctly uses AgglomerativeClustering(metric='precomputed', linkage='average') on correlation distance (1 - corr). Implementation is fine. BUT test_cluster_station_order_groups_similar_stations (test_redundancy.py:75-82) only asserts set(order) == expected stations and len(order) == 3. It does NOT verify that stations in the same cluster are more similar than stations in different clusters, which the spec explicitly requires: 'Test must verify that stations assigned to the same cluster are actually more similar than stations in different clusters.' The test is an existence/shape check, not a behavioral verification."
+      "status": "PASS",
+      "evidence": "redundancy.py:80-101 — cluster_station_order uses AgglomerativeClustering(metric='precomputed', linkage='average') on correlation distance (1 - corr). test_cluster_station_order_groups_similar_stations now re-runs clustering independently, computes intra-cluster vs inter-cluster mean distances, and asserts avg_intra < avg_inter. This is a proper behavioral verification of clustering correctness."
     },
     {
       "id": "AC-RED-3",
       "name": "Stanhope Benchmark",
       "status": "PASS",
-      "evidence": "redundancy.py:104-130 — benchmark_to_stanhope computes per-station overlap_count, mean_abs_diff, correlation, and raw observation deltas against Stanhope reference. test_benchmark_to_stanhope_summarizes_distance_and_overlap verifies output schema, overlap count (4), mean_abs_diff < 0.2, correlation > 0.99, and exact observation values via np.allclose. Solid behavioral test."
+      "evidence": "redundancy.py:104-130 — benchmark_to_stanhope computes per-station overlap_count, mean_abs_diff, correlation, and raw observation deltas against Stanhope reference. Test verifies output schema, overlap count (4), mean_abs_diff < 0.2, correlation > 0.99, and exact observation values via np.allclose. Solid."
     },
     {
       "id": "AC-RED-4",
       "name": "Recommendation Synthesis",
-      "status": "FAIL",
-      "evidence": "Spec requires: 'Recommendations must combine evidence from PCA, clustering, AND benchmarking.' redundancy.py:155-172 — _recommendation_from_row uses only risk_band, ci_upper, and correlation. PCA loadings and cluster assignments are computed in write_redundancy_summary but are NOT passed into build_station_recommendations or _recommendation_from_row. The evidence string (line 179-184) cites 'benchmark correlation' and 'uncertainty' but never references PCA or clustering. test_build_station_recommendations_references_uncertainty only checks for 'uncertainty=' and 'benchmark' substrings — it does not verify PCA or clustering evidence is referenced. Two of three required methods are missing from the recommendation logic."
+      "status": "PASS",
+      "evidence": "redundancy.py:134-172 — build_station_recommendations now accepts pca_loadings and cluster_order parameters. _build_evidence_string (lines 174-186) constructs evidence with benchmark correlation, uncertainty band, PCA loadings, and cluster position. test_recommendations_synthesize_pca_clustering_and_benchmark verifies all four analytical methods appear in evidence strings. All three required methods (PCA, clustering, benchmarking) plus uncertainty are synthesized in recommendations."
     },
     {
       "id": "AC-RED-5",
       "name": "Test Quality (Redundancy)",
-      "status": "FAIL",
-      "evidence": "All redundancy tests use _sample_frame() — a 4-row, 3-station synthetic fixture with no docstring. The spec requires: 'Tests must use real project data or clearly documented synthetic data that mimics real station structure.' The fixture has no documentation explaining why synthetic is acceptable or how it mimics real structure. Four timestamps is insufficient to mimic real station data (diurnal cycles, gaps, noise). Real PEINP data exists in data/raw/peinp/ and is used by uncertainty tests — redundancy tests should use it too."
+      "status": "PASS",
+      "evidence": "_sample_frame() now has a detailed docstring explaining design rationale: synthetic fixture mimicking real PEINP station data structure, 4 hourly timestamps for temporal variation, 4 stations (3 park + 1 reference), correlated temperature readings scaled to real °C values. Clustering test now verifies behavioral correctness (intra < inter-cluster distance). All 8 redundancy tests pass."
     },
     {
       "id": "AC-UNC-1",
       "name": "Probabilistic Method",
       "status": "PASS",
-      "evidence": "uncertainty.py:67-82 — _distribution_samples uses scipy.stats.gaussian_kde on observation-derived divergence samples. When benchmark provides 'observations' column (real delta arrays from benchmark_to_stanhope), these are used directly as KDE input. Fallback _synthetic_observations exists for cases without raw observations. Produces a distribution (256 samples), not a single scalar. assumptions string explicitly names gaussian_kde. Correct."
+      "evidence": "uncertainty.py:67-82 — _distribution_samples uses scipy.stats.gaussian_kde on observation-derived divergence samples. Produces a distribution of 256 samples, not a single scalar. assumptions string explicitly names gaussian_kde. Correct."
     },
     {
       "id": "AC-UNC-2",
@@ -48,27 +48,27 @@
     {
       "id": "AC-UNC-3",
       "name": "Confidence Intervals",
-      "status": "FAIL",
-      "evidence": "Tests FAIL. _distribution_samples operates on raw temperature divergence values (°C), which can exceed 1.0. The KDE resamples from these raw values and clips to max(q95, empirical_max) of the observations — but this upper bound can be > 1.0 for real data (observed value 1.135999). The implementation does not normalize divergence values to a [0, 1] risk scale before or after KDE resampling. Three tests fail: (1) test_quantify_station_removal_risk_uses_real_observation_samples — ci_upper clips to 1.0 for both lowest and highest diff stations, making them equal (assert lowest < highest fails); (2) test_distribution_samples_follow_empirical_delta_distribution — asserts samples between 0.0 and 1.0 but sample at index 2 is 1.135999; (3) test_quantify_station_removal_risk_kde_samples_follow_observed_signal — same between(0,1) violation. 3 FAILED, 9 passed."
+      "status": "PASS",
+      "evidence": "Previously failing because KDE operated on raw °C divergences exceeding 1.0. Fix in _distribution_samples (lines 72-74): clips samples to empirical upper bound, then normalizes by upper if upper > 1.0 (sampled = sampled / upper). This maps all samples to [0,1] probability scale. All 3 previously failing tests now pass: test_quantify_station_removal_risk_uses_real_observation_samples, test_distribution_samples_follow_empirical_delta_distribution, test_quantify_station_removal_risk_kde_samples_follow_observed_signal. Test also normalizes empirical quantiles the same way for fair comparison."
     },
     {
       "id": "AC-UNC-4",
       "name": "Assumptions and Limitations",
       "status": "PASS",
-      "evidence": "uncertainty.py:16-22 — _limitations flags stations with overlap_count < 24 as 'Insufficient overlap for reliable uncertainty estimation; intervals are intentionally wide.' assumptions string documents KDE method and synthetic fallback. test_quantify_station_removal_risk_surfaces_sample_size_limitations and test_quantify_station_removal_risk_reports_distributional_assumptions verify these."
+      "evidence": "uncertainty.py:16-22 — _limitations flags stations with overlap_count < 24 as 'Insufficient overlap for reliable uncertainty estimation.' assumptions string documents KDE method and synthetic fallback. Tests verify both."
     },
     {
       "id": "AC-UNC-5",
       "name": "Integration with Recommendations",
       "status": "PASS",
-      "evidence": "redundancy.py:155-172 — build_station_recommendations merges benchmark with uncertainty output via inner join on station/reference_station. Output includes risk_probability, ci_lower, ci_upper, risk_band. Evidence string cites uncertainty values. Recommendation logic uses ci_upper and risk_band in decision."
+      "evidence": "redundancy.py:134-172 — build_station_recommendations merges benchmark with uncertainty output via inner join on station/reference_station. Output includes risk_probability, ci_lower, ci_upper, risk_band. Evidence string cites uncertainty values. Recommendation logic uses ci_upper and risk_band in _recommendation_from_row."
     },
     {
       "id": "AC-UNC-6",
       "name": "Test Quality (Uncertainty)",
-      "status": "FAIL",
-      "evidence": "Tests FAIL — 3 of 12 uncertainty tests fail. The real-data tests use actual PEINP CSVs and test distributional behavior (good design), but they fail because the implementation doesn't bound KDE samples to [0, 1] when real temperature divergences exceed that range. Per review procedure: tests fail → REJECT."
+      "status": "PASS",
+      "evidence": "All 12 uncertainty tests pass. Real-data tests use actual PEINP CSVs and test distributional behavior (KDE output shape, confidence interval properties, empirical distribution tracking). Synthetic fixture _sample_similarity_frame() has a docstring explaining design rationale (strong/moderate/weak similarity stations, explicit overlap counts for interval-width testing)."
     }
   ],
-  "summary": "REJECT. No new commits since last review — all previously identified failures remain. Three tests fail in test_uncertainty.py due to _distribution_samples producing values outside [0, 1] when real temperature divergences exceed 1°C — the KDE operates on raw °C differences without normalization to a probability scale, and _clip_probability is not applied to all samples (only to the final probability and CI bounds). Additionally, Phase 5 has three criterion failures: AC-RED-2 (clustering test only checks set membership and length, not intra-cluster similarity), AC-RED-4 (recommendations synthesize only benchmarking + uncertainty, ignoring PCA and clustering evidence), and AC-RED-5 (redundancy tests use undocumented 4-row synthetic data instead of real PEINP data). Ralph needs to: (1) normalize divergence samples to [0, 1] before or after KDE resampling so that risk probabilities and confidence intervals are valid probabilities — the root cause is that _distribution_samples clips to an empirical upper bound that can exceed 1.0, (2) incorporate PCA and clustering evidence into build_station_recommendations and the evidence string, (3) add a behavioral clustering test that verifies same-cluster stations are more similar than different-cluster stations, and (4) either use real data in redundancy tests or document the synthetic fixture with a docstring explaining design rationale."
+  "summary": "PASS. All 11 acceptance criteria satisfied. Ralph fixed all previously failing items: (1) _distribution_samples now normalizes KDE samples to [0,1] when raw temperature divergences exceed 1°C (divide by empirical upper bound), fixing the 3 failing uncertainty tests; (2) build_station_recommendations now accepts and incorporates PCA loadings and cluster order into evidence strings, with a dedicated test verifying all four analytical methods appear; (3) clustering test now verifies behavioral correctness (intra-cluster < inter-cluster distance); (4) _sample_frame() synthetic fixture has a detailed docstring explaining design rationale. All 20 tests pass (8 redundancy + 12 uncertainty)."
 }
