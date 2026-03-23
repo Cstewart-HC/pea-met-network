@@ -59,6 +59,10 @@ Apply these rules IN ORDER:
    Print a one-line status summary (including whether a phase advanced)
    and exit immediately. Do not read any prompt files.
 
+   **IMPORTANT**: After a phase advance, `PHASE_EXIT=FAIL` on the new
+   phase is EXPECTED and NORMAL — the new phase's tests don't exist yet.
+   This is not an error. A phase advance means SUCCESS. Report it and stop.
+
 5. **No validation.json exists** → Run Ralph.
    First loop, no reviews yet.
 
