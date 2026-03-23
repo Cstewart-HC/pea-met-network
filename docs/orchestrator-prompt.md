@@ -62,12 +62,30 @@ Apply these rules IN ORDER:
 If you decided to **run Lisa**:
 - Read `docs/lisa-prompt.md` and follow it exactly.
 - That prompt contains all instructions for the review.
-- **After Lisa finishes**: commit the updated validation file so
-  `sync_state.py` can see it on the next tick:
+- **After Lisa finishes**: you MUST do two things before exiting:
+  1. Commit the updated validation file:
   ```bash
   git add docs/validation.json
   git commit -m "lisa: review verdict <VERDICT>"
   ```
+  2. Then update `last_reviewed_commit` in `docs/validation.json` to
+     the NEW HEAD (the verdict commit you just made). If you don't
+     do this, the orchestrator will see the verdict commit as "new work"
+     and loop Lisa forever.
+  ```bash
+  python3 -c "
+  import json, subprocess
+  v = json.load(open('docs/validation.json'))
+  v['last_reviewed_commit'] = subprocess.check_output(['git','-C','/mnt/fast_data/workspaces/pea-met-network','rev-parse','--short','HEAD']).decode().strip()
+  json.dump(v, open('docs/validation.json','w'), indent=2)
+  print('Updated last_reviewed_commit to', v['last_reviewed_commit'])
+  "
+  git add docs/validation.json
+  git commit --amend --no-edit
+  ```
+
+**IMPORTANT**: If you skip step 1, the next tick will see the verdict
+commit as new work and run Lisa in an infinite loop. Always do both steps.
 
 If you decided to **run Ralph**:
 - Read `docs/loop-prompt.md` and follow it exactly.
