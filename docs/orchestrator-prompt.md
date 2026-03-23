@@ -53,8 +53,24 @@ Apply these rules IN ORDER:
    the current phase exit passes, and advance to the next phase if
    appropriate. Then commit the updated state files:
    ```bash
+   python3 scripts/sync_state.py
    git add docs/ralph-state.json docs/validation.json
    git commit -m "orchestrator: sync state after PASS"
+   ```
+   Then update `last_reviewed_commit` in `docs/validation.json` to the
+   NEW HEAD (the sync commit you just made). If you don't do this,
+   the orchestrator will see the sync commit as "new work" and loop
+   sync forever:
+   ```bash
+   python3 -c "
+   import json, subprocess
+   v = json.load(open('docs/validation.json'))
+   v['last_reviewed_commit'] = subprocess.check_output(['git','-C','/mnt/fast_data/workspaces/pea-met-network','rev-parse','--short','HEAD']).decode().strip()
+   json.dump(v, open('docs/validation.json','w'), indent=2)
+   print('Updated last_reviewed_commit to', v['last_reviewed_commit'])
+   "
+   git add docs/validation.json
+   git commit --amend --no-edit
    ```
    Print a one-line status summary (including whether a phase advanced)
    and exit immediately. Do not read any prompt files.
