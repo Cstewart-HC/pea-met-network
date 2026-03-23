@@ -36,6 +36,11 @@
       "name": "Interpret",
       "exit": ".venv/bin/pytest tests/test_uncertainty.py -q",
       "status": "active"
+    },
+    "7": {
+      "name": "Remediation: Phases 1-4",
+      "exit": ".venv/bin/pytest tests/test_fwi_vectors.py tests/test_imputation.py tests/test_qa_qc.py tests/test_normalized_loader.py tests/test_explore_smoke.py -q",
+      "status": "pending"
     }
   },
   "decisions": [
