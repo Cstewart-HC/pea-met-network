@@ -31,13 +31,19 @@ TIMESTAMP_FORMATS = {
 UNSUPPORTED_FAMILIES = set()
 
 
-def _normalized_name(column: str) -> str:
+def _normalized_name(column: str) -> str | None:
+    """Map a raw CSV column name to its canonical name.
+
+    Returns None for Date/Time columns or unrecognized columns.
+    """
     if column in {"Date", "Time"}:
         return column
     prefix = column.split("(", 1)[0].strip()
+    # Normalize whitespace (e.g. "Wind gust  speed" -> "Wind gust speed")
+    prefix = " ".join(prefix.split())
     if prefix in COLUMN_RENAMES:
         return COLUMN_RENAMES[prefix]
-    raise KeyError(f"No normalized column mapping for: {column}")
+    return None
 
 
 def _parse_timestamp_date_time(
@@ -81,10 +87,15 @@ def _parse_timestamp_single(
 def load_normalized_station_csv(path: Path, station: str) -> pd.DataFrame:
     frame = pd.read_csv(path)
     schema = recognize_schema(frame.columns)
+    # Build rename map, skipping unmapped columns
     rename_map = {
-        col: _normalized_name(col) for col in frame.columns
+        col: new_name
+        for col in frame.columns
+        if (new_name := _normalized_name(col)) is not None
     }
     renamed = frame.rename(columns=rename_map)
+    # Deduplicate columns (duplicate sensors map to same name)
+    renamed = renamed.loc[:, ~renamed.columns.duplicated()]
 
     # Parse timestamps based on schema family
     if schema.family in UNSUPPORTED_FAMILIES:
