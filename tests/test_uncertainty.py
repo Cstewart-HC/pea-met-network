@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 
 from pea_met_network.redundancy import benchmark_to_stanhope
@@ -289,8 +290,20 @@ def test_distribution_samples_follow_empirical_delta_distribution() -> None:
     assert high_samples.std() > 0.0
     assert low_observed.mean() < high_observed.mean()
     assert low_samples.mean() < high_samples.mean()
-    low_empirical_q90 = float(low_observed.quantile(0.9))
-    high_empirical_q90 = float(high_observed.quantile(0.9))
+
+    # Normalize empirical quantiles the same way _distribution_samples does
+    # so the comparison is on the same [0, 1] scale.
+    def _normalized_q90(obs: pd.Series) -> float:
+        finite = obs.dropna().to_numpy()
+        finite = finite[(np.isfinite(finite)) & (finite >= 0.0)]
+        upper = max(float(np.quantile(finite, 0.95)), float(np.max(finite)))
+        raw_q90 = float(np.quantile(finite, 0.9))
+        if upper > 1.0:
+            return raw_q90 / upper
+        return raw_q90
+
+    low_empirical_q90 = _normalized_q90(low_observed)
+    high_empirical_q90 = _normalized_q90(high_observed)
     assert (
         abs(float(pd.Series(low_samples).quantile(0.9))
         - low_empirical_q90)

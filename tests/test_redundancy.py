@@ -4,6 +4,7 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+from sklearn.cluster import AgglomerativeClustering
 
 from pea_met_network.redundancy import (
     benchmark_to_stanhope,
@@ -31,7 +32,12 @@ def _sample_frame() -> pd.DataFrame:
     return pd.DataFrame(
         {
             "timestamp_utc": list(timestamps) * 4,
-            "station": ["alpha"] * 4 + ["beta"] * 4 + ["gamma"] * 4 + ["stanhope"] * 4,
+            "station": (
+                ["alpha"] * 4
+                + ["beta"] * 4
+                + ["gamma"] * 4
+                + ["stanhope"] * 4
+            ),
             "air_temperature_c": [
                 1.0,
                 2.0,
@@ -59,7 +65,7 @@ def test_build_station_matrix_pivots_hourly_values() -> None:
 
     matrix = build_station_matrix(frame, value_column="air_temperature_c")
 
-    assert list(matrix.columns) == ["alpha", "beta", "stanhope"]
+    assert list(matrix.columns) == ["alpha", "beta", "gamma", "stanhope"]
     assert matrix.index.name == "timestamp_utc"
     assert matrix.loc[matrix.index[0], "alpha"] == 1.0
     assert matrix.loc[matrix.index[-1], "stanhope"] == 3.9
@@ -71,7 +77,7 @@ def test_pairwise_station_correlation_reports_similarity() -> None:
 
     correlation = pairwise_station_correlation(matrix)
 
-    assert list(correlation.columns) == ["alpha", "beta", "stanhope"]
+    assert list(correlation.columns) == ["alpha", "beta", "gamma", "stanhope"]
     assert correlation.loc["alpha", "beta"] > 0.99
     assert correlation.loc["alpha", "stanhope"] > 0.99
 
@@ -88,7 +94,7 @@ def test_pca_station_loadings_returns_station_weights() -> None:
         "loading",
         "explained_variance_ratio",
     }
-    assert set(loadings["station"]) == {"alpha", "beta", "stanhope"}
+    assert set(loadings["station"]) == {"alpha", "beta", "gamma", "stanhope"}
     assert set(loadings["component"]) == {"PC1", "PC2"}
     assert (loadings["explained_variance_ratio"] >= 0.0).all()
 

@@ -71,6 +71,13 @@ def _distribution_samples(
     kde = gaussian_kde(finite)
     sampled = kde.resample(sample_size, seed=0).reshape(-1)
 
+    upper = _sample_upper_bound(finite)
+    sampled = np.clip(sampled, 0.0, upper)
+    if upper > 1.0:
+        sampled = sampled / upper
+
+    return sampled
+
 
 
 def quantify_station_removal_risk(

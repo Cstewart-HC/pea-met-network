@@ -668,7 +668,7 @@ def main() -> None:
         state["status"] = "circuit_breaked"
         save_state(state)
         cb = state.get("circuit_breaker", {})
-        print(f"CIRCUIT_BREAKER=TRIPPED")
+        print("CIRCUIT_BREAKER=TRIPPED")
         print(f"CIRCUIT_BREAKER_REASON={cb.get('trip_reason', '')}")
         print(f"CIRCUIT_BREAKER_AT={cb.get('trip_at', '')}")
         sys.exit(0)
