@@ -62,6 +62,12 @@ Apply these rules IN ORDER:
 If you decided to **run UnRalph**:
 - Read `docs/unralph-prompt.md` and follow it exactly.
 - That prompt contains all instructions for the review.
+- **After UnRalph finishes**: commit the updated validation file so
+  `sync_state.py` can see it on the next tick:
+  ```bash
+  git add docs/validation.json
+  git commit -m "unralph: review verdict <VERDICT>"
+  ```
 
 If you decided to **run Ralph**:
 - Read `docs/loop-prompt.md` and follow it exactly.
