@@ -13,6 +13,7 @@ ALLOWED_ROOT_FILES = {
     "analysis.ipynb",
     "Makefile",
     "requirements-dev.txt",
+    "codemap.md",
 }
 
 ALLOWED_ROOT_DIRS = {
@@ -29,6 +30,7 @@ ALLOWED_ROOT_DIRS = {
     ".ruff_cache",
     ".mypy_cache",
     ".venv",
+    ".cartography",
 }
 
 

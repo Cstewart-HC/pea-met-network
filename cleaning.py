@@ -300,10 +300,7 @@ def main(argv: list[str] | None = None) -> None:
                     include="number"
                 ).columns
             }).reset_index()
-            cleaned_daily.columns = [
-                c if c != "timestamp_utc" else "date"
-                for c in cleaned_daily.columns
-            ]
+            # groupby key retains the name "timestamp_utc"
             cleaned_daily_path = station_output / "station_daily.csv"
             cleaned_daily.to_csv(cleaned_daily_path, index=False)
 
