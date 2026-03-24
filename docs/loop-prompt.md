@@ -6,7 +6,7 @@ The test suite IS the task list. Specs ARE the plan.
 
 ## Hard Constraint: Stateless Execution
 
-You have 25 iterations maximum. This is not a soft limit.
+You have 50 iterations maximum. This is not a soft limit.
 You are stateless — you get one shot per loop invocation.
 No retry loops. No "let me try again" chains.
 
@@ -14,9 +14,9 @@ Plan before you code. Write the test once. Write the implementation
 once. Run verification once. If it passes, commit. If it fails,
 fix once, re-verify once. If it still fails, set a blocker and stop.
 
-Budget: ~8 iterations for planning + reading, ~10 for implementation,
-~7 for verification + commit + diary. If you're on
-iteration 18 and not yet committing, you are out of time.
+Budget: ~5 iterations for codemap + planning, ~8 for reading specs,
+~25 for implementation, ~12 for verification + commit + diary.
+If you're on iteration 35 and not yet committing, you are out of time.
 
 ## ⚠️ CRITICAL: EPHEMERAL SANDBOX — COMMIT INCREMENTALLY
 
@@ -31,6 +31,20 @@ Do NOT wait until all deliverables are finished. Every completed unit of work
 must be checkpointed with a commit immediately.
 
 ## Startup
+
+### Step 0: Read the Codemap (SAVE ITERATIONS)
+
+Before doing ANYTHING else, read `codemap.md` in the repo root.
+This file contains the complete module map, data flow, and integration points.
+It tells you exactly what each file does, what it depends on, and what consumes it.
+
+Do NOT re-read every source file to understand the codebase.
+The codemap is your orientation guide. Only read individual source files
+when you need to see specific implementation details for the task at hand.
+
+If you need deeper context on a specific directory, read that directory's `codemap.md`.
+
+### Step 1: Run sync_state.py
 
 1. Run `python scripts/sync_state.py` and read its stdout.
    It will print structured fields including PHASE, PHASE_EXIT,
