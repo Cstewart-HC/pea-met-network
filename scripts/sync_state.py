@@ -119,10 +119,18 @@ def revert_phase_on_reject(state: dict) -> bool:
     if verdict != "REJECT":
         return False
     if phase_info.get("status") == "done":
-        state["phase"] = int(current)
+        state["phase"] = current
         phase_info["status"] = "active"
         return True
     return False
+
+
+def _phase_sort_key(key: str) -> tuple[int, str]:
+    """Sort phase keys like: 1, 2, ..., 9, 10, 10b, 10c, 10d, 11."""
+    m = re.match(r"^(\d+)(.*)", key)
+    if m:
+        return (int(m.group(1)), m.group(2))
+    return (999, key)
 
 
 def advance_phase_if_done(state: dict) -> bool:
@@ -147,12 +155,12 @@ def advance_phase_if_done(state: dict) -> bool:
     if verdict in {"NONE", "PASS"}:
         phase_info["status"] = "done"
         next_phase = None
-        for p_num in sorted(phases.keys(), key=int):
+        for p_num in sorted(phases.keys(), key=_phase_sort_key):
             if phases[p_num].get("status") in ("not_started", "pending"):
                 next_phase = p_num
                 break
         if next_phase is not None:
-            state["phase"] = int(next_phase)
+            state["phase"] = next_phase
             phases[next_phase]["status"] = "active"
             if validation is not None:
                 validation["verdict"] = "PENDING"

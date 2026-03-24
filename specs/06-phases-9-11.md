@@ -34,25 +34,67 @@ materialized outputs in `data/processed/`.
 
 ## Phase 10: Analysis & Narrative
 
-### Goal
-Populate `analysis.ipynb` with real findings, charts, and evidence-based
-answers to the four core questions from the project contract.
+### Overview
+Analysis work is split into four sub-phases to keep each tick focused
+and achievable within the iteration budget.
 
-### Acceptance Criteria
+### Sub-Phase 10: EDA + FWI
+
+**Goal:** Implement the exploratory data analysis and fire weather index
+sections of the notebook.
 
 | ID | Criterion |
 |---|---|
 | AC-ANA-1 | Notebook loads real processed data (not stubs) from `data/processed/` |
 | AC-ANA-2 | EDA section includes station coverage map/table, temporal coverage summary, and missingness heatmap |
+| AC-ANA-6 | FWI section includes time series of moisture codes and fire weather indices for at least 2 stations |
+| AC-ANA-8 | All cells execute top-to-bottom without errors |
+
+**Exit Gate:**
+```bash
+.venv/bin/pytest tests/test_analysis_notebook.py -q
+```
+
+### Sub-Phase 10b: PCA + Clustering
+
+**Goal:** Implement the dimensionality reduction and clustering sections.
+
+| ID | Criterion |
+|---|---|
 | AC-ANA-3 | PCA section includes scree plot, loadings table, and biplot or score plot |
 | AC-ANA-4 | Clustering section includes dendrogram or cluster assignment table with intra/inter-cluster distance comparison |
+| AC-ANA-8 | All cells execute top-to-bottom without errors |
+
+**Exit Gate:**
+```bash
+.venv/bin/pytest tests/test_analysis_notebook.py -q
+```
+
+### Sub-Phase 10c: Redundancy + Uncertainty
+
+**Goal:** Implement the redundancy verdict and uncertainty quantification.
+
+| ID | Criterion |
+|---|---|
 | AC-ANA-5 | Redundancy section answers "Which stations are redundant?" with evidence from PCA + clustering + benchmarking |
-| AC-ANA-6 | FWI section includes time series of moisture codes and fire weather indices for at least 2 stations |
 | AC-ANA-7 | Uncertainty section includes confidence intervals or risk probabilities for station removal recommendations |
 | AC-ANA-8 | All cells execute top-to-bottom without errors |
-| AC-ANA-9 | Notebook has a conclusion cell summarizing key findings and recommendations |
 
-### Exit Gate
+**Exit Gate:**
+```bash
+.venv/bin/pytest tests/test_analysis_notebook.py -q
+```
+
+### Sub-Phase 10d: Conclusion
+
+**Goal:** Write the conclusion and ensure the full notebook runs cleanly.
+
+| ID | Criterion |
+|---|---|
+| AC-ANA-9 | Notebook has a conclusion cell summarizing key findings and recommendations |
+| AC-ANA-8 | All cells execute top-to-bottom without errors |
+
+**Exit Gate:**
 ```bash
 .venv/bin/pytest tests/test_analysis_notebook.py -q
 ```

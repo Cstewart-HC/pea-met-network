@@ -17,6 +17,9 @@ line-length = 80
 target-version = "py311"
 src = ["src", "tests", "cleaning.py"]
 
+[tool.ruff.lint.per-file-ignores]
+"*.ipynb" = ["E402"]
+
 [tool.ruff.lint]
 select = [
   "E",
