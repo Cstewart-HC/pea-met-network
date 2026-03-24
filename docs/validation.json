@@ -1,7 +1,50 @@
 {
-  "last_reviewed_commit": "6347592",
-  "verdict": "PENDING",
-  "reviewed_at": "2026-03-24T01:34:54.454846+00:00",
-  "criteria": [],
-  "summary": "Phase 9 activated. Awaiting Lisa review."
+  "last_reviewed_commit": "de4a027",
+  "verdict": "REJECT",
+  "reviewed_at": "2026-03-24T02:28:25.179358+00:00",
+  "criteria": [
+    {
+      "id": "AC-PIPE-1",
+      "name": "cleaning.py runs on all raw data",
+      "status": "FAIL",
+      "evidence": "cleaning.py exists and iterates manifest stations, but only calls materialize_resampled_outputs. It does not run imputation, Stanhope ingestion, or FWI computation. The pipeline is incomplete \u2014 it only resamples, it doesn't execute the full pipeline."
+    },
+    {
+      "id": "AC-PIPE-2",
+      "name": "Cleaned hourly + daily datasets in data/processed/",
+      "status": "FAIL",
+      "evidence": "cleaning.py writes resampled hourly/daily CSVs per station, but no test verifies the outputs exist with correct shape. The exit gate test (test_pipeline_execution.py) does not exist."
+    },
+    {
+      "id": "AC-PIPE-3",
+      "name": "Imputation report generated",
+      "status": "FAIL",
+      "evidence": "imputation.py has AuditRecord + audit_trail_to_dataframe(), but cleaning.py never calls impute_column or impute_frame. No imputation report is produced during pipeline execution."
+    },
+    {
+      "id": "AC-PIPE-4",
+      "name": "Stanhope reference data downloaded and cached",
+      "status": "FAIL",
+      "evidence": "stanhope_cache.py has fetch/normalize functions, but cleaning.py does not call them. Stanhope data is not integrated into the pipeline."
+    },
+    {
+      "id": "AC-PIPE-5",
+      "name": "FFMC, DMC, DC computed for all stations",
+      "status": "FAIL",
+      "evidence": "fwi.py has fine_fuel_moisture_code, duff_moisture_code, drought_code. However cleaning.py does not call any of them. FWI moisture codes are not computed during pipeline execution."
+    },
+    {
+      "id": "AC-PIPE-6",
+      "name": "ISI, BUI, FWI computed",
+      "status": "FAIL",
+      "evidence": "fwi.py has NO functions for Initial Spread Index (ISI), Buildup Index (BUI), or Fire Weather Index (FWI). Only the three moisture codes (FFMC, DMC, DC) are implemented. The full FWI chain is incomplete."
+    },
+    {
+      "id": "AC-PIPE-7",
+      "name": "Pipeline artifacts manifest with timestamps and row counts",
+      "status": "FAIL",
+      "evidence": "cleaning.py logs row counts to console but does not write a manifest file tracking artifacts with timestamps and row counts. No manifest output exists."
+    }
+  ],
+  "summary": "Phase 9 is substantially incomplete. cleaning.py only performs resampling (materialize_resampled_outputs) \u2014 it does not integrate imputation, Stanhope reference data, FWI moisture code computation, or the full FWI chain (ISI/BUI/FWI functions are entirely missing). No imputation report or artifact manifest is generated. The exit gate test (test_pipeline_execution.py) does not exist. The commit under review (de4a027) only adds README tests to test_deliverables.py \u2014 it does not advance Phase 9 implementation. All 7 criteria FAIL."
 }
