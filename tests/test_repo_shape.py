@@ -10,6 +10,7 @@ ALLOWED_ROOT_FILES = {
     ".pre-commit-config.yaml",
     "IMPLEMENTATION_PLAN.md",
     "cleaning.py",
+    "analysis.ipynb",
     "Makefile",
     "requirements-dev.txt",
 }
@@ -22,6 +23,7 @@ ALLOWED_ROOT_DIRS = {
     "notebooks",
     "specs",
     "scripts",
+    "__pycache__",
     ".git",
     ".pytest_cache",
     ".ruff_cache",
