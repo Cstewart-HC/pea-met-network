@@ -45,7 +45,22 @@
     "8": {
       "name": "Deliverables",
       "exit": ".venv/bin/pytest tests/test_deliverables.py -q",
-      "status": "active"
+      "status": "done"
+    },
+    "9": {
+      "name": "Pipeline Execution",
+      "exit": ".venv/bin/pytest tests/test_pipeline_execution.py -q",
+      "status": "pending"
+    },
+    "10": {
+      "name": "Analysis & Narrative",
+      "exit": ".venv/bin/pytest tests/test_analysis_notebook.py -q",
+      "status": "pending"
+    },
+    "11": {
+      "name": "Final Polish",
+      "exit": ".venv/bin/pytest -q",
+      "status": "pending"
     }
   },
   "decisions": [
