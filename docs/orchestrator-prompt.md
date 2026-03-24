@@ -47,16 +47,15 @@ Apply these rules IN ORDER:
 3. **No new commits + verdict is REJECT** → Run Ralph.
    Lisa rejected; Ralph needs to fix what was flagged.
 
-4. **No new commits + verdict is PASS** → SYNC AND STOP.
-   Run `python3 scripts/sync_state.py --auto-commit`. This script will
-   evaluate phase state, advance if appropriate, and commit any changes
-   automatically. If no state changed, it exits silently with `AUTO_COMMIT=false`.
-   Print a one-line status summary (including whether a phase advanced)
-   and exit immediately. Do not read any prompt files.
-
-   **IMPORTANT**: After a phase advance, `PHASE_EXIT=FAIL` on the new
-   phase is EXPECTED and NORMAL — the new phase's tests don't exist yet.
-   This is not an error. A phase advance means SUCCESS. Report it and stop.
+4. **No new commits + verdict is PASS** → SYNC AND CHECK.
+   Run `python3 scripts/sync_state.py --auto-commit` and read its output.
+   - If output contains `VALIDATION_STATE=PP` → phase advance is legitimate.
+     Print a one-line status summary (including whether a phase advanced)
+     and exit immediately. Do not read any prompt files.
+   - If output contains `VALIDATION_STATE=FP` (stale PASS from previous phase)
+     or `NEXT_ACTION=RUN_RALPH` → the PASS is stale/invalid for the
+     active phase. **Fall through to Rule 5** to dispatch Ralph.
+     Do NOT stop. Do NOT sync again.
 
 5. **No validation.json exists** → Run Ralph.
    First loop, no reviews yet.

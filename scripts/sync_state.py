@@ -469,6 +469,26 @@ def main() -> None:
     state["status"] = "running"
     save_state(state)
     print_sync_report(state, head_sha, phase_advanced)
+    # Fix B: FP anomaly handling
+    # If phase exit fails but validation says PASS, the PASS is stale
+    # (from a previous phase). Reset verdict to PENDING and do NOT commit.
+    validation = load_validation()
+    verdict = get_validation_verdict(validation)
+    exit_passes, exit_cmd, exit_output = check_phase_exit(state)
+    if verdict == "PASS" and not exit_passes:
+        print("VALIDATION_STATE=FP", file=sys.stderr)
+        print("ACTION=RESET_STALE_PASS", file=sys.stderr)
+        validation["verdict"] = "PENDING"
+        validation["criteria"] = []
+        validation["summary"] = f"Phase {state.get('phase', '?')} activated; stale PASS reset. Awaiting Lisa review."
+        validation["reviewed_at"] = datetime.now(timezone.utc).astimezone().isoformat()
+        save_validation(validation)
+        # Stage the reset validation file but do NOT commit
+        subprocess.run(["git", "-C", str(REPO_ROOT), "add", str(VALIDATION_FILE.relative_to(REPO_ROOT))], capture_output=True, text=True)
+        subprocess.run(["git", "-C", str(REPO_ROOT), "commit", "-m", "orchestrator: reset stale PASS to PENDING (FP state)"], capture_output=True, text=True)
+        print("AUTO_COMMIT=false")
+        print("NEXT_ACTION=RUN_RALPH")
+        return
     if auto_commit:
         auto_commit_if_changed()
 
