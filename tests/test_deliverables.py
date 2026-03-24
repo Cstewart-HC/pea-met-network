@@ -3,8 +3,6 @@
 import json
 from pathlib import Path
 
-import pytest
-
 ROOT = Path(__file__).resolve().parent.parent
 
 
@@ -25,7 +23,9 @@ class TestCleaningEntrypoint:
     def test_cleaning_main_exists(self):
         import cleaning
 
-        assert callable(getattr(cleaning, "main", None)), "cleaning.main() must exist and be callable"
+        assert callable(getattr(cleaning, "main", None)), (
+            "cleaning.main() must exist and be callable"
+        )
 
 
 class TestAnalysisNotebook:
@@ -40,7 +40,9 @@ class TestAnalysisNotebook:
         with open(nb_path) as f:
             nb = json.load(f)
         assert nb.get("nbformat") == 4, "notebook must be nbformat v4"
-        assert nb.get("metadata", {}).get("kernelspec", {}).get("language") == "python"
+        assert nb.get("metadata", {}).get(
+            "kernelspec", {}
+        ).get("language") == "python"
 
 
 class TestReadme:
@@ -54,8 +56,39 @@ class TestReadme:
         readme = (ROOT / "README.md").read_text()
         assert "Parks Canada" in readme, "README must mention Parks Canada"
 
-    def test_readme_has_install_instructions(self):
-        readme = (ROOT / "README.md").read_text().lower()
-        assert any(
-            kw in readme for kw in ("installation", "install", "pip install", "setup")
-        ), "README must contain installation instructions"
+    def test_readme_has_installation_instructions(self):
+        readme = (ROOT / "README.md").read_text()
+        lower = readme.lower()
+        assert ("installation" in lower or "install" in lower), (
+            "README must contain installation instructions"
+        )
+
+    def test_readme_describes_cleaning_pipeline(self):
+        readme = (ROOT / "README.md").read_text()
+        assert "cleaning.py" in readme, (
+            "README must describe how to run cleaning.py"
+        )
+
+    def test_readme_describes_analysis_notebook(self):
+        readme = (ROOT / "README.md").read_text()
+        assert "analysis.ipynb" in readme, (
+            "README must describe how to run analysis.ipynb"
+        )
+
+    def test_readme_mentions_osemn(self):
+        readme = (ROOT / "README.md").read_text()
+        assert "OSEMN" in readme, (
+            "README must reference the OSEMN pipeline structure"
+        )
+
+    def test_readme_lists_key_outputs(self):
+        readme = (ROOT / "README.md").read_text()
+        lower = readme.lower()
+        # At least two of: cleaned datasets, fwi, redundancy, uncertainty
+        hits = sum(
+            kw in lower
+            for kw in ["cleaned", "fwi", "redundancy", "uncertainty"]
+        )
+        assert hits >= 2, (
+            f"README must list key outputs (found {hits}/2 required keywords)"
+        )

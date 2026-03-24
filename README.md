@@ -1,42 +1,87 @@
 # pea-met-network
 
-This repository is an experiment in AI-assisted analytics development.
-It applies a visible Ralph-style loop to a DATA-3210 semester project for
-Parks Canada Agency (PEI Field Unit).
+Weather-station analytics pipeline for Parks Canada Agency (PEI Field Unit).
 
-The goal is to determine weather-station redundancy across Prince Edward
-Island National Park and automate Canadian Fire Weather Index (FWI)
+This project determines weather-station redundancy across Prince Edward
+Island National Park and automates Canadian Fire Weather Index (FWI)
 calculation for localized wildfire risk management.
 
-## Project status
-The project is past initial planning and data audit work and has entered
-real ingestion implementation.
+## OSEMN Pipeline Structure
 
-Implemented so far:
-- planning stack and working agreement
-- repository quality rails and shape enforcement
-- raw data inventory and schema audit
-- raw manifest loader and schema recognition
-- timestamp normalization across observed schema families
-- deterministic local virtual environment workflow
+The project follows the **OSEMN** (Obtain, Scrub, Explore, Model, iNterpret)
+framework:
 
-See `docs/status.md` for the current checkpoint summary.
+1. **Obtain** — raw station CSVs inventoried and schema-audited
+2. **Scrub** — ingestion, timestamp normalization, hourly/daily resampling, imputation
+3. **Explore** — EDA, QA/QC summaries, exploratory notebooks
+4. **Model** — Stanhope reference calibration, FWI chain, PCA redundancy analysis
+5. **iNterpret** — probabilistic uncertainty quantification and recommendations
 
-## Assignment context
-**DATA-3210: Advanced Concepts in Data — Semester Project**
+## Setup and Installation
 
-Client: Parks Canada Agency (PEI Field Unit)
+```bash
+python3 -m venv .venv
+. .venv/bin/activate
+pip install -r requirements.txt
+pip install -r requirements-dev.txt
+```
 
-Required themes:
-- Python-based data pipeline and QA/QC
-- station redundancy analysis using PCA and/or clustering
-- FWI calculation and validation
-- probabilistic uncertainty quantification
+Or use:
 
-## Repository structure
+```bash
+make install
+```
+
+## Running the Pipeline
+
+### Data Cleaning (`cleaning.py`)
+
+`cleaning.py` is the end-to-end pipeline entrypoint. It loads raw station
+CSVs from `data/raw/`, normalizes timestamps, resamples to hourly and daily
+frequencies, applies imputation, and writes cleaned datasets to
+`data/processed/`.
+
+```bash
+python cleaning.py
+python cleaning.py --output-dir /custom/path
+```
+
+No manual steps are required between start and finished output. If raw data
+directories are missing, a clear error message is shown.
+
+### Analysis Notebook (`analysis.ipynb`)
+
+`analysis.ipynb` contains the full analytical narrative with sections for
+EDA, redundancy analysis, FWI logic, and uncertainty quantification. Each
+section includes visualizations and markdown explanations.
+
+To run:
+
+```bash
+jupyter lab analysis.ipynb
+```
+
+## Key Outputs
+
+- **Cleaned datasets** — hourly and daily resampled data for all PCA stations
+- **FWI values** — full FWI chain (FFMC → DMC → DC → ISI → BUI → FWI)
+- **Redundancy results** — PCA biplot and clustering analysis of station overlap
+- **Uncertainty distributions** — probabilistic quantification of imputation and model uncertainty
+
+## Quality Checks
+
+```bash
+make lint
+make test
+make check
+```
+
+## Repository Structure
 
 ```text
 pea-met-network/
+├── analysis.ipynb          # Analytical narrative notebook
+├── cleaning.py             # Pipeline entrypoint
 ├── data/
 │   ├── raw/
 │   ├── processed/
@@ -54,41 +99,14 @@ pea-met-network/
 └── requirements-dev.txt
 ```
 
-## Setup
+## Assignment Context
 
-```bash
-python3 -m venv .venv
-. .venv/bin/activate
-pip install -r requirements.txt
-pip install -r requirements-dev.txt
-```
+**DATA-3210: Advanced Concepts in Data — Semester Project**
 
-Or use:
+Client: Parks Canada Agency (PEI Field Unit)
 
-```bash
-make install
-```
-
-## Quality checks
-
-```bash
-make lint
-make test
-make check
-```
-
-## Current implementation path
-1. Obtain: inventory and schema grounding
-2. Scrub: ingestion, normalization, resampling, imputation
-3. Explore: notebook and QA/QC summaries
-4. Model: Stanhope reference, FWI, redundancy analysis
-5. Interpret: uncertainty and recommendation outputs
-
-## Notes on autonomy
-This repository is being developed with observation by default.
-Manual and scheduled loops should leave visible artifacts:
-- diary entries
-- progress markers or standup summaries
-- verifiable commits
-
-No black-box runs.
+Required themes:
+- Python-based data pipeline and QA/QC
+- Station redundancy analysis using PCA and/or clustering
+- FWI calculation and validation
+- Probabilistic uncertainty quantification
