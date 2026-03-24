@@ -15,6 +15,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 STATE_FILE = REPO_ROOT / "docs" / "ralph-state.json"
 TESTS_DIR = REPO_ROOT / "tests"
 VALIDATION_FILE = REPO_ROOT / "docs" / "validation.json"
+LOOP_LOG_FILE = REPO_ROOT / "docs" / "loop-log.jsonl"
 
 
 def git(*args: str) -> str:
@@ -403,6 +404,58 @@ def print_sync_report(state: dict, head_sha: str, phase_advanced: bool) -> None:
         print(f"BLOCKER={blocker}")
 
 
+def append_loop_log(state: dict, head_sha: str, phase_advanced: bool, auto_committed: bool) -> None:
+    """Append one JSON line to docs/loop-log.jsonl for deterministic tick tracking."""
+    validation = load_validation()
+    verdict = get_validation_verdict(validation)
+    phases = state.get("phases", {})
+    phase = str(state.get("phase", "?"))
+    phase_info = phases.get(phase, {})
+    # Discover commits since last log entry
+    last_logged_head = None
+    if LOOP_LOG_FILE.exists():
+        try:
+            last_line = LOOP_LOG_FILE.read_text().strip().split("\n")[-1]
+            if last_line:
+                last_logged_head = json.loads(last_line).get("head_sha")
+        except (json.JSONDecodeError, KeyError, IndexError):
+            pass
+    new_commits = []
+    if last_logged_head:
+        log_output = git("log", "--oneline", f"{last_logged_head}..HEAD")
+        if log_output:
+            new_commits = [line.strip() for line in log_output.split("\n") if line.strip()]
+    else:
+        log_output = git("log", "--oneline", "-10")
+        if log_output:
+            new_commits = [line.strip() for line in log_output.split("\n") if line.strip()]
+    # Discover files changed in working tree
+    files_changed = []
+    result = subprocess.run(
+        ["git", "-C", str(REPO_ROOT), "diff", "--name-only", "HEAD"],
+        capture_output=True, text=True,
+    )
+    if result.stdout.strip():
+        files_changed = [f.strip() for f in result.stdout.strip().split("\n") if f.strip()]
+    entry = {
+        "ts": datetime.now(timezone.utc).astimezone().isoformat(),
+        "iteration": state.get("iteration", 0),
+        "phase": int(phase) if phase.isdigit() else phase,
+        "phase_name": phase_info.get("name", "unknown"),
+        "phase_status": phase_info.get("status", "unknown"),
+        "verdict": verdict,
+        "head_sha": head_sha,
+        "phase_advanced": phase_advanced,
+        "auto_committed": auto_committed,
+        "new_commits": new_commits[:10],
+        "files_changed": files_changed[:20],
+        "working_tree_clean": len(files_changed) == 0,
+    }
+    # Append to log file
+    with open(LOOP_LOG_FILE, "a") as f:
+        f.write(json.dumps(entry) + "\n")
+
+
 def auto_commit_if_changed() -> bool:
     pre_sync_head = get_head_sha()
     validation = load_validation() or {}
@@ -416,6 +469,13 @@ def auto_commit_if_changed() -> bool:
         result = subprocess.run(["git", "-C", str(REPO_ROOT), "diff", "--quiet", rel], capture_output=True, text=True)
         if result.returncode != 0:
             subprocess.run(["git", "-C", str(REPO_ROOT), "add", rel], capture_output=True, text=True)
+            changed = True
+    # Always stage the loop log if it exists (new or updated)
+    if LOOP_LOG_FILE.exists():
+        rel = str(LOOP_LOG_FILE.relative_to(REPO_ROOT))
+        subprocess.run(["git", "-C", str(REPO_ROOT), "add", rel], capture_output=True, text=True)
+        result = subprocess.run(["git", "-C", str(REPO_ROOT), "diff", "--cached", "--quiet", rel], capture_output=True, text=True)
+        if result.returncode != 0:
             changed = True
     if changed:
         subprocess.run(["git", "-C", str(REPO_ROOT), "commit", "-m", "orchestrator: sync state after PASS"], capture_output=True, text=True)
@@ -490,7 +550,10 @@ def main() -> None:
         print("NEXT_ACTION=RUN_RALPH")
         return
     if auto_commit:
-        auto_commit_if_changed()
+        committed = auto_commit_if_changed()
+        append_loop_log(state, head_sha, phase_advanced, committed)
+    else:
+        append_loop_log(state, head_sha, phase_advanced, False)
 
 
 if __name__ == "__main__":
