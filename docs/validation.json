@@ -1,44 +1,7 @@
 {
   "last_reviewed_commit": "3619d4e",
-  "verdict": "PASS",
-  "reviewed_at": "2026-03-23T16:31:00-03:00",
-  "criteria": [
-    {
-      "id": "AC-REM-1",
-      "name": "FWI reference vector tests",
-      "status": "PASS",
-      "evidence": "Unchanged from previous PASS review. test_fwi_vectors.py calls fine_fuel_moisture_code, duff_moisture_code, and drought_code directly with parametrized reference vectors. 9 vectors (3 per code) with abs(result - expected) < 0.01 tolerance. No regression."
-    },
-    {
-      "id": "AC-REM-2",
-      "name": "DMC and DC implementations",
-      "status": "PASS",
-      "evidence": "Unchanged from previous PASS review. fwi.py contains all three moisture-code functions with proper Van Wagner formulas, day-length factors, and rain models. All pass reference vector tests. No regression."
-    },
-    {
-      "id": "AC-REM-3",
-      "name": "Imputation framework with audit trail",
-      "status": "PASS",
-      "evidence": "Unchanged from previous PASS review. ImputationConfig, AuditRecord, impute_column, impute_frame, audit_trail_to_dataframe all present. 10 tests covering no-missing, short-gap interpolation, long-gap preservation, audit fields, ffill, multi-column, per-station. No regression."
-    },
-    {
-      "id": "AC-REM-4",
-      "name": "QA/QC summary artifacts",
-      "status": "PASS",
-      "evidence": "Unchanged from previous PASS review. qa_qc.py provides missingness_summary, duplicate_timestamps, out_of_range_values (with 10 meteorological defaults), coverage_summary. Tests use synthetic data with planted anomalies. No regression."
-    },
-    {
-      "id": "AC-REM-5",
-      "name": "Loader handles multiple schema families",
-      "status": "PASS",
-      "evidence": "FIXED. test_normalized_loader.py now has 3 tests covering 3 schema families: test_load_normalized_station_csv_maps_canonical_columns (minimal_date_time_family, Cavendish Dec 2022), test_load_hoboware_date_time_family (hoboware_date_time_family, Tracadie Wharf Aug 2025), test_load_legacy_dual_wind_family (legacy_dual_wind_family, Tracadie Wharf Aug 2023). All use real data files from data/raw/peinp/. Each test verifies canonical columns, correct schema_family label, non-empty frame, and timezone-aware timestamps. Spec requires at least 2 families \u2014 3 covered. Loader routing in normalized_loader.py is correct: _parse_timestamp_date_time for date+time families, _parse_timestamp_single for single_timestamp_family, NotImplementedError for unrecognized families."
-    },
-    {
-      "id": "AC-REM-6",
-      "name": "Explore notebook automated verification",
-      "status": "PASS",
-      "evidence": "Unchanged from previous PASS review. test_explore_smoke.py has 3 tests: file existence, valid nbformat v4 with Python kernel, full notebook execution via nbconvert ExecutePreprocessor with 120s timeout. No regression."
-    }
-  ],
-  "summary": "PASS \u2014 AC-REM-5 fixed. Ralph added two new loader tests (test_load_hoboware_date_time_family and test_load_legacy_dual_wind_family) using real PEINP CSV files from Tracadie Wharf. The test suite now exercises 3 schema families (minimal, hoboware, legacy dual wind), exceeding the spec requirement of at least 2. All 73 tests pass. All 6 acceptance criteria for Phase 7 (Remediation) are now satisfied."
+  "verdict": "PENDING",
+  "reviewed_at": "2026-03-24T01:02:35.028472+00:00",
+  "criteria": [],
+  "summary": "Phase 8 activated; stale PASS reset. Awaiting Lisa review."
 }
