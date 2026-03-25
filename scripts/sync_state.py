@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 """sync_state.py — Ralph loop state synchronizer (spec-driven)."""
-
 from __future__ import annotations
 
 import json
@@ -18,20 +17,89 @@ VALIDATION_FILE = REPO_ROOT / "docs" / "validation.json"
 LOOP_LOG_FILE = REPO_ROOT / "docs" / "loop-log.jsonl"
 
 
-def git(*args: str) -> str:
-    result = subprocess.run(
+class StateManager:
+    """Encapsulates state IO to prevent global variable mutation and race conditions."""
+    def __init__(self):
+        self.phases_was_list = False
+
+    def load_state(self) -> dict:
+        if not STATE_FILE.exists():
+            print("ralph-state.json not found", file=sys.stderr)
+            sys.exit(1)
+
+        with open(STATE_FILE) as f:
+            raw = json.load(f)
+
+        self.phases_was_list = isinstance(raw.get("phases"), list)
+        return self._normalize_state(raw)
+
+    def save_state(self, state: dict) -> None:
+        state["updated_at"] = datetime.now(timezone.utc).astimezone().isoformat()
+        out = self._denormalize_state(state)
+        self._atomic_write(STATE_FILE, out)
+
+    def load_validation(self) -> dict | None:
+        if VALIDATION_FILE.exists():
+            with open(VALIDATION_FILE) as f:
+                return json.load(f)
+        return None
+
+    def save_validation(self, validation: dict) -> None:
+        self._atomic_write(VALIDATION_FILE, validation)
+
+    def _normalize_state(self, state: dict) -> dict:
+        phases = state.get("phases")
+        if isinstance(phases, list):
+            phase_map = {}
+            for p in phases:
+                key = str(p["id"])
+                # FIX 3: Use truthiness check to catch empty string, not just key absence
+                if "exit_gate" in p and not p.get("exit"):
+                    p["exit"] = p["exit_gate"]
+                phase_map[key] = p
+            state["phases"] = phase_map
+
+        if "phase" not in state and "current_phase" in state:
+            state["phase"] = str(state["current_phase"])
+        elif "phase" in state:
+            state["phase"] = str(state["phase"])
+        return state
+
+    def _denormalize_state(self, state: dict) -> dict:
+        out = dict(state)
+        if self.phases_was_list and isinstance(out.get("phases"), dict):
+            out["phases"] = sorted(out["phases"].values(), key=lambda p: p["id"])
+            try:
+                out["current_phase"] = int(out.get("phase", out.get("current_phase", 1)))
+            except (ValueError, TypeError):
+                pass
+        return out
+
+    @staticmethod
+    def _atomic_write(filepath: Path, data: dict) -> None:
+        # FIX 2: Avoid with_suffix("..tmp") which raises ValueError on Python ≥ 3.13
+        tmp = filepath.parent / (filepath.name + ".tmp")
+        tmp.write_text(json.dumps(data, indent=2) + "\n")
+        tmp.replace(filepath)
+
+
+def git(*args: str, check: bool = True, capture: bool = True) -> subprocess.CompletedProcess:
+    """Wrapper for git commands with safe default error checking."""
+    return subprocess.run(
         ["git", "-C", str(REPO_ROOT), *args],
-        capture_output=True,
+        capture_output=capture,
         text=True,
+        check=check
     )
-    if result.returncode != 0:
-        print(f"git error: {result.stderr.strip()}", file=sys.stderr)
-        sys.exit(1)
-    return result.stdout.strip()
 
 
 def get_head_sha() -> str:
-    return git("rev-parse", "--short", "HEAD")
+    try:
+        result = git("rev-parse", "--short", "HEAD")
+        return result.stdout.strip()
+    except subprocess.CalledProcessError as e:
+        print(f"git error: {e.stderr.strip()}", file=sys.stderr)
+        sys.exit(1)
 
 
 def run_cmd(cmd: str, timeout: int = 60) -> tuple[bool, str]:
@@ -54,84 +122,6 @@ def run_cmd(cmd: str, timeout: int = 60) -> tuple[bool, str]:
         return False, str(e)[:300]
 
 
-def _normalize_state(state: dict) -> dict:
-    """Normalize state to the expected internal format.
-
-    v2 state files use a list of phase dicts keyed by 'id' and
-    'current_phase' as an int.  Convert those to the dict-of-dicts
-    layout that the rest of sync_state.py expects.
-    """
-    phases = state.get("phases")
-    if isinstance(phases, list):
-        # v2 format: list of {"id": N, ...} -> {"1": {...}, ...}
-        phase_map = {}
-        for p in phases:
-            key = str(p["id"])
-            # v2 uses "exit_gate"; v1 uses "exit" — normalise to "exit"
-            if "exit_gate" in p and "exit" not in p:
-                p["exit"] = p["exit_gate"]
-            phase_map[key] = p
-        state["phases"] = phase_map
-
-    # Normalise the current-phase key
-    if "phase" not in state and "current_phase" in state:
-        state["phase"] = str(state["current_phase"])
-    elif "phase" in state:
-        state["phase"] = str(state["phase"])
-
-    return state
-
-
-# Remember whether the original file used a list so we can round-trip.
-_PHASES_WAS_LIST = False
-
-
-def load_state() -> dict:
-    global _PHASES_WAS_LIST
-    if STATE_FILE.exists():
-        with open(STATE_FILE) as f:
-            raw = json.load(f)
-        _PHASES_WAS_LIST = isinstance(raw.get("phases"), list)
-        return _normalize_state(raw)
-    print("ralph-state.json not found", file=sys.stderr)
-    sys.exit(1)
-
-
-def _denormalize_state(state: dict) -> dict:
-    """Convert internal dict-of-dicts back to list format if needed."""
-    out = dict(state)
-    if _PHASES_WAS_LIST and isinstance(out.get("phases"), dict):
-        out["phases"] = sorted(
-            out["phases"].values(), key=lambda p: p["id"]
-        )
-        try:
-            out["current_phase"] = int(out.get("phase", out.get("current_phase", 1)))
-        except (ValueError, TypeError):
-            pass
-    return out
-
-
-def save_state(state: dict) -> None:
-    state["updated_at"] = datetime.now(timezone.utc).astimezone().isoformat()
-    out = _denormalize_state(state)
-    tmp = STATE_FILE.with_suffix("..tmp")
-    tmp.write_text(json.dumps(out, indent=2) + "\n")
-    tmp.replace(STATE_FILE)
-
-
-def load_validation() -> dict | None:
-    if VALIDATION_FILE.exists():
-        with open(VALIDATION_FILE) as f:
-            return json.load(f)
-    return None
-
-
-def save_validation(validation: dict) -> None:
-    tmp = VALIDATION_FILE.with_suffix("..tmp")
-    tmp.write_text(json.dumps(validation, indent=2) + "\n")
-    tmp.replace(VALIDATION_FILE)
-
-
 def discover_tests() -> list[str]:
     if not TESTS_DIR.exists():
         return []
@@ -139,15 +129,15 @@ def discover_tests() -> list[str]:
 
 
 def run_test_file(test_file: str) -> tuple[bool, str]:
-    cmd = f".venv/bin/pytest {test_file} -q --tb=short 2>&1"
+    cmd = f"{sys.executable} -m pytest {test_file} -q --tb=short 2>&1"
     return run_cmd(cmd, timeout=120)
 
 
-def _ensure_venv_path(cmd: str) -> str:
-    """Prepend .venv/bin/ to pytest/ruff if not already present."""
+def _ensure_portable_execution(cmd: str) -> str:
+    """Ensure standard tools execute within the current Python environment."""
     for tool in ("pytest", "ruff"):
         if cmd.startswith(tool + " ") or cmd == tool:
-            return f".venv/bin/{cmd}"
+            return cmd.replace(tool, f"{sys.executable} -m {tool}", 1)
     return cmd
 
 
@@ -156,9 +146,11 @@ def check_phase_exit(state: dict) -> tuple[bool, str, str]:
     phase = str(state.get("phase", "?"))
     phase_info = phases.get(phase, {})
     exit_gate = phase_info.get("exit", "")
+
     if not exit_gate:
         return True, "(no exit gate defined)", ""
-    exit_gate = _ensure_venv_path(exit_gate)
+
+    exit_gate = _ensure_portable_execution(exit_gate)
     passes, output = run_cmd(exit_gate, timeout=120)
     return passes, exit_gate, output
 
@@ -169,14 +161,14 @@ def get_validation_verdict(validation: dict | None) -> str:
     return validation.get("verdict", "NONE").upper()
 
 
-def revert_phase_on_reject(state: dict) -> bool:
-    validation = load_validation()
-    verdict = get_validation_verdict(validation)
+def revert_phase_on_reject(state: dict, verdict: str) -> bool:
     phases = state.get("phases", {})
     current = str(state.get("phase", "?"))
     phase_info = phases.get(current, {})
+
     if verdict != "REJECT":
         return False
+
     if phase_info.get("status") == "done":
         state["phase"] = current
         phase_info["status"] = "active"
@@ -185,20 +177,16 @@ def revert_phase_on_reject(state: dict) -> bool:
 
 
 def _phase_sort_key(key: str) -> tuple[int, str]:
-    """Sort phase keys like: 1, 2, ..., 9, 10, 10b, 10c, 10d, 11."""
     m = re.match(r"^(\d+)(.*)", key)
     if m:
         return (int(m.group(1)), m.group(2))
     return (999, key)
 
 
-def advance_phase_if_done(state: dict) -> bool:
+def advance_phase_if_done(state: dict, validation: dict | None, verdict: str, exit_passes: bool, exit_cmd: str) -> bool:
     phases = state.get("phases", {})
     current = str(state.get("phase", "?"))
     phase_info = phases.get(current, {})
-    exit_passes, exit_cmd, exit_output = check_phase_exit(state)
-    validation = load_validation()
-    verdict = get_validation_verdict(validation)
 
     if not exit_passes:
         if verdict == "PASS":
@@ -211,13 +199,16 @@ def advance_phase_if_done(state: dict) -> bool:
             phase_info["status"] = "active"
         return False
 
-    if verdict in {"NONE", "PASS"}:
+    # CORE BUG FIX: Only advance on explicit PASS, not NONE
+    if verdict == "PASS":
         phase_info["status"] = "done"
         next_phase = None
+
         for p_num in sorted(phases.keys(), key=_phase_sort_key):
             if phases[p_num].get("status") in ("not_started", "pending"):
                 next_phase = p_num
                 break
+
         if next_phase is not None:
             state["phase"] = next_phase
             phases[next_phase]["status"] = "active"
@@ -226,7 +217,6 @@ def advance_phase_if_done(state: dict) -> bool:
                 validation["criteria"] = []
                 validation["summary"] = f"Phase {next_phase} activated; awaiting Lisa review."
                 validation["reviewed_at"] = datetime.now(timezone.utc).astimezone().isoformat()
-                save_validation(validation)
             return True
         return True
 
@@ -234,11 +224,7 @@ def advance_phase_if_done(state: dict) -> bool:
 
 
 def report_working_tree() -> list[str]:
-    result = subprocess.run(
-        ["git", "-C", str(REPO_ROOT), "status", "--porcelain"],
-        capture_output=True,
-        text=True,
-    )
+    result = git("status", "--porcelain", check=False)
     lines = []
     if result.stdout.strip():
         lines.append("WORKING_TREE=DIRTY")
@@ -254,29 +240,28 @@ def render_plan(state: dict) -> str:
     phase = state.get("phase", "?")
     phases = state.get("phases", {})
     phase_info = phases.get(str(phase), {})
+
     lines.append(f"## Current Phase: {phase} — {phase_info.get('name', 'unknown')}")
-    lines.append(f"Exit criteria: `{phase_info.get('exit', '')}`")
-    lines.append("")
-    lines.append("## Phase Roadmap")
-    lines.append("")
+    lines.append(f"Exit criteria: `{phase_info.get('exit', '')}`\n")
+    lines.append("## Phase Roadmap\n")
     lines.append("| Phase | Name | Status | Exit Criteria |")
     lines.append("|---|---|---|---|")
+
     for p_num, p_info in phases.items():
         lines.append(f"| {p_num} | {p_info.get('name', '?')} | {p_info.get('status', '?')} | `{p_info.get('exit', '')}` |")
     lines.append("")
+
     decisions = state.get("decisions", [])
     if decisions:
-        lines.append("## Decisions")
-        lines.append("")
+        lines.append("## Decisions\n")
         for d in decisions:
             lines.append(f"- {d.get('summary', '?')} ({d.get('date', '?')})")
         lines.append("")
+
     blocker = state.get("blocker")
     if blocker:
-        lines.append("## Blocker")
-        lines.append("")
-        lines.append(f"**{blocker}**")
-        lines.append("")
+        lines.append("## Blocker\n")
+        lines.append(f"**{blocker}**\n")
     return "\n".join(lines)
 
 
@@ -299,15 +284,15 @@ def render_status(state: dict) -> str:
     phase = state.get("phase", "?")
     phases = state.get("phases", {})
     phase_info = phases.get(str(phase), {})
+
     lines.append(f"Phase: {phase} — {phase_info.get('name', 'unknown')}")
     lines.append(f"Exit: `{phase_info.get('exit', '')}`")
     lines.append(f"Iteration: {state.get('iteration', '?')}/{state.get('max_per_day', '?')}")
     lines.append(f"Status: {state.get('status', '?')}")
     blocker = state.get("blocker")
-    lines.append(f"Blocker: {blocker if blocker else 'none'}")
-    lines.append("")
-    lines.append("## Test Suite")
-    lines.append("")
+    lines.append(f"Blocker: {blocker if blocker else 'none'}\n")
+    lines.append("## Test Suite\n")
+
     for tf in discover_tests():
         passes, output = run_test_file(tf)
         lines.append(f"  {'PASS' if passes else 'FAIL'}: {tf}")
@@ -319,7 +304,7 @@ def render_status(state: dict) -> str:
 def parse_view_arg(argv: list[str]) -> str | None:
     for index, arg in enumerate(argv):
         if arg.startswith("--view="):
-            return arg.split("=", 1)[1]
+            return arg.split("=", 1)[1]  # FIX 1: extract the value, not the list
         if arg == "--view" and len(argv) > index + 1:
             return argv[index + 1]
     return None
@@ -338,11 +323,11 @@ def handle_view_mode(view_arg: str | None, state: dict) -> bool:
     return False
 
 
-def handle_check_only(state: dict) -> None:
-    passes, gate_cmd, output = check_phase_exit(state)
-    if not passes:
-        print(f"Phase exit FAILS: {gate_cmd}")
-        print(f"  {output}")
+# FIX 3: Accept precomputed results instead of re-running check_phase_exit
+def handle_check_only(exit_passes: bool, exit_cmd: str, exit_output: str) -> None:
+    if not exit_passes:
+        print(f"Phase exit FAILS: {exit_cmd}")
+        print(f"  {exit_output}")
         sys.exit(1)
     print("Phase exit passes.")
     sys.exit(0)
@@ -352,22 +337,26 @@ def validate_blocker(state: dict) -> tuple[bool, str | None]:
     blocker = state.get("blocker")
     if not blocker:
         return False, None
+
     blocker_lower = blocker.lower()
     files_mentioned = re.findall(r"[\w/\-]+\.py", blocker)
+
     if "ruff" in blocker_lower:
         targets = " ".join(files_mentioned) if files_mentioned else "."
-        passed, _ = run_cmd(f".venv/bin/ruff check {targets}")
+        passed, _ = run_cmd(f"{sys.executable} -m ruff check {targets}")
         if passed:
             return False, f"ruff now passes on {targets}"
+
     if "pytest" in blocker_lower or "test" in blocker_lower:
         if files_mentioned:
             test_files = [f for f in files_mentioned if "test_" in f]
             targets = " ".join(test_files) if test_files else "."
         else:
             targets = "."
-        passed, _ = run_cmd(f".venv/bin/pytest {targets} -q --tb=short 2>&1")
+        passed, _ = run_cmd(f"{sys.executable} -m pytest {targets} -q --tb=short 2>&1")
         if passed:
             return False, f"pytest now passes on {targets}"
+
     return True, blocker
 
 
@@ -380,7 +369,7 @@ def compute_fail_criteria_hash(validation: dict | None) -> str | None:
     return sha256(",".join(failed).encode()).hexdigest()[:16]
 
 
-def update_circuit_breaker(state: dict) -> bool:
+def update_circuit_breaker(state: dict, head_sha: str, validation: dict | None, verdict: str) -> bool:
     cb = state.setdefault("circuit_breaker", {
         "consecutive_stalls": 0,
         "last_commit": None,
@@ -391,11 +380,10 @@ def update_circuit_breaker(state: dict) -> bool:
         "trip_reason": None,
         "trip_at": None,
     })
+
     if cb.get("tripped"):
         return True
-    head_sha = get_head_sha()
-    validation = load_validation()
-    verdict = get_validation_verdict(validation)
+
     fail_hash = compute_fail_criteria_hash(validation)
     is_stall = (
         cb.get("last_commit") == head_sha and
@@ -403,37 +391,42 @@ def update_circuit_breaker(state: dict) -> bool:
         cb.get("last_fail_criteria_hash") == fail_hash and
         verdict == "REJECT"
     )
+
     cb["consecutive_stalls"] = cb.get("consecutive_stalls", 0) + 1 if is_stall else 0
     cb["last_commit"] = head_sha
     cb["last_verdict"] = verdict
     cb["last_fail_criteria_hash"] = fail_hash
+
     if cb["consecutive_stalls"] >= 3:
         cb["tripped"] = True
         cb["trip_reason"] = f"3 consecutive stalls on commit {head_sha}: verdict={verdict}, fail_criteria={fail_hash}"
         cb["trip_at"] = datetime.now(timezone.utc).astimezone().isoformat()
         print(f"CIRCUIT_BREAKER_TRIPPED: {cb['trip_reason']}", file=sys.stderr)
         return True
+
     if cb["consecutive_stalls"] > 0:
         print(f"CIRCUIT_BREAKER_WARNING: stall {cb['consecutive_stalls']}/3 on commit {head_sha}", file=sys.stderr)
     return False
 
 
-def print_sync_report(state: dict, head_sha: str, phase_advanced: bool) -> None:
+def print_sync_report(state: dict, head_sha: str, phase_advanced: bool, validation: dict | None, verdict: str, exit_passes: bool, exit_cmd: str, exit_output: str) -> None:
     for line in report_working_tree():
         print(line)
+
     phases = state.get("phases", {})
     phase = state.get("phase", "?")
     phase_info = phases.get(str(phase), {})
+
     print(f"PHASE={phase}")
     print(f"PHASE_NAME={phase_info.get('name', 'unknown')}")
     print(f"COMMIT={head_sha}")
+
     if phase_advanced:
         print("PHASE_ADVANCED=true")
-    validation = load_validation()
-    verdict = get_validation_verdict(validation)
+
     if verdict != "NONE":
         print(f"VALIDATION={verdict}")
-        if verdict == "REJECT":
+        if verdict == "REJECT" and validation:
             failed = [c for c in validation.get("criteria", []) if c.get("status") == "FAIL"]
             print(f"VALIDATION_FAIL_COUNT={len(failed)}")
             for c in failed:
@@ -443,11 +436,13 @@ def print_sync_report(state: dict, head_sha: str, phase_advanced: bool) -> None:
                     print(f"    {evidence[:200]}")
     else:
         print("VALIDATION=NONE")
-    exit_passes, exit_cmd, exit_output = check_phase_exit(state)
+
     print(f"PHASE_EXIT={'PASS' if exit_passes else 'FAIL'}")
     print(f"PHASE_EXIT_CMD={exit_cmd}")
+
     if not exit_passes and exit_output:
         print(f"PHASE_EXIT_OUTPUT={exit_output[:200]}")
+
     if verdict == "PASS" and exit_passes:
         print("VALIDATION_STATE=PP")
     elif verdict == "REJECT" and exit_passes:
@@ -458,27 +453,25 @@ def print_sync_report(state: dict, head_sha: str, phase_advanced: bool) -> None:
         print("VALIDATION_STATE=FP")
     else:
         print(f"VALIDATION_STATE=INDETERMINATE (validation={verdict}, exit={'PASS' if exit_passes else 'FAIL'})")
-    print("")
-    print("## Test Discovery")
+
+    print("\n## Test Discovery")
     test_files = discover_tests()
     if not test_files:
         print("  No test files found in tests/")
     else:
         for tf in test_files:
             print(f"  {tf}")
+
     blocker = state.get("blocker")
     if blocker:
         print(f"BLOCKER={blocker}")
 
 
-def append_loop_log(state: dict, head_sha: str, phase_advanced: bool, auto_committed: bool) -> None:
-    """Append one JSON line to docs/loop-log.jsonl for deterministic tick tracking."""
-    validation = load_validation()
-    verdict = get_validation_verdict(validation)
+def append_loop_log(state: dict, head_sha: str, phase_advanced: bool, auto_committed: bool, verdict: str) -> None:
     phases = state.get("phases", {})
     phase = str(state.get("phase", "?"))
     phase_info = phases.get(phase, {})
-    # Discover commits since last log entry
+
     last_logged_head = None
     if LOOP_LOG_FILE.exists():
         try:
@@ -487,23 +480,25 @@ def append_loop_log(state: dict, head_sha: str, phase_advanced: bool, auto_commi
                 last_logged_head = json.loads(last_line).get("head_sha")
         except (json.JSONDecodeError, KeyError, IndexError):
             pass
+
     new_commits = []
     if last_logged_head:
-        log_output = git("log", "--oneline", f"{last_logged_head}..HEAD")
-        if log_output:
-            new_commits = [line.strip() for line in log_output.split("\n") if line.strip()]
+        try:
+            log_output = git("log", "--oneline", f"{last_logged_head}..HEAD").stdout
+            if log_output:
+                new_commits = [line.strip() for line in log_output.split("\n") if line.strip()]
+        except subprocess.CalledProcessError:
+            pass
     else:
-        log_output = git("log", "--oneline", "-10")
+        log_output = git("log", "--oneline", "-10", check=False).stdout
         if log_output:
             new_commits = [line.strip() for line in log_output.split("\n") if line.strip()]
-    # Discover files changed in working tree
+
     files_changed = []
-    result = subprocess.run(
-        ["git", "-C", str(REPO_ROOT), "diff", "--name-only", "HEAD"],
-        capture_output=True, text=True,
-    )
-    if result.stdout.strip():
-        files_changed = [f.strip() for f in result.stdout.strip().split("\n") if f.strip()]
+    diff_result = git("diff", "--name-only", "HEAD", check=False).stdout
+    if diff_result.strip():
+        files_changed = [f.strip() for f in diff_result.strip().split("\n") if f.strip()]
+
     entry = {
         "ts": datetime.now(timezone.utc).astimezone().isoformat(),
         "iteration": state.get("iteration", 0),
@@ -518,36 +513,35 @@ def append_loop_log(state: dict, head_sha: str, phase_advanced: bool, auto_commi
         "files_changed": files_changed[:20],
         "working_tree_clean": len(files_changed) == 0,
     }
-    # Append to log file
+
     with open(LOOP_LOG_FILE, "a") as f:
         f.write(json.dumps(entry) + "\n")
 
 
+# Pure git operations — no validation mutation or file writes
 def auto_commit_if_changed() -> bool:
-    pre_sync_head = get_head_sha()
-    validation = load_validation() or {}
-    validation["last_reviewed_commit"] = pre_sync_head
-    save_validation(validation)
     changed = False
+
     for state_file in [STATE_FILE, VALIDATION_FILE]:
         if not state_file.exists():
             continue
         rel = str(state_file.relative_to(REPO_ROOT))
-        result = subprocess.run(["git", "-C", str(REPO_ROOT), "diff", "--quiet", rel], capture_output=True, text=True)
-        if result.returncode != 0:
-            subprocess.run(["git", "-C", str(REPO_ROOT), "add", rel], capture_output=True, text=True)
+        # CAVEAT 1: check=False for resilience on non-critical git operations
+        if git("diff", "--quiet", rel, check=False).returncode != 0:
+            git("add", rel, check=False)
             changed = True
-    # Always stage the loop log if it exists (new or updated)
+
     if LOOP_LOG_FILE.exists():
         rel = str(LOOP_LOG_FILE.relative_to(REPO_ROOT))
-        subprocess.run(["git", "-C", str(REPO_ROOT), "add", rel], capture_output=True, text=True)
-        result = subprocess.run(["git", "-C", str(REPO_ROOT), "diff", "--cached", "--quiet", rel], capture_output=True, text=True)
-        if result.returncode != 0:
+        git("add", rel, check=False)
+        if git("diff", "--cached", "--quiet", rel, check=False).returncode != 0:
             changed = True
+
     if changed:
-        subprocess.run(["git", "-C", str(REPO_ROOT), "commit", "-m", "orchestrator: sync state after PASS"], capture_output=True, text=True)
+        git("commit", "-m", "orchestrator: sync state after PASS", check=False)
         print("AUTO_COMMIT=true")
         return True
+
     print("AUTO_COMMIT=false")
     return False
 
@@ -559,68 +553,102 @@ def main() -> None:
     write_only = "--write" in args
     auto_commit = "--auto-commit" in args
     view_arg = parse_view_arg(argv)
-    state = load_state()
+
+    state_mgr = StateManager()
+    state = state_mgr.load_state()
+
     still_valid, reason = validate_blocker(state)
     if not still_valid and state.get("blocker"):
         print(f"BLOCKER_CLEARED reason=\"{reason}\"", file=sys.stderr)
         state["blocker"] = None
-        save_state(state)
+        state_mgr.save_state(state)
+
     if handle_view_mode(view_arg, state):
         return
-    if write_only:
-        advance_phase_if_done(state)
-        save_state(state)
-        return
+
+    # Centralize reads to prevent race conditions during the execution loop
+    validation = state_mgr.load_validation()
+    verdict = get_validation_verdict(validation)
+    exit_passes, exit_cmd, exit_output = check_phase_exit(state)
     head_sha = get_head_sha()
+
+    if write_only:
+        phase_advanced = advance_phase_if_done(state, validation, verdict, exit_passes, exit_cmd)
+        state_mgr.save_state(state)
+        # CAVEAT 2: Only save validation if phase advanced and validation exists
+        if phase_advanced and validation is not None:
+            validation["last_reviewed_commit"] = head_sha
+            state_mgr.save_validation(validation)
+        return
+
     if check_only:
-        handle_check_only(state)
-    tripped = update_circuit_breaker(state)
+        handle_check_only(exit_passes, exit_cmd, exit_output)  # FIX 3
+        return                                                  # FIX 5
+
+    # 1. FP Anomaly Handling (Stale PASS Reset)
+    if verdict == "PASS" and not exit_passes:
+        print("VALIDATION_STATE=FP", file=sys.stderr)
+        print("ACTION=RESET_STALE_PASS", file=sys.stderr)
+        if validation is not None:
+            validation["verdict"] = "PENDING"
+            validation["criteria"] = []
+            validation["summary"] = (
+                f"Phase {state.get('phase', '?')} activated; "
+                "stale PASS reset. Awaiting Lisa review."
+            )
+            validation["reviewed_at"] = datetime.now(timezone.utc).astimezone().isoformat()
+            state_mgr.save_validation(validation)
+
+        git("add", str(VALIDATION_FILE.relative_to(REPO_ROOT)), check=False)
+        print("AUTO_COMMIT=false")
+        print("NEXT_ACTION=RUN_RALPH")
+        return
+
+    # 2. Pipeline Execution
+    tripped = update_circuit_breaker(state, head_sha, validation, verdict)
     if tripped:
         state["status"] = "circuit_breaked"
-        save_state(state)
+        state_mgr.save_state(state)
         cb = state.get("circuit_breaker", {})
         print("CIRCUIT_BREAKER=TRIPPED")
         print(f"CIRCUIT_BREAKER_REASON={cb.get('trip_reason', '')}")
         print(f"CIRCUIT_BREAKER_AT={cb.get('trip_at', '')}")
         sys.exit(0)
+
     cb = state.get("circuit_breaker", {})
     stalls = cb.get("consecutive_stalls", 0)
     if stalls > 0:
         print(f"CIRCUIT_BREAKER={stalls}/3 stalls", file=sys.stderr)
-    reverted = revert_phase_on_reject(state)
+
+    reverted = revert_phase_on_reject(state, verdict)
     if reverted:
-        save_state(state)
         print("PHASE_REVERTED=true (validation REJECT)", file=sys.stderr)
-    phase_advanced = advance_phase_if_done(state)
+
+    phase_advanced = advance_phase_if_done(state, validation, verdict, exit_passes, exit_cmd)
+
     state["iteration"] = state.get("iteration", 0) + 1
     state["status"] = "running"
-    save_state(state)
-    print_sync_report(state, head_sha, phase_advanced)
-    # Fix B: FP anomaly handling
-    # If phase exit fails but validation says PASS, the PASS is stale
-    # (from a previous phase). Reset verdict to PENDING and do NOT commit.
-    validation = load_validation()
-    verdict = get_validation_verdict(validation)
-    exit_passes, exit_cmd, exit_output = check_phase_exit(state)
-    if verdict == "PASS" and not exit_passes:
-        print("VALIDATION_STATE=FP", file=sys.stderr)
-        print("ACTION=RESET_STALE_PASS", file=sys.stderr)
-        validation["verdict"] = "PENDING"
-        validation["criteria"] = []
-        validation["summary"] = f"Phase {state.get('phase', '?')} activated; stale PASS reset. Awaiting Lisa review."
-        validation["reviewed_at"] = datetime.now(timezone.utc).astimezone().isoformat()
-        save_validation(validation)
-        # Stage the reset validation file but do NOT commit
-        subprocess.run(["git", "-C", str(REPO_ROOT), "add", str(VALIDATION_FILE.relative_to(REPO_ROOT))], capture_output=True, text=True)
-        subprocess.run(["git", "-C", str(REPO_ROOT), "commit", "-m", "orchestrator: reset stale PASS to PENDING (FP state)"], capture_output=True, text=True)
-        print("AUTO_COMMIT=false")
-        print("NEXT_ACTION=RUN_RALPH")
-        return
-    if auto_commit:
-        committed = auto_commit_if_changed()
-        append_loop_log(state, head_sha, phase_advanced, committed)
-    else:
-        append_loop_log(state, head_sha, phase_advanced, False)
+
+    # 3. Single IO write point — all mutations complete
+    state_mgr.save_state(state)
+
+    # CAVEAT 2: Only save validation when phase advanced OR auto_commit is set
+    if phase_advanced and validation is not None:
+        validation["last_reviewed_commit"] = head_sha
+        state_mgr.save_validation(validation)
+    elif auto_commit and validation is not None:
+        validation["last_reviewed_commit"] = head_sha
+        state_mgr.save_validation(validation)
+
+    # 4. Reporting
+    print_sync_report(
+        state, head_sha, phase_advanced, validation,
+        verdict, exit_passes, exit_cmd, exit_output,
+    )
+
+    # 5. Git Logistics
+    committed = auto_commit_if_changed() if auto_commit else False
+    append_loop_log(state, head_sha, phase_advanced, committed, verdict)
 
 
 if __name__ == "__main__":
