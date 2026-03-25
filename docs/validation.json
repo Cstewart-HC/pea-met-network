@@ -1,7 +1,7 @@
 {
-  "last_reviewed_commit": "df87b15",
+  "last_reviewed_commit": "7bfbc2a",
   "verdict": "REJECT",
-  "reviewed_at": "2026-03-25T12:54:15.624876+00:00",
+  "reviewed_at": "2026-03-25T17:18:29.676743+00:00",
   "phase": 3,
   "criteria": [
     {
@@ -14,7 +14,7 @@
       "id": "AC-INT-2",
       "name": "All 6 stations have station_hourly.csv",
       "status": "PASS",
-      "evidence": "Verified: all 6 station dirs (cavendish, greenwich, north_rustico, stanhope, stanley_bridge, tracadie) contain station_hourly.csv."
+      "evidence": "Verified: all 6 station dirs contain station_hourly.csv."
     },
     {
       "id": "AC-INT-3",
@@ -26,38 +26,38 @@
       "id": "AC-INT-4",
       "name": "Hourly CSVs have FWI columns",
       "status": "FAIL",
-      "evidence": "cavendish/station_hourly.csv is missing all 6 FWI columns (ffmc, dmc, dc, isi, bui, fwi). Header only contains weather measurement columns. All other 5 stations have FWI columns."
+      "evidence": "cavendish/station_hourly.csv has 11 columns \u2014 no FWI columns (ffmc, dmc, dc, isi, bui, fwi). All other 5 stations have FWI. The pipeline was re-run locally producing FWI data for cavendish, but the output files are dirty (uncommitted in working tree). Commit 7bfbc2a touched cavendish CSVs but the committed versions still lack FWI. Test fails deterministically (sorted iteration fix is correct)."
     },
     {
       "id": "AC-INT-5",
       "name": "Daily CSVs have FWI columns",
       "status": "FAIL",
-      "evidence": "cavendish/station_daily.csv is missing all 6 FWI columns. Same root cause as AC-INT-4."
+      "evidence": "cavendish/station_daily.csv has 11 columns \u2014 no FWI columns. Same root cause as AC-INT-4: uncommitted pipeline output."
     },
     {
       "id": "AC-INT-6",
       "name": "Imputation report exists",
       "status": "PASS",
-      "evidence": "data/processed/imputation_report.csv exists with 2984 rows and expected columns (station, variable, time_start, time_end, method, count_affected)."
+      "evidence": "data/processed/imputation_report.csv exists."
     },
     {
       "id": "AC-INT-7",
       "name": "Imputation runs after concat+dedup",
       "status": "PASS",
-      "evidence": "Pipeline code in materialize_resampled.py applies imputation on concatenated hourly data, not per-file."
+      "evidence": "Pipeline code applies imputation on concatenated hourly data, not per-file."
     },
     {
       "id": "AC-INT-8",
       "name": "Long gaps remain NaN",
       "status": "PASS",
-      "evidence": "Imputation report shows 'preserve' method for gaps exceeding interpolation limits, leaving them as NaN."
+      "evidence": "Imputation report shows 'preserve' method for gaps exceeding limits."
     },
     {
       "id": "AC-INT-9",
       "name": "FWI calculated on imputed data",
       "status": "FAIL",
-      "evidence": "cavendish has no FWI columns at all \u2014 FWI was never calculated for this station. Downstream of AC-INT-4 failure."
+      "evidence": "cavendish has no FWI columns at all \u2014 FWI was never committed for this station. Downstream of AC-INT-4 failure."
     }
   ],
-  "summary": "REJECT: cavendish station is missing all 6 FWI columns (ffmc, dmc, dc, isi, bui, fwi) in both station_hourly.csv and station_daily.csv. All other 5 stations pass. The pipeline appears to skip FWI calculation for cavendish \u2014 likely the station has data characteristics (e.g., missing required inputs like air_temperature_c at key timestamps) that cause FWI calculation to fail silently or be skipped. Ralph must fix the FWI pipeline to handle cavendish correctly or document why it should be excluded. Tests are also non-deterministic: test_hourly_csvs_have_fwi_columns and test_daily_csvs_have_fwi_columns iterate DATA_PROCESSED.iterdir() which has undefined ordering, causing intermittent pass/fail."
+  "summary": "REJECT: Same root cause as previous review \u2014 cavendish is still missing all 6 FWI columns in both station_hourly.csv and station_daily.csv. Ralph re-ran the pipeline locally (dirty working tree shows cavendish CSVs with FWI) but failed to commit the regenerated outputs. Commit 7bfbc2a modified cavendish CSVs but the committed versions still have only 11 columns. The test fixes (sorted iteration, station column in daily CSVs) are correct and improve determinism, but do not address the core issue: Ralph must re-run the pipeline AND commit the resulting cavendish outputs with FWI columns. 2 tests fail, 7 pass."
 }
