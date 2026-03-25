@@ -39,12 +39,12 @@ PHASE_ARTIFACT_EXPECTATIONS = {
         ],
         "schema_checks": {
             "station_hourly.csv": {
-                "required_columns": ["timestamp", "temp_c", "rh_pct"],
-                "no_nan_columns": ["timestamp"],
+                "required_columns": ["station", "timestamp_utc", "air_temperature_c", "relative_humidity_pct"],
+                "no_nan_columns": ["station", "timestamp_utc"],
             },
             "station_daily.csv": {
-                "required_columns": ["date", "temp_c_max", "temp_c_min"],
-                "no_nan_columns": ["date"],
+                "required_columns": ["station", "timestamp_utc", "air_temperature_c", "relative_humidity_pct"],
+                "no_nan_columns": ["station", "timestamp_utc"],
             },
         },
     },
