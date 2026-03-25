@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import pandas as pd
 
-
 # Maps common raw column prefixes (before the first parenthesis)
 # to canonical output column names.
 COLUMN_MAPS: dict[str, str] = {
@@ -55,11 +54,17 @@ COLUMN_MAPS: dict[str, str] = {
     "Water Pressure": "water_pressure_kpa",
     "Water Temp - °C": "water_temperature_c",
     "Water Temperature": "water_temperature_c",
+    # Bare prefixes (XLSX headers with sensor serials in parens)
+    "Rain": "rain_mm",
+    "Temperature": "air_temperature_c",
+    "Wind Direction": "wind_direction_deg",
+    "Wind Speed": "wind_speed_kmh",
+    "Gust Speed": "wind_gust_speed_kmh",
+    "Wind Gust Speed": "wind_gust_speed_kmh",
     # Battery
     "Battery - V": "battery_v",
     "Battery": "battery_v",
     # Temperature from ECCC
-    "Temp (°C)": "air_temperature_c",
     "Dew Point Temp (°C)": "dew_point_c",
     "Rel Hum (%)": "relative_humidity_pct",
     "Precip. Amount (mm)": "rain_mm",
@@ -70,6 +75,12 @@ COLUMN_MAPS: dict[str, str] = {
 SKIP_COLUMNS: set[str] = {
     "accumulated_rain_mm",
     "accumulated_rain",
+}
+
+# Prefixes that should be dropped entirely (never reach output)
+SKIP_PREFIXES: set[str] = {
+    "Accumulated Rain",
+    "Diff Pressure",
 }
 
 
@@ -94,15 +105,23 @@ def rename_columns(df: pd.DataFrame) -> pd.DataFrame:
     """Rename DataFrame columns using the column maps.
 
     Columns not found in the map are kept as-is.
+    Columns whose prefix matches SKIP_PREFIXES are dropped.
     """
     rename_map: dict[str, str] = {}
+    drop_cols: list[str] = []
     for col in df.columns:
         prefix = extract_prefix(col)
+        if prefix in SKIP_PREFIXES:
+            drop_cols.append(col)
+            continue
         if prefix in COLUMN_MAPS:
             target = COLUMN_MAPS[prefix]
             if target in SKIP_COLUMNS:
+                drop_cols.append(col)
                 continue
             rename_map[col] = target
+    if drop_cols:
+        df = df.drop(columns=drop_cols)
     return df.rename(columns=rename_map)
 
 

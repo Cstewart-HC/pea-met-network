@@ -35,8 +35,12 @@ def _load_peinp_csv(path: Path) -> pd.DataFrame:
 
     # Parse timestamps from Date + Time columns
     if "Date" in df.columns and "Time" in df.columns:
-        timestamp_text = df["Date"].astype(str).str.strip() + " " + df["Time"].astype(str).str.strip()
-        timestamp_utc = pd.to_datetime(timestamp_text, format="%m/%d/%Y %H:%M:%S %z", utc=True)
+        date_str = df["Date"].astype(str).str.strip()
+        time_str = df["Time"].astype(str).str.strip()
+        ts_text = date_str + " " + time_str
+        timestamp_utc = pd.to_datetime(
+            ts_text, format="%m/%d/%Y %H:%M:%S %z", utc=True
+        )
     else:
         raise ValueError(
             f"PEINP CSV missing Date/Time columns: {list(df.columns[:5])}"
@@ -86,8 +90,12 @@ def _load_eccc_csv(path: Path) -> pd.DataFrame:
     for col in df.columns:
         if "date/time" in col.lower():
             continue
-        if col in ("Longitude (x)", "Latitude (y)", "Station Name", "Climate ID",
-                    "Year", "Month", "Day", "Time (LST)", "Flag", "Weather"):
+        skip_meta = {
+            "Longitude (x)", "Latitude (y)", "Station Name",
+            "Climate ID", "Year", "Month", "Day",
+            "Time (LST)", "Flag", "Weather",
+        }
+        if col in skip_meta:
             continue
         # Skip flag columns (ending in " Flag")
         if col.strip().endswith("Flag"):
@@ -102,7 +110,7 @@ class CSVAdapter(BaseAdapter):
     """Adapter for CSV files (PEINP and ECCC formats)."""
 
     def load(self, path: Path) -> pd.DataFrame:
-        """Load a CSV file and return a DataFrame with canonical schema columns."""
+        """Load a CSV file and return canonical DataFrame."""
         df = pd.read_csv(path)
         schema = _detect_csv_schema(df)
 
@@ -111,6 +119,10 @@ class CSVAdapter(BaseAdapter):
         else:
             result = _load_peinp_csv(path)
 
-        result["station"] = "stanhope" if schema == "eccc" else result.get("station", "unknown")
+        stn = (
+            "stanhope" if schema == "eccc"
+            else result.get("station", "unknown")
+        )
+        result["station"] = stn
         result["source_file"] = str(path)
         return result

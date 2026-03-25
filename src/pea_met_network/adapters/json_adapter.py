@@ -8,8 +8,6 @@ from pathlib import Path
 import pandas as pd
 
 from pea_met_network.adapters.base import BaseAdapter
-from pea_met_network.adapters.column_maps import derive_wind_speed_kmh
-
 
 # Map Licor measurement types to canonical column names.
 # Wind speed comes in m/s from the API, so we store as wind_speed_ms
@@ -52,89 +50,78 @@ class JSONAdapter(BaseAdapter):
     """Adapter for Licor Cloud API JSON files."""
 
     def load(self, path: Path) -> pd.DataFrame:
-        """Load a Licor JSON file and return a DataFrame with canonical schema columns."""
+        """Load a Licor JSON file and return canonical DataFrame."""
         with open(path) as f:
             data = json.load(f)
 
-        # Skip non-sensor files (devices.json, etc.)
-        if "sensors" not in data:
-            return pd.DataFrame()
+        # If this is devices.json (metadata), load all sensor data files instead
+        if path.name == "devices.json" or "sensors" not in data:
+            return self._load_all_sensor_files(path.parent)
 
+        return self._load_single_sensor_file(path, data)
+
+    def _load_single_sensor_file(self, path: Path, data: dict) -> pd.DataFrame:
+        """Parse a single Licor sensor data JSON file."""
         # Locate the devices.json file (sibling or parent directory)
         devices_path = path.parent.parent / "devices.json"
         if not devices_path.exists():
             devices_path = path.parent / "devices.json"
         devices: dict = {}
         if devices_path.exists():
-            devices = _load_devices_json(devices_path)
+            with open(devices_path) as f:
+                devices = json.load(f)
 
         # Infer station from directory name (device serial)
         device_serial = path.parent.name
         station = _serial_to_station(devices, device_serial)
 
-        # Parse sensor data
+        return self._parse_sensor_data(data, station, path)
+
+    def _load_all_sensor_files(self, base_dir: Path) -> pd.DataFrame:
+        """Load all sensor data JSON files from subdirectories of base_dir."""
+        devices_path = base_dir / "devices.json"
+        devices: dict = {}
+        if devices_path.exists():
+            with open(devices_path) as f:
+                devices = json.load(f)
+
+        frames: list[pd.DataFrame] = []
+        for subdir in sorted(base_dir.iterdir()):
+            if not subdir.is_dir():
+                continue
+            for json_file in sorted(subdir.glob("*.json")):
+                try:
+                    with open(json_file) as f:
+                        data = json.load(f)
+                    if "sensors" not in data:
+                        continue
+                    device_serial = subdir.name
+                    station = _serial_to_station(devices, device_serial)
+                    df = self._parse_sensor_data(data, station, json_file)
+                    if len(df) > 0:
+                        frames.append(df)
+                except (json.JSONDecodeError, KeyError, TypeError):
+                    continue
+
+        if not frames:
+            return pd.DataFrame()
+        return pd.concat(frames, ignore_index=True)
+
+    def _parse_sensor_data(
+        self, data: dict, station: str | None, path: Path
+    ) -> pd.DataFrame:
+        """Parse sensor data from a Licor JSON dict."""
         sensors = data.get("sensors", [])
         if isinstance(sensors, dict):
             sensors = [sensors]
 
         series_map: dict[str, pd.Series] = {}
-
         for sensor in sensors:
-            serial = sensor.get("sensorSerialNumber", "")
-            data_entries = sensor.get("data", [])
-            if isinstance(data_entries, dict):
-                data_entries = [data_entries]
-
-            for entry in data_entries:
-                measurement_type = entry.get("measurementType", "")
-                units = entry.get("units", "")
-                records = entry.get("records", [])
-
-                if not records:
-                    continue
-
-                canonical_name = LICOR_MEASUREMENT_MAP.get(measurement_type)
-                if canonical_name is None:
-                    continue
-
-                # Skip accumulated rain — not in canonical schema
-                if canonical_name == "accumulated_rain_mm":
-                    continue
-
-                # Build timestamp -> value series
-                ts_vals: dict[pd.Timestamp, float] = {}
-                for record in records:
-                    if len(record) < 2:
-                        continue
-                    ts_ms, val = record[0], record[1]
-                    try:
-                        ts = pd.Timestamp(ts_ms, unit="ms", tz="UTC")
-                        ts_vals[ts] = float(val)
-                    except (ValueError, TypeError):
-                        continue
-
-                if not ts_vals:
-                    continue
-
-                # Apply unit conversions
-                conv = UNIT_CONVERSIONS.get(measurement_type, {})
-                multiplier = conv.get(units, 1.0)
-
-                s = pd.Series(ts_vals, name=canonical_name)
-                if multiplier != 1.0:
-                    s = s * multiplier
-                    # Rename if conversion changed the semantic (m/s -> km/h)
-                    if measurement_type == "Wind Speed" and units == "m/s":
-                        s.name = "wind_speed_kmh"
-                    elif measurement_type == "Gust Speed" and units == "m/s":
-                        s.name = "wind_gust_speed_kmh"
-
-                series_map[s.name] = s
+            self._extract_sensor_series(sensor, series_map)
 
         if not series_map:
             return pd.DataFrame()
 
-        # Combine all series into a DataFrame
         df = pd.DataFrame(series_map)
         df = df.sort_index()
         df.index.name = "timestamp_utc"
@@ -142,6 +129,58 @@ class JSONAdapter(BaseAdapter):
 
         if station:
             df["station"] = station
-
         df["source_file"] = str(path)
         return df
+
+    @staticmethod
+    def _extract_sensor_series(
+        sensor: dict, series_map: dict[str, pd.Series]
+    ) -> None:
+        """Extract time-series from a single sensor's data entries."""
+        data_entries = sensor.get("data", [])
+        if isinstance(data_entries, dict):
+            data_entries = [data_entries]
+
+        for entry in data_entries:
+            mtype = entry.get("measurementType", "")
+            units = entry.get("units", "")
+            records = entry.get("records", [])
+            if not records:
+                continue
+
+            canonical = LICOR_MEASUREMENT_MAP.get(mtype)
+            if canonical is None or canonical == "accumulated_rain_mm":
+                continue
+
+            ts_vals = JSONAdapter._records_to_series(records)
+            if not ts_vals:
+                continue
+
+            conv = UNIT_CONVERSIONS.get(mtype, {})
+            multiplier = conv.get(units, 1.0)
+            s = pd.Series(ts_vals, name=canonical)
+
+            if multiplier != 1.0:
+                s = s * multiplier
+                if mtype == "Wind Speed" and units == "m/s":
+                    s.name = "wind_speed_kmh"
+                elif mtype == "Gust Speed" and units == "m/s":
+                    s.name = "wind_gust_speed_kmh"
+
+            series_map[s.name] = s
+
+    @staticmethod
+    def _records_to_series(
+        records: list,
+    ) -> dict[pd.Timestamp, float]:
+        """Convert raw record pairs [ts_ms, val] to a timestamp dict."""
+        ts_vals: dict[pd.Timestamp, float] = {}
+        for record in records:
+            if len(record) < 2:
+                continue
+            try:
+                ts = pd.Timestamp(record[0], unit="ms", tz="UTC")
+                ts_vals[ts] = float(record[1])
+            except (ValueError, TypeError):
+                continue
+        return ts_vals

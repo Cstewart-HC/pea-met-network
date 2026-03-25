@@ -14,7 +14,7 @@ class XLEAdapter(BaseAdapter):
     """Adapter for Solinst XLE XML files."""
 
     def load(self, path: Path) -> pd.DataFrame:
-        """Load an XLE file and return a DataFrame with canonical schema columns."""
+        """Load an XLE file and return canonical DataFrame."""
         tree = ET.parse(path)
         root = tree.getroot()
 
@@ -76,4 +76,29 @@ class XLEAdapter(BaseAdapter):
                 df[col] = pd.to_numeric(df[col], errors="coerce")
 
         df["source_file"] = str(path)
+
+        # Infer station from file path
+        station = self._infer_station(path)
+        if station:
+            df["station"] = station
+
         return df
+
+    @staticmethod
+    def _infer_station(path: Path) -> str | None:
+        """Infer station name from the XLE file path."""
+        p = str(path).lower()
+        mapping = {
+            "greenwich": "greenwich",
+            "cavendish": "cavendish",
+            "north_rustico": "north_rustico",
+            "north rustico": "north_rustico",
+            "stanley_bridge": "stanley_bridge",
+            "stanley bridge": "stanley_bridge",
+            "tracadie": "tracadie",
+            "stanhope": "stanhope",
+        }
+        for keyword, name in mapping.items():
+            if keyword in p:
+                return name
+        return None

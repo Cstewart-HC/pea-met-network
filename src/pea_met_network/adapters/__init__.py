@@ -7,9 +7,12 @@ Exports:
     BaseAdapter — abstract base class
 """
 
-from pea_met_network.adapters.registry import ADAPTER_REGISTRY, route_by_extension
-from pea_met_network.adapters.schema import CANONICAL_SCHEMA
 from pea_met_network.adapters.base import BaseAdapter
+from pea_met_network.adapters.registry import (
+    ADAPTER_REGISTRY,
+    route_by_extension,
+)
+from pea_met_network.adapters.schema import CANONICAL_SCHEMA
 
 __all__ = [
     "ADAPTER_REGISTRY",
