@@ -30,6 +30,30 @@ completing each individual file, test, or logical step (for example:
 Do NOT wait until all deliverables are finished. Every completed unit of work
 must be checkpointed with a commit immediately.
 
+### ⚠️ CRITICAL: Pipeline Output Commit Rule
+
+If you run the pipeline (e.g., `python -m src.cleaning` or any script that
+regenerates `data/processed/` files), you MUST commit ALL generated data
+files before finishing your loop iteration:
+
+```bash
+git add data/processed/
+git commit -m "data: regenerate processed outputs"
+```
+
+**Why:** Lisa reviews committed files, not the working tree. If you run
+the pipeline and do NOT commit the outputs, Lisa will either review stale
+data or see an uncommitted dirty working tree. Either way: false REJECT.
+
+This rule applies even if only some stations changed. Commit all of
+`data/processed/` — partial commits cause mismatched station data.
+
+**Before running the pipeline:** If the working tree is already dirty with
+pipeline outputs from a previous run, decide:
+- If the existing data looks correct → commit it as-is first
+- If it looks broken → `git checkout -- data/processed/` to restore HEAD,
+  then re-run the pipeline and commit the fresh output
+
 ## Startup
 
 ### Step 0: Read the Codemap (SAVE ITERATIONS)
@@ -142,6 +166,8 @@ or bugs in ANY file, they are your responsibility.
 - Do NOT modify docs/validation.json directly
 - Do NOT batch multiple greenfield tasks in one loop
 - Do NOT let finished work sit uncommitted in the sandbox
+- Do NOT run the pipeline without committing the resulting data/processed/ files
+- Do NOT leave data/processed/ in a dirty state when your loop iteration ends
 
 ## Escalation
 
