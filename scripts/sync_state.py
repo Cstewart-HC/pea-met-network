@@ -54,18 +54,68 @@ def run_cmd(cmd: str, timeout: int = 60) -> tuple[bool, str]:
         return False, str(e)[:300]
 
 
+def _normalize_state(state: dict) -> dict:
+    """Normalize state to the expected internal format.
+
+    v2 state files use a list of phase dicts keyed by 'id' and
+    'current_phase' as an int.  Convert those to the dict-of-dicts
+    layout that the rest of sync_state.py expects.
+    """
+    phases = state.get("phases")
+    if isinstance(phases, list):
+        # v2 format: list of {"id": N, ...} -> {"1": {...}, ...}
+        phase_map = {}
+        for p in phases:
+            key = str(p["id"])
+            # v2 uses "exit_gate"; v1 uses "exit" — normalise to "exit"
+            if "exit_gate" in p and "exit" not in p:
+                p["exit"] = p["exit_gate"]
+            phase_map[key] = p
+        state["phases"] = phase_map
+
+    # Normalise the current-phase key
+    if "phase" not in state and "current_phase" in state:
+        state["phase"] = str(state["current_phase"])
+    elif "phase" in state:
+        state["phase"] = str(state["phase"])
+
+    return state
+
+
+# Remember whether the original file used a list so we can round-trip.
+_PHASES_WAS_LIST = False
+
+
 def load_state() -> dict:
+    global _PHASES_WAS_LIST
     if STATE_FILE.exists():
         with open(STATE_FILE) as f:
-            return json.load(f)
+            raw = json.load(f)
+        _PHASES_WAS_LIST = isinstance(raw.get("phases"), list)
+        return _normalize_state(raw)
     print("ralph-state.json not found", file=sys.stderr)
     sys.exit(1)
 
 
+def _denormalize_state(state: dict) -> dict:
+    """Convert internal dict-of-dicts back to list format if needed."""
+    out = dict(state)
+    if _PHASES_WAS_LIST and isinstance(out.get("phases"), dict):
+        out["phases"] = sorted(
+            out["phases"].values(), key=lambda p: p["id"]
+        )
+        try:
+            out["current_phase"] = int(out.get("phase", out.get("current_phase", 1)))
+        except (ValueError, TypeError):
+            pass
+    return out
+
+
 def save_state(state: dict) -> None:
     state["updated_at"] = datetime.now(timezone.utc).astimezone().isoformat()
+    out = _denormalize_state(state)
     tmp = STATE_FILE.with_suffix("..tmp")
-    tmp.write_text(json.dumps(state, indent=2) + "\n")
+    tmp.write_text(json.dumps(out, indent=2) + "\n")
     tmp.replace(STATE_FILE)
 
 
