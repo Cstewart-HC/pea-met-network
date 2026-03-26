@@ -630,12 +630,45 @@ def verify_determinism(
     return current == previous
 
 
+def should_process(station: str, force: bool = False) -> bool:
+    """Check whether a station needs reprocessing.
+
+    Returns True if:
+      - force is True, OR
+      - no output exists yet, OR
+      - any raw input is newer than the most recent output.
+    """
+    if force:
+        return True
+
+    out_dir = PROCESSED_DIR / station
+    hourly_path = out_dir / "station_hourly.csv"
+    if not hourly_path.exists():
+        return True
+
+    # Latest output mtime
+    latest_output = max(
+        (f.stat().st_mtime for f in out_dir.iterdir() if f.is_file()),
+        default=0,
+    )
+
+    # Earliest raw input mtime for this station
+    station_files = discover_raw_files()
+    raw_paths = station_files.get(station, [])
+    if not raw_paths:
+        return False
+
+    latest_input = max(f.stat().st_mtime for f in raw_paths if f.exists())
+
+    return latest_input > latest_output
+
+
 # ---------------------------------------------------------------------------
 # Main pipeline
 # ---------------------------------------------------------------------------
 
 
-def run_pipeline(stations: list[str]) -> None:
+def run_pipeline(stations: list[str], force: bool = False) -> None:
     """Execute the full pipeline for given stations."""
     print(f"Pipeline: {len(stations)} stations")
 
@@ -647,6 +680,10 @@ def run_pipeline(stations: list[str]) -> None:
     all_daily: list[pd.DataFrame] = []
 
     for station in stations:
+        if not should_process(station, force=force):
+            print(f"  {station}: skipping (output up to date)")
+            continue
+
         if station not in station_dfs:
             print(f"  WARNING: no data for {station}", file=sys.stderr)
             continue
@@ -766,6 +803,12 @@ def main() -> None:
             f"Known: {', '.join(ALL_STATIONS)}"
         ),
     )
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        default=False,
+        help="Force reprocessing even if outputs are up to date",
+    )
     args = parser.parse_args()
 
     if args.stations.lower() == "all":
@@ -782,7 +825,7 @@ def main() -> None:
         )
         sys.exit(1)
 
-    run_pipeline(target)
+    run_pipeline(target, force=args.force)
 
 
 if __name__ == "__main__":
