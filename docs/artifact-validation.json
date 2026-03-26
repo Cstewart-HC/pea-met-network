@@ -1,7 +1,7 @@
 {
   "phase": "3",
-  "timestamp": "2026-03-25T22:30:23.581015+00:00",
-  "verdict": "PASS",
+  "timestamp": "2026-03-26T01:52:41.045866+00:00",
+  "verdict": "FAIL",
   "checks": [
     {
       "type": "directory",
@@ -55,39 +55,39 @@
       "type": "file_exists",
       "path": "data/processed/greenwich/station_hourly.csv",
       "status": "PASS",
-      "fingerprint": "d410b06d5935373e"
+      "fingerprint": "1810aee68cebbfc1"
     },
     {
       "type": "row_count",
       "path": "data/processed/greenwich/station_hourly.csv",
       "status": "PASS",
-      "message": "28715 rows",
-      "row_count": 28715
+      "message": "220564 rows",
+      "row_count": 220564
     },
     {
       "type": "schema",
       "path": "data/processed/greenwich/station_hourly.csv",
-      "status": "PASS",
-      "message": "Schema OK (101 rows checked)"
+      "status": "FAIL",
+      "message": "Found 75 NaN/null values in primary key 'station' in /mnt/fast_data/workspaces/pea-met-network/data/processed/greenwich/station_hourly.csv"
     },
     {
       "type": "file_exists",
       "path": "data/processed/greenwich/station_daily.csv",
       "status": "PASS",
-      "fingerprint": "30364bc7504e1a25"
+      "fingerprint": "458850ef9dbb155e"
     },
     {
       "type": "row_count",
       "path": "data/processed/greenwich/station_daily.csv",
       "status": "PASS",
-      "message": "1241 rows",
-      "row_count": 1241
+      "message": "9191 rows",
+      "row_count": 9191
     },
     {
       "type": "schema",
       "path": "data/processed/greenwich/station_daily.csv",
-      "status": "PASS",
-      "message": "Schema OK (101 rows checked)"
+      "status": "FAIL",
+      "message": "Found 95 NaN/null values in primary key 'station' in /mnt/fast_data/workspaces/pea-met-network/data/processed/greenwich/station_daily.csv"
     },
     {
       "type": "pipeline_manifest",
@@ -96,12 +96,15 @@
       "message": "Found 417 artifacts"
     }
   ],
-  "errors": [],
+  "errors": [
+    "Found 75 NaN/null values in primary key 'station' in /mnt/fast_data/workspaces/pea-met-network/data/processed/greenwich/station_hourly.csv",
+    "Found 95 NaN/null values in primary key 'station' in /mnt/fast_data/workspaces/pea-met-network/data/processed/greenwich/station_daily.csv"
+  ],
   "fingerprints": {
     "data/processed/cavendish/station_hourly.csv": "84b09fada5150c4b",
     "data/processed/cavendish/station_daily.csv": "b02c586d88193c33",
-    "data/processed/greenwich/station_hourly.csv": "d410b06d5935373e",
-    "data/processed/greenwich/station_daily.csv": "30364bc7504e1a25"
+    "data/processed/greenwich/station_hourly.csv": "1810aee68cebbfc1",
+    "data/processed/greenwich/station_daily.csv": "458850ef9dbb155e"
   },
-  "summary": "Validated 15 checks for phase 3: PASS (0 errors)"
+  "summary": "Validated 15 checks for phase 3: FAIL (2 errors)"
 }
