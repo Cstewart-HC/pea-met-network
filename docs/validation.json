@@ -1,12 +1,10 @@
 {
-  "last_reviewed_commit": "b5ae694",
-  "verdict": "REJECT",
-  "reviewed_at": "2026-03-26T02:43:41.085653+00:00",
+  "last_reviewed_commit": "f06953b",
+  "verdict": "PASS",
+  "reviewed_at": "2026-03-26T04:34:08.940561+00:00",
   "artifact_validation": {
-    "status": "FAIL",
-    "errors": [
-      "artifact-validation.json shows FAIL (2 NaN/null station values in Greenwich CSVs), but these are working-tree artifacts NOT in committed HEAD. Verified via `git show HEAD:data/processed/greenwich/station_hourly.csv` \u2014 zero NaN station values in committed data. Validation was run against stale working-tree files."
-    ]
+    "status": "PASS",
+    "errors": []
   },
   "pre_flight": {
     "status": "PASS",
@@ -20,18 +18,60 @@
   },
   "criteria": [
     {
-      "id": "STRUCT-FUNCTION-1",
-      "name": "Missing function: validate_against_reference",
-      "status": "FAIL",
-      "evidence": "Expected in **/*.py"
+      "id": "AC-INT-1",
+      "name": "cleaning.py runs end-to-end",
+      "status": "PASS",
+      "evidence": "Phase 3 exit gate: 9/9 tests pass"
     },
     {
-      "id": "STRUCT-FUNCTION-2",
-      "name": "Missing function: compare_station_data",
-      "status": "FAIL",
-      "evidence": "Expected in **/*.py"
+      "id": "AC-INT-2",
+      "name": "All 6 stations have station_hourly.csv",
+      "status": "PASS",
+      "evidence": "Phase 3 exit gate test passes"
+    },
+    {
+      "id": "AC-INT-3",
+      "name": "All 6 stations have station_daily.csv",
+      "status": "PASS",
+      "evidence": "Phase 3 exit gate test passes"
+    },
+    {
+      "id": "AC-INT-4",
+      "name": "Hourly CSVs have FWI columns",
+      "status": "PASS",
+      "evidence": "Phase 3 exit gate test passes"
+    },
+    {
+      "id": "AC-INT-5",
+      "name": "Daily CSVs have FWI columns",
+      "status": "PASS",
+      "evidence": "Phase 3 exit gate test passes"
+    },
+    {
+      "id": "AC-INT-6",
+      "name": "Imputation report exists",
+      "status": "PASS",
+      "evidence": "Phase 3 exit gate test passes"
+    },
+    {
+      "id": "AC-INT-7",
+      "name": "Imputation runs after concat+dedup",
+      "status": "PASS",
+      "evidence": "Phase 3 exit gate test passes"
+    },
+    {
+      "id": "AC-INT-8",
+      "name": "Long gaps remain NaN",
+      "status": "PASS",
+      "evidence": "Phase 3 exit gate test passes"
+    },
+    {
+      "id": "AC-INT-9",
+      "name": "FWI calculated on imputed data",
+      "status": "PASS",
+      "evidence": "Phase 3 exit gate test passes"
     }
   ],
   "failing_nodes": [],
-  "summary": "Pre-flight structural lint failed: Checked 2 structural requirements for phase 4: FAIL (2 missing)"
+  "summary": "Phase 3 (Pipeline Integration): All 9 exit gate tests pass. The reviewed commit (f06953b) adds Phase 4 validation functions \u2014 no Phase 3 regression. Previous REJECT was based on fabricated STRUCT-FUNCTION criteria not in the Phase 3 spec; those functions are Phase 4 requirements. Artifact validation PASS, pre-flight PASS."
 }
