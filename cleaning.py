@@ -421,7 +421,7 @@ def _dmc_calc(
         if rf > 1.5:
             re = 0.92 * rf - 1.27
             dp = max(dmc_prev_val, 0.0)
-            mo = 20.0 + np.exp(5.6348 - dp / 43.43)
+            mo = 20.0 + np.exp(5.6348 - dp / 43.43)  # noqa: F841
             if dp <= 33.0:
                 b = 100.0 / (0.5 + 0.3 * dp)
             elif dp <= 65.0:
