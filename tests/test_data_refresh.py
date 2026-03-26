@@ -61,6 +61,7 @@ class TestACREF2_ThreeSensorNR:
     """AC-REF-2: normalized_loader handles 3-sensor NR CSVs."""
 
     def test_north_rustico_dec2022_loads_without_error(self):
+        import pandas as pd
         from pea_met_network.manifest import build_raw_manifest
         from pea_met_network.normalized_loader import (
             load_normalized_station_csv,

@@ -6,6 +6,7 @@ on the cleaned test data.
 
 from pathlib import Path
 
+import pytest
 import nbformat
 from nbconvert.preprocessors import ExecutePreprocessor
 
@@ -32,6 +33,7 @@ def test_notebook_is_valid_json():
     )
 
 
+@pytest.mark.e2e
 def test_notebook_executes_without_error():
     """The notebook must execute end-to-end on cleaned data without errors."""
     nb = nbformat.read(str(NOTEBOOK_PATH), as_version=4)

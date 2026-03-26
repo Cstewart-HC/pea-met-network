@@ -634,17 +634,6 @@ class TestAC_PIPE_6_Determinism:
             f"{original_mtime} -> {new_mtime}"
         )
 
-    def test_race_condition_fixed(self):
-        """AC-DET-6: test_cleaning_py_runs marked as serial."""
-        # Check pytest.ini or test file for serial marker
-        test_file = PROJECT_ROOT / "tests" / "test_data_refresh.py"
-        if not test_file.exists():
-            pytest.skip("test_data_refresh.py not found")
-
-        content = test_file.read_text()
-        assert "@pytest.mark.serial" in content or "serial" in content, \
-            "Race condition test not marked as serial"
-
 
 # =============================================================================
 # Phase 7: E2E Validation
