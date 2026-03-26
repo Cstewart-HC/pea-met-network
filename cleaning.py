@@ -25,6 +25,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 from pea_met_network.adapters.registry import route_by_extension  # noqa: E402
+from pea_met_network.qa_qc import generate_qa_qc_report  # noqa: E402
 
 RAW_DIR = PROJECT_ROOT / "data" / "raw"
 PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
@@ -607,6 +608,8 @@ def run_pipeline(stations: list[str]) -> None:
     station_dfs = load_all_files(station_files, stations)
 
     all_reports: list[dict] = []
+    all_hourly: list[pd.DataFrame] = []
+    all_daily: list[pd.DataFrame] = []
 
     for station in stations:
         if station not in station_dfs:
@@ -643,6 +646,9 @@ def run_pipeline(stations: list[str]) -> None:
         daily.to_csv(daily_path, index=False)
         print(f"  {station}: {len(daily)} daily rows")
 
+        all_hourly.append(hourly)
+        all_daily.append(daily)
+
     # Write combined imputation report
     report_df = pd.DataFrame(
         all_reports,
@@ -658,6 +664,15 @@ def run_pipeline(stations: list[str]) -> None:
     report_path = PROCESSED_DIR / "imputation_report.csv"
     report_df.to_csv(report_path, index=False)
     print(f"  Imputation report: {len(report_df)} entries")
+
+    # QA/QC report
+    if all_hourly and all_daily:
+        combined_hourly = pd.concat(all_hourly, ignore_index=True)
+        combined_daily = pd.concat(all_daily, ignore_index=True)
+        qa_qc_df = generate_qa_qc_report(combined_hourly, combined_daily)
+        qa_qc_path = PROCESSED_DIR / "qa_qc_report.csv"
+        qa_qc_df.to_csv(qa_qc_path, index=False)
+        print(f"  QA/QC report: {len(qa_qc_df)} stations")
 
     print("Done.")
 
