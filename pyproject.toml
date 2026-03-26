@@ -64,3 +64,9 @@ max-complexity = 15
 minversion = "8.0"
 addopts = "-q"
 testpaths = ["tests"]
+timeout = 300
+markers = [
+    "e2e: end-to-end pipeline tests",
+    "slow: tests that take > 30s",
+    "integration: tests requiring external services",
+]

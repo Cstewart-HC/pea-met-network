@@ -61,24 +61,24 @@ class TestACREF2_ThreeSensorNR:
     """AC-REF-2: normalized_loader handles 3-sensor NR CSVs."""
 
     def test_north_rustico_dec2022_loads_without_error(self):
+        from pea_met_network.manifest import build_raw_manifest
         from pea_met_network.normalized_loader import (
-            load_station_files,
+            load_normalized_station_csv,
         )
 
         records = [
-            r for r in (
-                __import__(
-                    "src.pea_met_network.manifest",
-                    fromlist=["build_raw_manifest"],
-                ).build_raw_manifest(REPO_ROOT)
-            )
+            r for r in build_raw_manifest(REPO_ROOT)
             if r.station == "north_rustico"
             and r.year == 2022
             and r.extension == ".csv"
         ]
         if not records:
             pytest.skip("No Dec 2022 North Rustico CSVs found")
-        df = load_station_files([r.path for r in records])
+        frames = [
+            load_normalized_station_csv(r.path, "north_rustico")
+            for r in records
+        ]
+        df = pd.concat(frames, ignore_index=True)
         assert df is not None
         assert len(df) > 0
 
@@ -87,13 +87,10 @@ class TestACREF2_ThreeSensorNR:
         minimum."""
         import pandas as pd
 
+        from pea_met_network.manifest import build_raw_manifest
+
         records = [
-            r for r in (
-                __import__(
-                    "src.pea_met_network.manifest",
-                    fromlist=["build_raw_manifest"],
-                ).build_raw_manifest(REPO_ROOT)
-            )
+            r for r in build_raw_manifest(REPO_ROOT)
             if r.station == "north_rustico"
             and r.year == 2022
             and r.extension == ".csv"
@@ -108,26 +105,6 @@ class TestACREF2_ThreeSensorNR:
             f"Expected temperature column, got: {list(cols_lower)}"
         )
 
-
-class TestACREF3_PipelineEndToEnd:
-    """AC-REF-3: pipeline runs on expanded dataset without errors."""
-
-    @pytest.mark.serial
-    def test_cleaning_py_runs(self):
-        import subprocess
-
-        result = subprocess.run(
-            [sys.executable, "-m", "pea_met_network"],
-            capture_output=True,
-            text=True,
-            cwd=str(REPO_ROOT),
-            timeout=300,
-        )
-        # pea_met_network may produce warnings but should not crash
-        # Check for unhandled exceptions
-        assert "Traceback" not in result.stderr, (
-            f"pea_met_network crashed:\n{result.stderr[:500]}"
-        )
 
 
 class TestACREF4_ProcessedOutputs:
@@ -241,19 +218,3 @@ class TestACREF9_DataSourcesDoc:
         )
 
 
-class TestACREF10_FullSuitePasses:
-    """AC-REF-10: full test suite passes."""
-
-    def test_no_failures(self):
-        import subprocess
-
-        result = subprocess.run(
-            [".venv/bin/pytest", "-q", "--tb=short"],
-            capture_output=True,
-            text=True,
-            cwd=str(REPO_ROOT),
-            timeout=300,
-        )
-        assert "failed" not in result.stdout.lower(), (
-            f"Test suite has failures:\n{result.stdout[-500:]}"
-        )

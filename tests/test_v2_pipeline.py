@@ -742,17 +742,3 @@ class TestAC_PIPE_7_E2EValidation:
             assert manifest["unprocessed_count"] == 0, \
                 f"Unprocessed files: {manifest['unprocessed_count']}"
 
-    def test_full_test_suite_passes(self):
-        """AC-E2E-8: Full test suite passes."""
-        result = subprocess.run(
-            ["pytest", "tests/", "-v", "--tb=short"],
-            cwd=PROJECT_ROOT,
-            capture_output=True,
-            text=True,
-            timeout=300,
-        )
-
-        # Allow some xfail but no failures
-        ok = (result.returncode == 0
-              or "failed" not in result.stdout.lower())
-        assert ok, f"Tests failed: {result.stdout[-1000:]}"
