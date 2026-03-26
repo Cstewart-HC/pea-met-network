@@ -1,16 +1,18 @@
 {
-  "last_reviewed_commit": "a7f332f",
-  "verdict": "PENDING",
-  "reviewed_at": "2026-03-26T11:43:30.432566+00:00",
+  "last_reviewed_commit": "14456c0",
+  "verdict": "REJECT",
+  "reviewed_at": "2026-03-26T12:18:52.100104+00:00",
   "artifact_validation": {
-    "status": "PASS",
-    "errors": []
+    "status": "SKIP",
+    "errors": [
+      "No phase-6 artifact validation run; artifact-validation.json is from phase 5."
+    ]
   },
   "pre_flight": {
     "status": "FAIL",
     "missing": [
-      "generate_qa_qc_report (stale pre-flight \u2014 function exists at src/pea_met_network/qa_qc.py:147)",
-      "calculate_completeness (stale pre-flight \u2014 function exists at src/pea_met_network/qa_qc.py:126)"
+      "compute_checksum (function not found in src/)",
+      "verify_determinism (function not found in src/)"
     ]
   },
   "architecture_check": {
@@ -19,7 +21,76 @@
     "canonical_schema_compliant": true,
     "issues": []
   },
-  "criteria": [],
-  "failing_nodes": [],
-  "summary": "Phase 6 activated; awaiting Lisa review."
+  "criteria": [
+    {
+      "id": "AC-DET-1",
+      "name": "Byte-identical outputs on re-run",
+      "status": "PASS",
+      "evidence": "test_deterministic_outputs passes \u2014 resampling.py:112 sorts by (station, timestamp_utc)."
+    },
+    {
+      "id": "AC-DET-2",
+      "name": "Outputs sorted by (station, timestamp_utc)",
+      "status": "PASS",
+      "evidence": "resampling.py:112 uses sort_values([STATION_COLUMN, TIMESTAMP_COLUMN]). test_sorted_outputs passes."
+    },
+    {
+      "id": "AC-DET-3",
+      "name": "Deterministic column order (alphabetical)",
+      "status": "FAIL",
+      "evidence": "test_column_order_is_deterministic FAILS. CSV columns not in alphabetical order. cleaning.py does not apply sorted() to columns before writing. At src/pea_met_network/cleaning.py output section."
+    },
+    {
+      "id": "AC-DET-4",
+      "name": "Pipeline manifest includes SHA256 checksums",
+      "status": "FAIL",
+      "evidence": "test_manifest_has_checksums FAILS. pipeline_manifest.json has no 'checksums' key. cleaning.py writes manifest but never computes SHA256 hashes for output files."
+    },
+    {
+      "id": "AC-DET-5",
+      "name": "--force flag with skip-if-newer logic",
+      "status": "PASS",
+      "evidence": "test_force_flag_overwrites passes. Tests confirm --force is accepted and processed."
+    },
+    {
+      "id": "AC-DET-6",
+      "name": "Race condition fix (serial marker)",
+      "status": "FAIL",
+      "evidence": "test_race_condition_fixed FAILS. test_data_refresh.py does not contain @pytest.mark.serial marker."
+    },
+    {
+      "id": "AC-DET-7",
+      "name": "Checksum comparison between runs",
+      "status": "PASS",
+      "evidence": "test_checksum_comparison passes \u2014 SHA256 checksums of hourly CSV match between two runs."
+    }
+  ],
+  "failing_nodes": [
+    {
+      "file": "src/pea_met_network/cleaning.py",
+      "line": 0,
+      "message": "Missing deterministic column ordering (AC-DET-3)"
+    },
+    {
+      "file": "src/pea_met_network/cleaning.py",
+      "line": 0,
+      "message": "Pipeline manifest missing SHA256 checksums (AC-DET-4)"
+    },
+    {
+      "file": "tests/test_data_refresh.py",
+      "line": 0,
+      "message": "Race condition test not marked serial (AC-DET-6)"
+    },
+    {
+      "file": "src/pea_met_network/cleaning.py",
+      "line": 0,
+      "message": "compute_checksum function not implemented (pre-flight)"
+    },
+    {
+      "file": "src/pea_met_network/cleaning.py",
+      "line": 0,
+      "message": "verify_determinism function not implemented (pre-flight)"
+    }
+  ],
+  "summary": "Phase 6 REJECT: 3 of 7 acceptance criteria fail. Column order is not deterministic (AC-DET-3), pipeline manifest lacks SHA256 checksums (AC-DET-4), and the race condition test is not marked serial (AC-DET-6). Pre-flight also fails for two required functions (compute_checksum, verify_determinism) that are not implemented. Ralph needs to: (1) sort columns alphabetically before CSV write in cleaning.py, (2) add SHA256 checksum computation to the manifest writer, (3) add @pytest.mark.serial to test_data_refresh.py, and (4) implement compute_checksum and verify_determinism functions as required by pre_flight.py."
 }
