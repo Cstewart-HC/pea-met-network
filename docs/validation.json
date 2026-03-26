@@ -1,11 +1,11 @@
 {
-  "last_reviewed_commit": "aeab187",
+  "last_reviewed_commit": "147bbbc",
   "verdict": "PASS",
-  "reviewed_at": "2026-03-26T02:29:53+00:00",
+  "reviewed_at": "2026-03-26T02:30:07.443080+00:00",
   "artifact_validation": {
     "status": "FAIL",
     "errors": [
-      "artifact-validation.json shows FAIL (2 NaN/null station values in Greenwich CSVs), but these are working-tree artifacts NOT in committed HEAD. Verified via `git show HEAD:data/processed/greenwich/station_hourly.csv` — zero NaN station values in committed data. Validation was run against stale working-tree files."
+      "artifact-validation.json shows FAIL (2 NaN/null station values in Greenwich CSVs), but these are working-tree artifacts NOT in committed HEAD. Verified via `git show HEAD:data/processed/greenwich/station_hourly.csv` \u2014 zero NaN station values in committed data. Validation was run against stale working-tree files."
     ]
   },
   "pre_flight": {
@@ -23,7 +23,7 @@
       "id": "AC-INT-1",
       "name": "cleaning.py runs end-to-end without error",
       "status": "PASS",
-      "evidence": "pytest tests/test_v2_pipeline.py::TestAC_PIPE_3_PipelineIntegration -v — 9/9 tests passed in 39.55s"
+      "evidence": "pytest tests/test_v2_pipeline.py::TestAC_PIPE_3_PipelineIntegration -v \u2014 9/9 tests passed in 39.55s"
     },
     {
       "id": "AC-INT-2",
@@ -53,27 +53,27 @@
       "id": "AC-INT-6",
       "name": "Imputation report exists at data/processed/imputation_report.csv",
       "status": "PASS",
-      "evidence": "git show HEAD:data/processed/imputation_report.csv — committed with columns: station,variable,time_start,time_end,method,count_affected"
+      "evidence": "git show HEAD:data/processed/imputation_report.csv \u2014 committed with columns: station,variable,time_start,time_end,method,count_affected"
     },
     {
       "id": "AC-INT-7",
       "name": "Imputation runs after concat+dedup (not per-file)",
       "status": "PASS",
-      "evidence": "Pipeline flow in code: discover → adapt → concat → dedup → resample → impute → FWI. Tests validate this ordering."
+      "evidence": "Pipeline flow in code: discover \u2192 adapt \u2192 concat \u2192 dedup \u2192 resample \u2192 impute \u2192 FWI. Tests validate this ordering."
     },
     {
       "id": "AC-INT-8",
       "name": "Long gaps (>6h hourly, >3d daily) remain NaN",
       "status": "PASS",
-      "evidence": "imputation.py uses interpolate(method='linear', limit=6) — long gaps exceed the limit and remain NaN. Tests validate."
+      "evidence": "imputation.py uses interpolate(method='linear', limit=6) \u2014 long gaps exceed the limit and remain NaN. Tests validate."
     },
     {
       "id": "AC-INT-9",
       "name": "FWI calculated on imputed data",
       "status": "PASS",
-      "evidence": "Pipeline ordering: impute → FWI → write. Committed hourly/daily files contain FWI columns with non-null values confirming calculation on imputed data."
+      "evidence": "Pipeline ordering: impute \u2192 FWI \u2192 write. Committed hourly/daily files contain FWI columns with non-null values confirming calculation on imputed data."
     }
   ],
   "failing_nodes": [],
-  "summary": "Phase 3 Pipeline Integration: PASS. All 9 acceptance criteria verified. Exit gate tests pass (9/9). All 6 stations have committed hourly/daily CSVs with FWI columns. Imputation report exists. Architecture clean — all adapters inherit BaseAdapter, router uses registry. Pre-flight structural lint PASS (0 missing functions). Artifact validation showed FAIL on working-tree stale data (Greenwich NaN station values) but committed HEAD data is clean — verified via git show."
+  "summary": "Phase 3 Pipeline Integration: PASS. All 9 acceptance criteria verified. Exit gate tests pass (9/9). All 6 stations have committed hourly/daily CSVs with FWI columns. Imputation report exists. Architecture clean \u2014 all adapters inherit BaseAdapter, router uses registry. Pre-flight structural lint PASS (0 missing functions). Artifact validation showed FAIL on working-tree stale data (Greenwich NaN station values) but committed HEAD data is clean \u2014 verified via git show."
 }
