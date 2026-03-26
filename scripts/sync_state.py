@@ -802,9 +802,172 @@ def auto_commit_if_changed() -> bool:
     return False
 
 
+def handle_management_command(argv: list[str]) -> bool:
+    """Handle CLI commands for external state management.
+
+    Returns True if a management command was handled (caller should exit).
+    These commands bypass the main sync loop and operate directly on state files.
+    """
+    args = set(argv)
+
+    # --- get-state ---
+    if "--get-state" in args:
+        state_mgr = StateManager()
+        state = state_mgr.load_state()
+        validation = state_mgr.load_validation()
+        output = {
+            "phase": state.get("phase", "?"),
+            "phase_name": state.get("phases", {}).get(str(state.get("phase", "?")), {}).get("name", "unknown"),
+            "iteration": state.get("iteration", 0),
+            "status": state.get("status", "unknown"),
+            "verdict": get_validation_verdict(validation) if validation else "NONE",
+            "head_sha": get_head_sha(),
+            "circuit_breaker": state.get("circuit_breaker", {}),
+            "blocker": state.get("blocker"),
+            "phases": {
+                k: {"name": v.get("name"), "status": v.get("status")}
+                for k, v in state.get("phases", {}).items()
+            },
+        }
+        print(json.dumps(output, indent=2))
+        return True
+
+    # --- set-phase ---
+    if "--set-phase" in args:
+        idx = argv.index("--set-phase")
+        if idx + 1 >= len(argv):
+            print("ERROR: --set-phase requires a phase number argument", file=sys.stderr)
+            sys.exit(1)
+        new_phase = argv[idx + 1]
+
+        state_mgr = StateManager()
+        state = state_mgr.load_state()
+        phases = state.get("phases", {})
+
+        if new_phase not in phases:
+            print(f"ERROR: phase '{new_phase}' not found. Available: {sorted(phases.keys())}", file=sys.stderr)
+            sys.exit(1)
+
+        # Deactivate current phase
+        current = str(state.get("phase", "?"))
+        if current in phases:
+            phases[current]["status"] = "pending"
+
+        # Activate new phase and reset all subsequent phases
+        state["phase"] = new_phase
+        phases[new_phase]["status"] = "active"
+        state["iteration"] = 0
+
+        # Reset all phases after the target to pending
+        activated = False
+        for p_num in sorted(phases.keys(), key=_phase_sort_key):
+            if p_num == new_phase:
+                activated = True
+                continue
+            if activated:
+                phases[p_num]["status"] = "pending"
+
+        # Reset validation
+        validation = state_mgr.load_validation() or {}
+        validation["verdict"] = "PENDING"
+        validation["criteria"] = []
+        validation["summary"] = f"Phase {new_phase} activated; awaiting review."
+        validation["reviewed_at"] = datetime.now(timezone.utc).astimezone().isoformat()
+        validation["last_reviewed_commit"] = get_head_sha()
+
+        # Reset circuit breaker
+        cb = state.get("circuit_breaker", {})
+        cb["tripped"] = False
+        cb["trip_reason"] = None
+        cb["trip_at"] = None
+        cb["consecutive_stalls"] = 0
+        cb["consecutive_errors"] = 0
+        cb["last_commit"] = None
+        cb["last_verdict"] = None
+        cb["last_fail_criteria_hash"] = None
+        state["circuit_breaker"] = cb
+
+        # Clear blocker
+        state["blocker"] = None
+        state["status"] = "running"
+
+        state_mgr.save_state(state)
+        state_mgr.save_validation(validation)
+
+        print(f"PHASE_SET={new_phase}")
+        print(f"PHASE_NAME={phases[new_phase].get('name', 'unknown')}")
+        print(f"ITERATION_RESET=0")
+        print(f"VERDICT=PENDING")
+        print(f"CIRCUIT_BREAKER_RESET=true")
+        return True
+
+    # --- reset-iteration ---
+    if "--reset-iteration" in args:
+        state_mgr = StateManager()
+        state = state_mgr.load_state()
+        state["iteration"] = 0
+        state_mgr.save_state(state)
+        print("ITERATION_RESET=0")
+        return True
+
+    # --- set-verdict ---
+    if "--set-verdict" in args:
+        idx = argv.index("--set-verdict")
+        if idx + 1 >= len(argv):
+            print("ERROR: --set-verdict requires PENDING|PASS|REJECT argument", file=sys.stderr)
+            sys.exit(1)
+        new_verdict = argv[idx + 1].upper()
+        if new_verdict not in ("PENDING", "PASS", "REJECT"):
+            print(f"ERROR: invalid verdict '{new_verdict}'. Must be PENDING, PASS, or REJECT", file=sys.stderr)
+            sys.exit(1)
+
+        state_mgr = StateManager()
+        validation = state_mgr.load_validation() or {}
+        validation["verdict"] = new_verdict
+        validation["reviewed_at"] = datetime.now(timezone.utc).astimezone().isoformat()
+        validation["last_reviewed_commit"] = get_head_sha()
+
+        if new_verdict == "PENDING":
+            validation["criteria"] = []
+            validation["summary"] = f"Verdict reset to PENDING for phase {state_mgr.load_state().get('phase', '?')}"
+        elif new_verdict == "PASS":
+            validation["criteria"] = []
+            validation["summary"] = "Verdict manually set to PASS"
+
+        state_mgr.save_validation(validation)
+        print(f"VERDICT_SET={new_verdict}")
+        return True
+
+    # --- reset-circuit-breaker ---
+    if "--reset-cb" in args:
+        state_mgr = StateManager()
+        state = state_mgr.load_state()
+        cb = state.get("circuit_breaker", {})
+        cb["tripped"] = False
+        cb["trip_reason"] = None
+        cb["trip_at"] = None
+        cb["consecutive_stalls"] = 0
+        cb["consecutive_errors"] = 0
+        cb["last_commit"] = None
+        cb["last_verdict"] = None
+        cb["last_fail_criteria_hash"] = None
+        state["circuit_breaker"] = cb
+        state["status"] = "running"
+        state_mgr.save_state(state)
+        print("CIRCUIT_BREAKER_RESET=true")
+        return True
+
+    return False
+
+
 def main() -> None:
     argv = sys.argv[1:]
     args = set(argv)
+
+    # Handle management commands first — these bypass the main loop
+    if handle_management_command(argv):
+        return
+
     check_only = "--check-only" in args
     write_only = "--write" in args
     auto_commit = "--auto-commit" in args
