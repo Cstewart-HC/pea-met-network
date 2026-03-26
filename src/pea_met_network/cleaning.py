@@ -732,10 +732,16 @@ def run_pipeline(stations: list[str], force: bool = False) -> None:
             continue
         for fpath in sorted(station_dir.iterdir()):
             if fpath.is_file() and fpath.suffix == ".csv":
+                try:
+                    row_count = len(pd.read_csv(fpath))
+                except Exception:
+                    row_count = -1
                 manifest["artifacts"].append({
                     "type": "processed_csv",
                     "path": str(fpath.relative_to(PROJECT_ROOT)),
                     "station": station,
+                    "rows": row_count,
+                    "timestamp": pd.Timestamp.now(tz="UTC").isoformat(),
                 })
                 manifest["checksums"][
                     str(fpath.relative_to(PROJECT_ROOT))
@@ -778,6 +784,22 @@ def run_pipeline(stations: list[str], force: bool = False) -> None:
     report_path = PROCESSED_DIR / "imputation_report.csv"
     report_df.to_csv(report_path, index=False)
     print(f"  Imputation report: {len(report_df)} entries")
+
+    # Register imputation report in pipeline manifest
+    if manifest_path.exists():
+        manifest = json.loads(manifest_path.read_text())
+        manifest["artifacts"] = [
+            a for a in manifest["artifacts"]
+            if a.get("type") != "imputation_report"
+        ]
+        manifest["artifacts"].append({
+            "type": "imputation_report",
+            "path": str(report_path.relative_to(PROJECT_ROOT)),
+            "rows": len(report_df),
+            "timestamp": pd.Timestamp.now(tz="UTC").isoformat(),
+        })
+        manifest["generated_at"] = pd.Timestamp.now(tz="UTC").isoformat()
+        manifest_path.write_text(json.dumps(manifest, indent=2))
 
     # QA/QC report
     if all_hourly and all_daily:

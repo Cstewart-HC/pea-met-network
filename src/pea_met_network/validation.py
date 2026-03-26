@@ -35,6 +35,14 @@ def compare_station_data(
     -------
     DataFrame with the overlapping rows from both stations.
     """
+    if (
+        ref_df.empty
+        or cmp_df.empty
+        or on not in ref_df.columns
+        or on not in cmp_df.columns
+    ):
+        return pd.DataFrame()
+
     if value_cols is None:
         merged = ref_df.merge(
             cmp_df, on=on, how="inner", suffixes=("_ref", "_cmp")

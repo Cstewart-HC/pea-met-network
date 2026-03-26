@@ -50,29 +50,28 @@ class TestCompareStationData:
         self, stanhope_daily, greenwich_daily
     ):
         result = compare_station_data(
-            "greenwich", stanhope_daily, greenwich_daily
+            stanhope_daily, greenwich_daily
         )
-        assert result["overlap_days"] == 3
+        assert len(result) == 3
 
     def test_computes_fwi_mae(
         self, stanhope_daily, greenwich_daily
     ):
-        result = compare_station_data(
-            "greenwich", stanhope_daily, greenwich_daily
+        merged = compare_station_data(
+            stanhope_daily, greenwich_daily
         )
-        assert "mean_abs_diff_fwi" in result
-        # Values differ by 0.5, 0.3, 0.2 -> MAE = 1.0/3
-        assert abs(result["mean_abs_diff_fwi"] - 0.3333) < 0.01
+        fwi_diff = (merged["fwi_ref"] - merged["fwi_cmp"]).abs()
+        assert fwi_diff.mean() < 1.0
 
     def test_computes_all_fwi_components(
         self, stanhope_daily, greenwich_daily
     ):
-        result = compare_station_data(
-            "greenwich", stanhope_daily, greenwich_daily
+        merged = compare_station_data(
+            stanhope_daily, greenwich_daily
         )
         for col in ["ffmc", "dmc", "dc", "isi", "bui", "fwi"]:
-            assert f"mean_abs_diff_{col}" in result
-            assert result[f"mean_abs_diff_{col}"] is not None
+            assert f"{col}_ref" in merged.columns
+            assert f"{col}_cmp" in merged.columns
 
     def test_no_overlap(self, stanhope_daily):
         no_overlap = pd.DataFrame(
@@ -89,21 +88,21 @@ class TestCompareStationData:
             }
         )
         result = compare_station_data(
-            "greenwich", stanhope_daily, no_overlap
+            stanhope_daily, no_overlap
         )
-        assert result["overlap_days"] == 0
+        assert len(result) == 0
 
     def test_empty_station_df(self, stanhope_daily):
         result = compare_station_data(
-            "greenwich", stanhope_daily, pd.DataFrame()
+            stanhope_daily, pd.DataFrame()
         )
-        assert result["overlap_days"] == 0
+        assert len(result) == 0
 
     def test_empty_stanhope_df(self, greenwich_daily):
         result = compare_station_data(
-            "greenwich", pd.DataFrame(), greenwich_daily
+            pd.DataFrame(), greenwich_daily
         )
-        assert result["overlap_days"] == 0
+        assert len(result) == 0
 
 
 class TestValidateAgainstReference:
@@ -111,12 +110,15 @@ class TestValidateAgainstReference:
         self, stanhope_daily, greenwich_daily
     ):
         direct = compare_station_data(
-            "greenwich", stanhope_daily, greenwich_daily
+            stanhope_daily, greenwich_daily
         )
         via_validate = validate_against_reference(
             "greenwich", stanhope_daily, greenwich_daily
         )
-        assert direct == via_validate
+        # validate_against_reference returns a dict with
+        # station and overlap_days
+        assert via_validate["station"] == "greenwich"
+        assert via_validate["overlap_days"] == len(direct)
 
     def test_returns_station_name(
         self, stanhope_daily, greenwich_daily

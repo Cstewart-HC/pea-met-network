@@ -136,13 +136,13 @@ class TestACREF4_ProcessedOutputs:
     def test_hourly_output_exists(self):
         if not DATA_PROCESSED.exists():
             pytest.skip("data/processed/ does not exist yet")
-        hourly = list(DATA_PROCESSED.glob("station_hourly*"))
+        hourly = list(DATA_PROCESSED.glob("*/station_hourly.csv"))
         assert len(hourly) > 0, "No hourly processed files found"
 
     def test_daily_output_exists(self):
         if not DATA_PROCESSED.exists():
             pytest.skip("data/processed/ does not exist yet")
-        daily = list(DATA_PROCESSED.glob("station_daily*"))
+        daily = list(DATA_PROCESSED.glob("*/station_daily.csv"))
         assert len(daily) > 0, "No daily processed files found"
 
     def test_north_rustico_early_period_in_output(self):
@@ -150,10 +150,10 @@ class TestACREF4_ProcessedOutputs:
         data."""
         import pandas as pd
 
-        hourly = list(DATA_PROCESSED.glob("station_hourly*"))
-        if not hourly:
-            pytest.skip("No hourly processed files found")
-        df = pd.read_csv(hourly[0])
+        nr_hourly = DATA_PROCESSED / "north_rustico" / "station_hourly.csv"
+        if not nr_hourly.exists():
+            pytest.skip("No North Rustico hourly file found")
+        df = pd.read_csv(nr_hourly)
         if "timestamp_utc" not in df.columns:
             pytest.skip("Unexpected column schema")
         nr = df[df["station"] == "north_rustico"]
@@ -184,7 +184,7 @@ class TestACREF6_FWIComputed:
     def test_fwi_columns_in_output(self):
         import pandas as pd
 
-        daily = list(DATA_PROCESSED.glob("station_daily*"))
+        daily = list(DATA_PROCESSED.glob("*/station_daily.csv"))
         if not daily:
             pytest.skip("No daily processed files found")
         df = pd.read_csv(daily[0])
