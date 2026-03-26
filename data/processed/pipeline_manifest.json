@@ -3,1978 +3,2766 @@
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Apr2023_daily.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:32.779151+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Apr2023_hourly.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 720,
+      "timestamp": "2026-03-26T18:15:32.780326+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Apr2024_daily.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:32.780891+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Apr2024_hourly.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 720,
+      "timestamp": "2026-03-26T18:15:32.781803+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Apr2025_daily.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:32.782328+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Apr2025_hourly.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 720,
+      "timestamp": "2026-03-26T18:15:32.783565+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Aug2023_daily.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:32.784121+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Aug2023_hourly.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:32.785252+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Aug2024_daily.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:32.785812+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Aug2024_hourly.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:32.787027+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Aug2025_daily.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:32.787589+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Aug2025_hourly.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:32.788774+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Dec2022_daily.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:32.789350+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Dec2022_hourly.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:32.790491+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Dec2023_daily.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:32.791038+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Dec2023_hourly.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 740,
+      "timestamp": "2026-03-26T18:15:32.792160+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Dec2024_daily.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:32.792717+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Dec2024_hourly.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:32.793948+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Dec2025_daily.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:32.794533+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Dec2025_hourly.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:32.795632+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Feb2023_daily.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 29,
+      "timestamp": "2026-03-26T18:15:32.796169+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Feb2023_hourly.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 672,
+      "timestamp": "2026-03-26T18:15:32.797202+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Feb2024_daily.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 30,
+      "timestamp": "2026-03-26T18:15:32.797742+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Feb2024_hourly.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 696,
+      "timestamp": "2026-03-26T18:15:32.798551+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Feb2025_daily.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 29,
+      "timestamp": "2026-03-26T18:15:32.799062+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Feb2025_hourly.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 672,
+      "timestamp": "2026-03-26T18:15:32.800168+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Feb2026_daily.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 28,
+      "timestamp": "2026-03-26T18:15:32.800698+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Feb2026_hourly.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 198,
+      "timestamp": "2026-03-26T18:15:32.801358+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Jan2023_daily.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:32.801857+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Jan2023_hourly.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:32.802911+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Jan2024_daily.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:32.803445+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Jan2024_hourly.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:32.804263+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Jan2025_daily.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:32.804789+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Jan2025_hourly.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:32.806034+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Jan2026_daily.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:32.806584+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Jan2026_hourly.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:32.807862+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Jul2023_daily.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:32.808427+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Jul2023_hourly.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:32.809554+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Jul2024_daily.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:32.810098+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Jul2024_hourly.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:32.811313+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Jul2025_daily.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:32.811868+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Jul2025_hourly.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:32.813025+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Jun2023_daily.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:32.813581+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Jun2023_hourly.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 720,
+      "timestamp": "2026-03-26T18:15:32.814683+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Jun2024_daily.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:32.815227+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Jun2024_hourly.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 720,
+      "timestamp": "2026-03-26T18:15:32.816390+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Jun2025_daily.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:32.816941+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Jun2025_hourly.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 720,
+      "timestamp": "2026-03-26T18:15:32.818073+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Mar2023_daily.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:32.818618+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Mar2023_hourly.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 743,
+      "timestamp": "2026-03-26T18:15:32.819686+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Mar2024_daily.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:32.820224+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Mar2024_hourly.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 743,
+      "timestamp": "2026-03-26T18:15:32.821253+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Mar2025_daily.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:32.821798+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Mar2025_hourly.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 743,
+      "timestamp": "2026-03-26T18:15:32.822986+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Mar2026_daily.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 23,
+      "timestamp": "2026-03-26T18:15:32.823525+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Mar2026_hourly.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 23,
+      "timestamp": "2026-03-26T18:15:32.823988+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_May2023_daily.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 27,
+      "timestamp": "2026-03-26T18:15:32.824483+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_May2023_hourly.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 598,
+      "timestamp": "2026-03-26T18:15:32.825476+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_May2024_daily.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:32.826004+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_May2024_hourly.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:32.827004+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_May2025_daily.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:32.827546+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_May2025_hourly.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:32.828721+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Nov2022_daily.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:32.829257+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Nov2022_hourly.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 721,
+      "timestamp": "2026-03-26T18:15:32.830274+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Nov2023_daily.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:32.830822+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Nov2023_hourly.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 721,
+      "timestamp": "2026-03-26T18:15:32.831903+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Nov2024_daily.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:32.832460+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Nov2024_hourly.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 721,
+      "timestamp": "2026-03-26T18:15:32.833596+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Nov2025_daily.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:32.834145+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Nov2025_hourly.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 721,
+      "timestamp": "2026-03-26T18:15:32.835247+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Oct2022_daily.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 8,
+      "timestamp": "2026-03-26T18:15:32.835769+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Oct2022_hourly.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 131,
+      "timestamp": "2026-03-26T18:15:32.836339+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Oct2023_daily.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:32.836843+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Oct2023_hourly.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:32.837954+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Oct2024_daily.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:32.838512+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Oct2024_hourly.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:32.839705+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Oct2025_daily.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:32.840255+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Oct2025_hourly.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:32.841409+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Sep2023_daily.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:32.841957+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Sep2023_hourly.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 720,
+      "timestamp": "2026-03-26T18:15:32.843043+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Sep2024_daily.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:32.843593+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Sep2024_hourly.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 720,
+      "timestamp": "2026-03-26T18:15:32.844735+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Sep2025_daily.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:32.845281+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/PEINP_GR_WeatherStn_Sep2025_hourly.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 720,
+      "timestamp": "2026-03-26T18:15:32.846417+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/station_daily.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 9191,
+      "timestamp": "2026-03-26T18:15:32.851500+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/greenwich/station_hourly.csv",
-      "station": "greenwich"
+      "station": "greenwich",
+      "rows": 220564,
+      "timestamp": "2026-03-26T18:15:33.116959+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_CAV_WeatherStn_Dec2025_daily.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:33.165970+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_CAV_WeatherStn_Dec2025_hourly.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 34,
+      "timestamp": "2026-03-26T18:15:33.166482+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_CAV_WeatherStn_Feb2026_daily.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 28,
+      "timestamp": "2026-03-26T18:15:33.166971+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_CAV_WeatherStn_Feb2026_hourly.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 28,
+      "timestamp": "2026-03-26T18:15:33.167450+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_CAV_WeatherStn_Jan2026_daily.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:33.167925+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_CAV_WeatherStn_Jan2026_hourly.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 382,
+      "timestamp": "2026-03-26T18:15:33.168855+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_CAV_WeatherStn_Mar2026_daily.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 23,
+      "timestamp": "2026-03-26T18:15:33.169369+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_CAV_WeatherStn_Mar2026_hourly.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 23,
+      "timestamp": "2026-03-26T18:15:33.169844+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_CAV_WeatherStn_Nov2025_daily.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 30,
+      "timestamp": "2026-03-26T18:15:33.170311+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_CAV_WeatherStn_Nov2025_hourly.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 381,
+      "timestamp": "2026-03-26T18:15:33.171173+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_CAV_WeatherStn_Oct2025_daily.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 1,
+      "timestamp": "2026-03-26T18:15:33.171674+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_CAV_WeatherStn_Oct2025_hourly.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 4,
+      "timestamp": "2026-03-26T18:15:33.172126+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Apr2023_daily.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:33.172655+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Apr2023_hourly.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 720,
+      "timestamp": "2026-03-26T18:15:33.173976+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Apr2024_daily.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:33.174544+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Apr2024_hourly.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 720,
+      "timestamp": "2026-03-26T18:15:33.175731+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_April2025_daily.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 26,
+      "timestamp": "2026-03-26T18:15:33.176282+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_April2025_hourly.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 573,
+      "timestamp": "2026-03-26T18:15:33.177302+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Aug2023_daily.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.177886+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Aug2023_hourly.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.179172+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Aug2024_daily.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.179743+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Aug2024_hourly.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.180837+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Aug2025_daily.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.181387+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Aug2025_hourly.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.182587+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Dec2022_daily.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:33.183170+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Dec2022_hourly.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 721,
+      "timestamp": "2026-03-26T18:15:33.184387+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Dec2023_daily.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.184977+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Dec2023_hourly.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.186223+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Dec2024_daily.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.186820+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Dec2024_hourly.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.188043+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Feb2023_daily.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 29,
+      "timestamp": "2026-03-26T18:15:33.188659+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Feb2023_hourly.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 672,
+      "timestamp": "2026-03-26T18:15:33.189862+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Feb2024_daily.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 30,
+      "timestamp": "2026-03-26T18:15:33.190442+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Feb2024_hourly.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 696,
+      "timestamp": "2026-03-26T18:15:33.191660+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Feb2025_daily.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 29,
+      "timestamp": "2026-03-26T18:15:33.192229+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Feb2025_hourly.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 672,
+      "timestamp": "2026-03-26T18:15:33.193380+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Jan2023_daily.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.193957+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Jan2023_hourly.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.195198+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Jan2024_daily.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.195783+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Jan2024_hourly.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.197047+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Jan2025_daily.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.197631+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Jan2025_hourly.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.198888+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Jul2023_daily.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.199489+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Jul2023_hourly.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.200727+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Jul2024_daily.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.201286+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Jul2024_hourly.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.202371+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_July2025_daily.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.202921+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_July2025_hourly.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.204094+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Jun2023_daily.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:33.204685+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Jun2023_hourly.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 720,
+      "timestamp": "2026-03-26T18:15:33.205919+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Jun2024_daily.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:33.206479+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Jun2024_hourly.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 720,
+      "timestamp": "2026-03-26T18:15:33.207557+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_June2025_daily.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:33.208103+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_June2025_hourly.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 720,
+      "timestamp": "2026-03-26T18:15:33.209261+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Mar2023_daily.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.209847+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Mar2023_hourly.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 743,
+      "timestamp": "2026-03-26T18:15:33.211112+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Mar2024_daily.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.211697+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Mar2024_hourly.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 743,
+      "timestamp": "2026-03-26T18:15:33.212940+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Mar2025_daily.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 22,
+      "timestamp": "2026-03-26T18:15:33.213485+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Mar2025_hourly.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 494,
+      "timestamp": "2026-03-26T18:15:33.214405+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_May2023_daily.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.214960+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_May2023_hourly.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.216210+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_May2024_daily.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.216770+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_May2024_hourly.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.217863+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_May2025_daily.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.218430+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_May2025_hourly.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.219612+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Nov2022_daily.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:33.220187+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Nov2022_hourly.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 721,
+      "timestamp": "2026-03-26T18:15:33.221402+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Nov2023_daily.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:33.221977+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Nov2023_hourly.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 721,
+      "timestamp": "2026-03-26T18:15:33.223205+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Nov2024_daily.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:33.223789+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Nov2024_hourly.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 721,
+      "timestamp": "2026-03-26T18:15:33.225011+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Oct2022_daily.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 21,
+      "timestamp": "2026-03-26T18:15:33.225578+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Oct2022_hourly.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 470,
+      "timestamp": "2026-03-26T18:15:33.226558+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Oct2023_daily.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.227121+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Oct2023_hourly.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.228368+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Oct2024_daily.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.228952+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Oct2024_hourly.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.230190+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Oct2025_daily.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.230749+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Oct2025_hourly.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.231931+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Sep2023_daily.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.232517+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Sep2023_hourly.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.233747+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Sep2024_daily.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:33.234297+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Sep2024_hourly.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 720,
+      "timestamp": "2026-03-26T18:15:33.235359+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Sept2025_daily.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:33.235911+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Sept2025_hourly.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 720,
+      "timestamp": "2026-03-26T18:15:33.237070+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/station_daily.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 1259,
+      "timestamp": "2026-03-26T18:15:33.239762+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/cavendish/station_hourly.csv",
-      "station": "cavendish"
+      "station": "cavendish",
+      "rows": 30183,
+      "timestamp": "2026-03-26T18:15:33.305823+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Apr2023_daily.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 18,
+      "timestamp": "2026-03-26T18:15:33.313215+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Apr2023_hourly.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 393,
+      "timestamp": "2026-03-26T18:15:33.314028+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Apr2024_daily.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:33.314550+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Apr2024_hourly.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 720,
+      "timestamp": "2026-03-26T18:15:33.315783+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Apr2025_daily.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:33.316322+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Apr2025_hourly.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 720,
+      "timestamp": "2026-03-26T18:15:33.317419+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Aug2023_daily.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.317973+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Aug2023_hourly.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.318919+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Aug2024_daily.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.319450+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Aug2024_hourly.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.320596+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Aug2025_daily.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.321135+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Aug2025_hourly.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.322286+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Dec2023_daily.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:33.322862+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Dec2023_hourly.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 740,
+      "timestamp": "2026-03-26T18:15:33.323886+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Dec2024_daily.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.324422+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Dec2024_hourly.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.325565+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Dec2025_daily.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.326139+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Dec2025_hourly.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.327354+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Feb2024_daily.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 30,
+      "timestamp": "2026-03-26T18:15:33.327892+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Feb2024_hourly.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 696,
+      "timestamp": "2026-03-26T18:15:33.328925+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Feb2025_daily.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 29,
+      "timestamp": "2026-03-26T18:15:33.329488+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Feb2025_hourly.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 672,
+      "timestamp": "2026-03-26T18:15:33.330534+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Feb2026_daily.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 29,
+      "timestamp": "2026-03-26T18:15:33.331059+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Feb2026_hourly.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 672,
+      "timestamp": "2026-03-26T18:15:33.332157+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Jan2024_daily.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.332694+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Jan2024_hourly.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.333732+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Jan2025_daily.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.334263+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Jan2025_hourly.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.335413+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Jan2026_daily.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.335944+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Jan2026_hourly.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.337130+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Jul2023_daily.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.337708+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Jul2023_hourly.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.338727+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Jul2024_daily.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.339253+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Jul2024_hourly.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.340426+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Jul2025_daily.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.340967+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Jul2025_hourly.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.342124+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Jun2023_daily.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:33.342700+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Jun2023_hourly.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 720,
+      "timestamp": "2026-03-26T18:15:33.343730+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Jun2024_daily.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:33.344255+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Jun2024_hourly.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 720,
+      "timestamp": "2026-03-26T18:15:33.345377+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Jun2025_daily.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:33.345922+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Jun2025_hourly.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 720,
+      "timestamp": "2026-03-26T18:15:33.346998+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Mar2024_daily.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.347551+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Mar2024_hourly.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 743,
+      "timestamp": "2026-03-26T18:15:33.348658+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Mar2025_daily.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.349197+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Mar2025_hourly.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 743,
+      "timestamp": "2026-03-26T18:15:33.350320+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Mar2026_daily.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 24,
+      "timestamp": "2026-03-26T18:15:33.350851+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Mar2026_hourly.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 549,
+      "timestamp": "2026-03-26T18:15:33.351817+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_May2023_daily.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.352371+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_May2023_hourly.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.353417+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_May2024_daily.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.353939+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_May2024_hourly.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.355062+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_May2025_daily.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.355607+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_May2025_hourly.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.356752+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Nov2023_daily.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:33.357311+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Nov2023_hourly.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 721,
+      "timestamp": "2026-03-26T18:15:33.358310+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Nov2024_daily.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:33.358833+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Nov2024_hourly.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 721,
+      "timestamp": "2026-03-26T18:15:33.359927+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Nov2025_daily.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:33.360501+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Nov2025_hourly.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 721,
+      "timestamp": "2026-03-26T18:15:33.361615+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Oct2023_daily.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.362170+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Oct2023_hourly.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.363197+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Oct2024_daily.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.363726+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Oct2024_hourly.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.364885+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Oct2025_daily.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.365426+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Oct2025_hourly.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.366505+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Sep2023_daily.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:33.367066+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Sep2023_hourly.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 720,
+      "timestamp": "2026-03-26T18:15:33.368087+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Sep2024_daily.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:33.368618+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Sep2024_hourly.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 720,
+      "timestamp": "2026-03-26T18:15:33.369729+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Sep2025_daily.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:33.370257+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Sep2025_hourly.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 720,
+      "timestamp": "2026-03-26T18:15:33.371345+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_TR_WeatherStn_Feb2025_daily.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 29,
+      "timestamp": "2026-03-26T18:15:33.371870+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/PEINP_TR_WeatherStn_Feb2025_hourly.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 672,
+      "timestamp": "2026-03-26T18:15:33.372843+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/station_daily.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 9192,
+      "timestamp": "2026-03-26T18:15:33.380216+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/north_rustico/station_hourly.csv",
-      "station": "north_rustico"
+      "station": "north_rustico",
+      "rows": 220585,
+      "timestamp": "2026-03-26T18:15:33.689585+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Aug2023_daily.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.745219+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Aug2023_hourly.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.746285+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Dec2023_daily.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:33.746819+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Dec2023_hourly.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 740,
+      "timestamp": "2026-03-26T18:15:33.747799+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Dec2025_daily.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:33.748279+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Dec2025_hourly.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 34,
+      "timestamp": "2026-03-26T18:15:33.748722+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Feb2026_daily.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 28,
+      "timestamp": "2026-03-26T18:15:33.749154+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Feb2026_hourly.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 119,
+      "timestamp": "2026-03-26T18:15:33.749629+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Jan2026_daily.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.750055+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Jan2026_hourly.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.750835+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Jul2023_daily.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 8,
+      "timestamp": "2026-03-26T18:15:33.751304+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Jul2023_hourly.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 157,
+      "timestamp": "2026-03-26T18:15:33.751868+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Jul202_daily.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 8,
+      "timestamp": "2026-03-26T18:15:33.752322+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Jul202_hourly.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 157,
+      "timestamp": "2026-03-26T18:15:33.752877+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Mar2026_daily.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 23,
+      "timestamp": "2026-03-26T18:15:33.753306+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Mar2026_hourly.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 23,
+      "timestamp": "2026-03-26T18:15:33.753736+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Nov2023_daily.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:33.754196+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Nov2023_hourly.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 721,
+      "timestamp": "2026-03-26T18:15:33.755142+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Nov2025_daily.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 30,
+      "timestamp": "2026-03-26T18:15:33.755621+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Nov2025_hourly.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 692,
+      "timestamp": "2026-03-26T18:15:33.756366+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Oct2023_daily.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.756863+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Oct2023_hourly.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.757827+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Oct2025_daily.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 1,
+      "timestamp": "2026-03-26T18:15:33.758277+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Oct2025_hourly.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 4,
+      "timestamp": "2026-03-26T18:15:33.758691+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Sept2023_daily.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:33.759151+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Sept2023_hourly.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 720,
+      "timestamp": "2026-03-26T18:15:33.760099+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Apr2024_daily.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:33.760592+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Apr2024_hourly.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 720,
+      "timestamp": "2026-03-26T18:15:33.761509+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Apr2025_daily.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:33.761991+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Apr2025_hourly.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 720,
+      "timestamp": "2026-03-26T18:15:33.762890+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Aug2024_daily.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.763370+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Aug2024_hourly.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.764284+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Aug2025_daily.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.764767+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Aug2025_hourly.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.765676+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Dec2024_daily.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.766153+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Dec2024_hourly.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.767054+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Feb2024_daily.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 30,
+      "timestamp": "2026-03-26T18:15:33.767537+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Feb2024_hourly.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 696,
+      "timestamp": "2026-03-26T18:15:33.768414+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Feb2025_daily.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 29,
+      "timestamp": "2026-03-26T18:15:33.768891+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Feb2025_hourly.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 672,
+      "timestamp": "2026-03-26T18:15:33.769763+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Jan2024_daily.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.770240+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Jan2024_hourly.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.771139+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Jan2025_daily.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.771629+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Jan2025_hourly.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.772543+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Jul2024_daily.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.773022+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Jul2024_hourly.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.773929+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Jul2025_daily.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.774415+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Jul2025_hourly.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.775306+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Jun2024_daily.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:33.775797+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Jun2024_hourly.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 720,
+      "timestamp": "2026-03-26T18:15:33.776705+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Jun2025_daily.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:33.777182+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Jun2025_hourly.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 720,
+      "timestamp": "2026-03-26T18:15:33.778092+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Mar2024_daily.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.778582+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Mar2024_hourly.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 743,
+      "timestamp": "2026-03-26T18:15:33.779500+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Mar2025_daily.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.779981+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Mar2025_hourly.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 743,
+      "timestamp": "2026-03-26T18:15:33.780898+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_May2024_daily.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.781377+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_May2024_hourly.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.782277+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_May2025_daily.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.782770+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_May2025_hourly.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.783671+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Nov2024_daily.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:33.784152+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Nov2024_hourly.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 721,
+      "timestamp": "2026-03-26T18:15:33.785042+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Oct2024_daily.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.785531+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Oct2024_hourly.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.786438+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Oct2025_daily.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.786911+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Oct2025_hourly.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.787806+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Sep2024_daily.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:33.788284+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Sep2024_hourly.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 720,
+      "timestamp": "2026-03-26T18:15:33.789181+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Sep2025_daily.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:33.789665+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Sep2025_hourly.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 720,
+      "timestamp": "2026-03-26T18:15:33.790567+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/station_daily.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 1353,
+      "timestamp": "2026-03-26T18:15:33.792937+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanley_bridge/station_hourly.csv",
-      "station": "stanley_bridge"
+      "station": "stanley_bridge",
+      "rows": 32438,
+      "timestamp": "2026-03-26T18:15:33.853793+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Apr2024_daily.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:33.860645+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Apr2024_hourly.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 720,
+      "timestamp": "2026-03-26T18:15:33.861926+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Apr2025_daily.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:33.862475+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Apr2025_hourly.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 720,
+      "timestamp": "2026-03-26T18:15:33.863505+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Aug2023_daily.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.864050+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Aug2023_hourly.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.865006+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Aug2024_daily.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.865528+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Aug2024_hourly.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.866618+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Aug2025_daily.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.867167+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Aug2025_hourly.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.868178+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Dec2023_daily.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:33.868743+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Dec2023_hourly.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 740,
+      "timestamp": "2026-03-26T18:15:33.869791+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Dec2024_daily.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.870314+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Dec2024_hourly.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.871323+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Dec2025_daily.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:33.871831+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Dec2025_hourly.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 34,
+      "timestamp": "2026-03-26T18:15:33.872283+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Feb2024_daily.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 30,
+      "timestamp": "2026-03-26T18:15:33.872752+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Feb2024_hourly.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 696,
+      "timestamp": "2026-03-26T18:15:33.873751+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Feb2025_daily.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 29,
+      "timestamp": "2026-03-26T18:15:33.874260+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Feb2025_hourly.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 672,
+      "timestamp": "2026-03-26T18:15:33.875419+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Feb2026_daily.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 28,
+      "timestamp": "2026-03-26T18:15:33.875945+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Feb2026_hourly.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 28,
+      "timestamp": "2026-03-26T18:15:33.876410+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Jan2024_daily.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.876878+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Jan2024_hourly.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.877889+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Jan2025_daily.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.878410+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Jan2025_hourly.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.879423+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Jan2026_daily.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:33.879928+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Jan2026_hourly.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 693,
+      "timestamp": "2026-03-26T18:15:33.880755+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Jul2024_daily.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.881248+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Jul2024_hourly.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.882269+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Jul2025_daily.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.882788+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Jul2025_hourly.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.883821+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_July2023_daily.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.884363+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_July2023_hourly.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 736,
+      "timestamp": "2026-03-26T18:15:33.885285+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Jun2024_daily.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:33.885802+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Jun2024_hourly.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 720,
+      "timestamp": "2026-03-26T18:15:33.886797+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Jun2025_daily.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:33.887316+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Jun2025_hourly.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 720,
+      "timestamp": "2026-03-26T18:15:33.888310+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_June2023_daily.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 3,
+      "timestamp": "2026-03-26T18:15:33.888838+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_June2023_hourly.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 51,
+      "timestamp": "2026-03-26T18:15:33.889359+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Mar2024_daily.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.889834+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Mar2024_hourly.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 743,
+      "timestamp": "2026-03-26T18:15:33.890846+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Mar2025_daily.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.891365+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Mar2025_hourly.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 743,
+      "timestamp": "2026-03-26T18:15:33.892361+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Mar2026_daily.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 23,
+      "timestamp": "2026-03-26T18:15:33.892872+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Mar2026_hourly.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 23,
+      "timestamp": "2026-03-26T18:15:33.893321+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_May2024_daily.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.893808+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_May2024_hourly.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.894848+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_May2025_daily.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.895370+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_May2025_hourly.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.896372+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Nov2023_daily.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:33.896931+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Nov2023_hourly.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 721,
+      "timestamp": "2026-03-26T18:15:33.897969+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Nov2024_daily.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:33.898502+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Nov2024_hourly.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 721,
+      "timestamp": "2026-03-26T18:15:33.899510+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Nov2025_daily.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 30,
+      "timestamp": "2026-03-26T18:15:33.900016+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Nov2025_hourly.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 692,
+      "timestamp": "2026-03-26T18:15:33.900844+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Oct2023_daily.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.901375+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Oct2023_hourly.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.902430+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Oct2024_daily.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 4,
+      "timestamp": "2026-03-26T18:15:33.902929+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Oct2024_hourly.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 73,
+      "timestamp": "2026-03-26T18:15:33.903440+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Oct2025_daily.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 1,
+      "timestamp": "2026-03-26T18:15:33.903873+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Oct2025_hourly.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 4,
+      "timestamp": "2026-03-26T18:15:33.904297+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Sep2023_daily.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:33.904811+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Sep2023_hourly.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 720,
+      "timestamp": "2026-03-26T18:15:33.905813+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Sep2024_daily.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 32,
+      "timestamp": "2026-03-26T18:15:33.906335+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Sep2024_hourly.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 744,
+      "timestamp": "2026-03-26T18:15:33.907344+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Sept2025_daily.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 31,
+      "timestamp": "2026-03-26T18:15:33.907875+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Sept2025_hourly.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 720,
+      "timestamp": "2026-03-26T18:15:33.908856+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/station_daily.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 999,
+      "timestamp": "2026-03-26T18:15:33.910822+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/tracadie/station_hourly.csv",
-      "station": "tracadie"
+      "station": "tracadie",
+      "rows": 23956,
+      "timestamp": "2026-03-26T18:15:33.954918+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanhope/station_daily.csv",
-      "station": "stanhope"
+      "station": "stanhope",
+      "rows": 1461,
+      "timestamp": "2026-03-26T18:15:33.962108+00:00"
     },
     {
       "type": "processed_csv",
       "path": "data/processed/stanhope/station_hourly.csv",
-      "station": "stanhope"
+      "station": "stanhope",
+      "rows": 35064,
+      "timestamp": "2026-03-26T18:15:34.011602+00:00"
     },
     {
-      "type": "qa_qc_report",
-      "path": "data/processed/qa_qc_report.csv",
-      "rows": 6,
-      "timestamp": "2026-03-26T16:02:01.252503+00:00"
+      "type": "imputation_report",
+      "path": "data/processed/imputation_report.csv",
+      "rows": 0,
+      "timestamp": "2026-03-26T18:15:34.024912+00:00"
     }
   ],
   "checksums": {
@@ -2373,7 +3161,7 @@
     "data/processed/stanhope/station_daily.csv": "4caba1c6a2bc835664c2671f7a85debabc7d6483d899e8a067a4481f2309e6f8",
     "data/processed/stanhope/station_hourly.csv": "d8d35ccba044b209357c5d8b9c57f6f62102cfc1ee3017f9a0c4232a5670472d"
   },
-  "generated_at": "2026-03-26T16:02:01.252518+00:00",
+  "generated_at": "2026-03-26T18:15:34.024926+00:00",
   "stations": {
     "greenwich": 86,
     "cavendish": 88,
