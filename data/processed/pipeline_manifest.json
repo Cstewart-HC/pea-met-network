@@ -429,12 +429,6 @@
       "type": "processed_csv",
       "path": "data/processed/greenwich/station_hourly.csv",
       "station": "greenwich"
-    },
-    {
-      "type": "qa_qc_report",
-      "path": "data/processed/qa_qc_report.csv",
-      "rows": 1,
-      "timestamp": "2026-03-26T12:44:14.714786+00:00"
     }
   ],
   "checksums": {
@@ -525,5 +519,5 @@
     "data/processed/greenwich/station_daily.csv": "12025a77fdaae2413297f1573c96d87514732c75ed8b0d4ee26c7a4eb60a89b7",
     "data/processed/greenwich/station_hourly.csv": "57257bbf9d7edb5cdb4680c734277565d73b4d46bdbfe88c191f8f94a6024653"
   },
-  "generated_at": "2026-03-26T12:44:14.714801+00:00"
+  "generated_at": "2026-03-26T13:32:34.273318+00:00"
 }
