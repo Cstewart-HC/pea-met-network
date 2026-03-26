@@ -429,6 +429,1552 @@
       "type": "processed_csv",
       "path": "data/processed/greenwich/station_hourly.csv",
       "station": "greenwich"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_CAV_WeatherStn_Dec2025_daily.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_CAV_WeatherStn_Dec2025_hourly.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_CAV_WeatherStn_Feb2026_daily.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_CAV_WeatherStn_Feb2026_hourly.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_CAV_WeatherStn_Jan2026_daily.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_CAV_WeatherStn_Jan2026_hourly.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_CAV_WeatherStn_Mar2026_daily.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_CAV_WeatherStn_Mar2026_hourly.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_CAV_WeatherStn_Nov2025_daily.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_CAV_WeatherStn_Nov2025_hourly.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_CAV_WeatherStn_Oct2025_daily.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_CAV_WeatherStn_Oct2025_hourly.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Apr2023_daily.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Apr2023_hourly.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Apr2024_daily.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Apr2024_hourly.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_April2025_daily.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_April2025_hourly.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Aug2023_daily.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Aug2023_hourly.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Aug2024_daily.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Aug2024_hourly.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Aug2025_daily.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Aug2025_hourly.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Dec2022_daily.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Dec2022_hourly.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Dec2023_daily.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Dec2023_hourly.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Dec2024_daily.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Dec2024_hourly.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Feb2023_daily.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Feb2023_hourly.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Feb2024_daily.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Feb2024_hourly.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Feb2025_daily.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Feb2025_hourly.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Jan2023_daily.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Jan2023_hourly.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Jan2024_daily.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Jan2024_hourly.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Jan2025_daily.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Jan2025_hourly.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Jul2023_daily.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Jul2023_hourly.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Jul2024_daily.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Jul2024_hourly.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_July2025_daily.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_July2025_hourly.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Jun2023_daily.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Jun2023_hourly.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Jun2024_daily.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Jun2024_hourly.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_June2025_daily.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_June2025_hourly.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Mar2023_daily.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Mar2023_hourly.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Mar2024_daily.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Mar2024_hourly.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Mar2025_daily.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Mar2025_hourly.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_May2023_daily.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_May2023_hourly.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_May2024_daily.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_May2024_hourly.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_May2025_daily.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_May2025_hourly.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Nov2022_daily.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Nov2022_hourly.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Nov2023_daily.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Nov2023_hourly.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Nov2024_daily.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Nov2024_hourly.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Oct2022_daily.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Oct2022_hourly.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Oct2023_daily.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Oct2023_hourly.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Oct2024_daily.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Oct2024_hourly.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Oct2025_daily.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Oct2025_hourly.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Sep2023_daily.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Sep2023_hourly.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Sep2024_daily.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Sep2024_hourly.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Sept2025_daily.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/PEINP_Cav_WeatherStn_Sept2025_hourly.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/station_daily.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/cavendish/station_hourly.csv",
+      "station": "cavendish"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Apr2023_daily.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Apr2023_hourly.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Apr2024_daily.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Apr2024_hourly.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Apr2025_daily.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Apr2025_hourly.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Aug2023_daily.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Aug2023_hourly.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Aug2024_daily.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Aug2024_hourly.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Aug2025_daily.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Aug2025_hourly.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Dec2023_daily.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Dec2023_hourly.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Dec2024_daily.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Dec2024_hourly.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Dec2025_daily.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Dec2025_hourly.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Feb2024_daily.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Feb2024_hourly.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Feb2025_daily.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Feb2025_hourly.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Feb2026_daily.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Feb2026_hourly.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Jan2024_daily.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Jan2024_hourly.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Jan2025_daily.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Jan2025_hourly.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Jan2026_daily.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Jan2026_hourly.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Jul2023_daily.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Jul2023_hourly.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Jul2024_daily.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Jul2024_hourly.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Jul2025_daily.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Jul2025_hourly.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Jun2023_daily.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Jun2023_hourly.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Jun2024_daily.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Jun2024_hourly.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Jun2025_daily.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Jun2025_hourly.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Mar2024_daily.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Mar2024_hourly.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Mar2025_daily.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Mar2025_hourly.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Mar2026_daily.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Mar2026_hourly.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_May2023_daily.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_May2023_hourly.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_May2024_daily.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_May2024_hourly.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_May2025_daily.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_May2025_hourly.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Nov2023_daily.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Nov2023_hourly.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Nov2024_daily.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Nov2024_hourly.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Nov2025_daily.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Nov2025_hourly.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Oct2023_daily.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Oct2023_hourly.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Oct2024_daily.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Oct2024_hourly.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Oct2025_daily.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Oct2025_hourly.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Sep2023_daily.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Sep2023_hourly.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Sep2024_daily.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Sep2024_hourly.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Sep2025_daily.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Sep2025_hourly.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_TR_WeatherStn_Feb2025_daily.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_TR_WeatherStn_Feb2025_hourly.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/station_daily.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/station_hourly.csv",
+      "station": "north_rustico"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Aug2023_daily.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Aug2023_hourly.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Dec2023_daily.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Dec2023_hourly.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Dec2025_daily.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Dec2025_hourly.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Feb2026_daily.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Feb2026_hourly.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Jan2026_daily.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Jan2026_hourly.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Jul2023_daily.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Jul2023_hourly.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Jul202_daily.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Jul202_hourly.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Mar2026_daily.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Mar2026_hourly.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Nov2023_daily.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Nov2023_hourly.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Nov2025_daily.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Nov2025_hourly.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Oct2023_daily.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Oct2023_hourly.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Oct2025_daily.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Oct2025_hourly.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Sept2023_daily.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Sept2023_hourly.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Apr2024_daily.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Apr2024_hourly.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Apr2025_daily.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Apr2025_hourly.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Aug2024_daily.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Aug2024_hourly.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Aug2025_daily.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Aug2025_hourly.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Dec2024_daily.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Dec2024_hourly.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Feb2024_daily.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Feb2024_hourly.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Feb2025_daily.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Feb2025_hourly.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Jan2024_daily.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Jan2024_hourly.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Jan2025_daily.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Jan2025_hourly.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Jul2024_daily.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Jul2024_hourly.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Jul2025_daily.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Jul2025_hourly.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Jun2024_daily.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Jun2024_hourly.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Jun2025_daily.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Jun2025_hourly.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Mar2024_daily.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Mar2024_hourly.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Mar2025_daily.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Mar2025_hourly.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_May2024_daily.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_May2024_hourly.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_May2025_daily.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_May2025_hourly.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Nov2024_daily.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Nov2024_hourly.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Oct2024_daily.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Oct2024_hourly.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Oct2025_daily.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Oct2025_hourly.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Sep2024_daily.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Sep2024_hourly.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Sep2025_daily.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Sep2025_hourly.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/station_daily.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanley_bridge/station_hourly.csv",
+      "station": "stanley_bridge"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Apr2024_daily.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Apr2024_hourly.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Apr2025_daily.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Apr2025_hourly.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Aug2023_daily.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Aug2023_hourly.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Aug2024_daily.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Aug2024_hourly.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Aug2025_daily.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Aug2025_hourly.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Dec2023_daily.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Dec2023_hourly.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Dec2024_daily.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Dec2024_hourly.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Dec2025_daily.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Dec2025_hourly.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Feb2024_daily.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Feb2024_hourly.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Feb2025_daily.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Feb2025_hourly.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Feb2026_daily.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Feb2026_hourly.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Jan2024_daily.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Jan2024_hourly.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Jan2025_daily.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Jan2025_hourly.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Jan2026_daily.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Jan2026_hourly.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Jul2024_daily.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Jul2024_hourly.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Jul2025_daily.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Jul2025_hourly.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_July2023_daily.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_July2023_hourly.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Jun2024_daily.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Jun2024_hourly.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Jun2025_daily.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Jun2025_hourly.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_June2023_daily.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_June2023_hourly.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Mar2024_daily.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Mar2024_hourly.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Mar2025_daily.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Mar2025_hourly.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Mar2026_daily.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Mar2026_hourly.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_May2024_daily.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_May2024_hourly.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_May2025_daily.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_May2025_hourly.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Nov2023_daily.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Nov2023_hourly.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Nov2024_daily.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Nov2024_hourly.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Nov2025_daily.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Nov2025_hourly.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Oct2023_daily.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Oct2023_hourly.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Oct2024_daily.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Oct2024_hourly.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Oct2025_daily.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Oct2025_hourly.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Sep2023_daily.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Sep2023_hourly.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Sep2024_daily.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Sep2024_hourly.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Sept2025_daily.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/PEINP_TR_WeatherStn_Sept2025_hourly.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/station_daily.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/tracadie/station_hourly.csv",
+      "station": "tracadie"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanhope/station_daily.csv",
+      "station": "stanhope"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/stanhope/station_hourly.csv",
+      "station": "stanhope"
+    },
+    {
+      "type": "qa_qc_report",
+      "path": "data/processed/qa_qc_report.csv",
+      "rows": 6,
+      "timestamp": "2026-03-26T16:02:01.252503+00:00"
     }
   ],
   "checksums": {
@@ -517,7 +2063,324 @@
     "data/processed/greenwich/PEINP_GR_WeatherStn_Sep2025_daily.csv": "7e06cf668da9e003892448d916932abdbff4f026d8dc944e3f3c8990264e6dc0",
     "data/processed/greenwich/PEINP_GR_WeatherStn_Sep2025_hourly.csv": "63a7520f4da2d0b3c38bba4f6d875836b26afd655799ac2b08e4d9030d08fa8c",
     "data/processed/greenwich/station_daily.csv": "12025a77fdaae2413297f1573c96d87514732c75ed8b0d4ee26c7a4eb60a89b7",
-    "data/processed/greenwich/station_hourly.csv": "57257bbf9d7edb5cdb4680c734277565d73b4d46bdbfe88c191f8f94a6024653"
+    "data/processed/greenwich/station_hourly.csv": "57257bbf9d7edb5cdb4680c734277565d73b4d46bdbfe88c191f8f94a6024653",
+    "data/processed/cavendish/PEINP_CAV_WeatherStn_Dec2025_daily.csv": "334d8eea890e8c0d4340ae1eeff33971c96b48cd7f5d3ddcbc637e776b4ed85c",
+    "data/processed/cavendish/PEINP_CAV_WeatherStn_Dec2025_hourly.csv": "2984477f3aba3e1355371bcafa981a5f8353cf639ad86688f5fb4a4fdf04509c",
+    "data/processed/cavendish/PEINP_CAV_WeatherStn_Feb2026_daily.csv": "963de8f560e2f9dbd3eb535929b29742d5d592ce499fd27890e2d8ea1c636d04",
+    "data/processed/cavendish/PEINP_CAV_WeatherStn_Feb2026_hourly.csv": "1781feb75f583cf8b19c8722765c2007f750ccfe1075a440e0e2d6fd7003a23c",
+    "data/processed/cavendish/PEINP_CAV_WeatherStn_Jan2026_daily.csv": "8b9a4cd5bec0c8180e7c19bb91769fdcbde11ea82135bb59f77295378bae60bd",
+    "data/processed/cavendish/PEINP_CAV_WeatherStn_Jan2026_hourly.csv": "204a059599c9a6ac92a037e883616a3966720cac11dddecee2ec16d5c6852fab",
+    "data/processed/cavendish/PEINP_CAV_WeatherStn_Mar2026_daily.csv": "917dc971d71566e49cb13e13c43fa20bbf957d479133465c611df16ba4aa158c",
+    "data/processed/cavendish/PEINP_CAV_WeatherStn_Mar2026_hourly.csv": "160d672baf4e9132098714cf70c11c3e559a62e856a429f7fea3c861a038faee",
+    "data/processed/cavendish/PEINP_CAV_WeatherStn_Nov2025_daily.csv": "72758e187c1ae68fb93e0741fe635449ed8155f43b73d9bb2d022fdfd943b37a",
+    "data/processed/cavendish/PEINP_CAV_WeatherStn_Nov2025_hourly.csv": "00bbbbbe5ca7a1660d84e55ce69dbb5ad79ab8b744f110700b78b5ffab8dab35",
+    "data/processed/cavendish/PEINP_CAV_WeatherStn_Oct2025_daily.csv": "f75fb1d73350fe687d9a0cfa7693f81d371a32dc963065fd5ec738764bb30974",
+    "data/processed/cavendish/PEINP_CAV_WeatherStn_Oct2025_hourly.csv": "4e33916c2f4bf7c02e785ec34f5175f96a83eabeb7fe19af00c1ffb0b1fee0c0",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Apr2023_daily.csv": "8167db1afdb4da6b9b0db3aeded0500ea08eb175df0b4d30ae3ee15e4020e032",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Apr2023_hourly.csv": "d0a73fd9e1d0a7953d5a50ab128414f7c9b6980f4e637f8ef9006f1dec65930a",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Apr2024_daily.csv": "a5eefc0468f2a1375e4924ffc1da4c1bdebea75654090099793e8bf625777a4c",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Apr2024_hourly.csv": "5ce0352276037a0932ba5d0991089c28ecb4889ab7f3394a996d112da88fbfa9",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_April2025_daily.csv": "912920e239a0bc59c8f32fca2a4d186cadf9313f101a01b07ad3669b098c9080",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_April2025_hourly.csv": "3946e57000b925e19d15162330155971d88db725bd49bc9b8039647659d08add",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Aug2023_daily.csv": "657814bfd318ce58974a6b1c58101c9db6711c12b2230f7664d5392c2b6ea32d",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Aug2023_hourly.csv": "a2a8fa9d76e88a14383d4e677491c20fc4ff3ebb594e92e9bfeb6b2ae17bca7c",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Aug2024_daily.csv": "e38eaf2b6eeae68f150e1aee8bc5d88cecd819a93eb3b89824bae000709e2864",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Aug2024_hourly.csv": "98b030bdd85e9d74e795155ca8b03ff6bfb325436195ee4a7609ba4bd3e34f4c",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Aug2025_daily.csv": "74483aa63d1783b073fc215a74fce8fcbedcf7885264e5ba75cb39caff8d0ea9",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Aug2025_hourly.csv": "6687643d7554e42fbc1a1beb39c92fb2ce8063c0d60bf1b817e78aaa35790d61",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Dec2022_daily.csv": "b291b33ee981cbe1e6bb8d7c7137535a4473d845e705304d2ce439bba7093401",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Dec2022_hourly.csv": "dc34fe4606d8fcca0ea1ccbd7150f551710280a9c0625a9d80d10f12399c19f9",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Dec2023_daily.csv": "64121c03a80333c1052f22fef0ee722ab6ae0a23c9c51f11d0a987b495dbdffd",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Dec2023_hourly.csv": "0cfadef9d56d17b4340f3b36e85dd5c55662c95664ed72a94684fcf01612c401",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Dec2024_daily.csv": "9b12a03f32efcfb30a6fdf7d20a2c69aa5d76d2df8c074cf3bc2aec30c2d2e1b",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Dec2024_hourly.csv": "fb07e2abe7eee23041e0dda0764edf5ef93797a63aefd0a61609044a82cf22ee",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Feb2023_daily.csv": "82aced4083b3abcc470c0e1385f8d240ed66789acd835fb1b0064d292bb3cc34",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Feb2023_hourly.csv": "ae7ebc65db83c8e2bd9864a130d0d1c26528fee18d93151a66dde32ed34a4df1",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Feb2024_daily.csv": "44c849b6d9fe370e29d7d77d5c422f9a8ebbecbbf16c6ac24b91b5bde3b17cf7",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Feb2024_hourly.csv": "e646113791b1ddb4a77f6d243839a3df7765d8e92ea621cc4a405c1d3f6f7cf0",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Feb2025_daily.csv": "ec2a36689e7af70c2bd5f03b38f6b473fa60b817d23d251db4840aab77ed12b6",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Feb2025_hourly.csv": "fdcc8fdc67b5d653032d1d7704182ec1d4c169ef907e21f83c6fcae8f1d7ce4a",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Jan2023_daily.csv": "029c6618d28920f02160bebacc719f404b1c21f7acc648bfe8d61cec5d1e4630",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Jan2023_hourly.csv": "1c89d5077c8265f413f855ee1f857155f5eb6ef12213d1eedb83bb5653364f4a",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Jan2024_daily.csv": "6c34f1dbf961f64d822dc48feff7fd16663f3fd60f7784dae094644fea30e20f",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Jan2024_hourly.csv": "b083d69afc79c4632ce4950aebebf4110a0519cccfadb5c699d7b48d331601a8",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Jan2025_daily.csv": "366016636f82d0f1aecaba8f2bb7c12e0b3613cdec4322a08a5cd63166be979e",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Jan2025_hourly.csv": "d2a27868ad1298675d3f08d5f6b916536be507197c7473c9e9e42b46b03a418b",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Jul2023_daily.csv": "e9149bbcc5093e762b555636b2e1fb72dc33fe845e917c778e98cd1540041572",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Jul2023_hourly.csv": "f1d3cdb0094eeb4455c357046a0619078283fb380bde5dc434b8fabe1a962c5f",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Jul2024_daily.csv": "4b6f6ab03a95fb765df05ccc95cf7cd72c9fd867797e2ce784d7c251463c7c1a",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Jul2024_hourly.csv": "e6eec768751862b58a5dc36493a2be2619d412c4b173a326ba83c40452461329",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_July2025_daily.csv": "4c13f0804bb35e2bee95eee0cd4af37480697c5ea65dff2d0b852b4b3faa1c26",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_July2025_hourly.csv": "a3066a1e6f24c2883bc73968f0cb6d3d5cab15e438dda51f9a891ad8634bee99",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Jun2023_daily.csv": "2a931f892c8d19c753b30867a1b024eb61828809e7da2dea69134c93475af3ef",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Jun2023_hourly.csv": "926015fd7061cd494d5fac8e52f5d0caa8001ba11a2ff719bba41af2844214bd",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Jun2024_daily.csv": "cfd0abd749e05908f86560fdd9df220381d921b00a9646ff6d75e55b6a2923dc",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Jun2024_hourly.csv": "beab23348c96bdf3bf21f9b71e0ba0aabc9769bfcdccdd619dc084092907e52e",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_June2025_daily.csv": "c8e3c8829451a14bcb6faac786f2ef1f9e499dfbd0bc6cc7cfb7b8cd50f9d657",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_June2025_hourly.csv": "8bf95e95e0f8f51b573a6e946ec0013fc0af5018c87849aa8d28dff0f17c6aa3",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Mar2023_daily.csv": "4f14f550b77cb965f00a2b32fe05d135f8a3a320c6e9ad783f1c8deef2755cb8",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Mar2023_hourly.csv": "5dd022bbcd7f972a2540f410eeb801365a48d6b85c74ca22a726e53837bdd5d0",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Mar2024_daily.csv": "69a09a0cb18bb37e66af4b4f3699112b8dba8cb94010b23750021172f9146e40",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Mar2024_hourly.csv": "ce942297e9ba713d3a6ea19574dbd394250a052faeade5836fff4e83788250df",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Mar2025_daily.csv": "3bdebccf659d5741a96db2197c0b0ef149206a130432a52b33bf9d2aabd98136",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Mar2025_hourly.csv": "d53b8e2dea8c242b3acfb0bff23103f11c30370fbf380cafb22606f2a2cf1d5e",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_May2023_daily.csv": "0e5e4f6a251e78b77b62d6167a2be5436641bf8bfde750bad81a500038acc548",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_May2023_hourly.csv": "16f7069c164f546ff15e1f88666a9f96196eeba88b9eb058bfdb2f818590628c",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_May2024_daily.csv": "30e10b474ce915bed10b09521963fd48fe4cd449faf3031788073f93591d5ec6",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_May2024_hourly.csv": "00bbfd02bacad00a9de229417043b7d124b9c7734a0f09c34d4d4363fbc3cf8f",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_May2025_daily.csv": "b8fe762b4935586883f1b2910b1380a8519edd13a0c1b3ec27c1de1c6fc802e0",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_May2025_hourly.csv": "bf3d77cb5f54d8b434f4a9bd37dbf76906aa80cfa3ab2d4decb54f2756f7ba9c",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Nov2022_daily.csv": "b291b33ee981cbe1e6bb8d7c7137535a4473d845e705304d2ce439bba7093401",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Nov2022_hourly.csv": "dc34fe4606d8fcca0ea1ccbd7150f551710280a9c0625a9d80d10f12399c19f9",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Nov2023_daily.csv": "d0efa49411dc879cbe926066e35fe9227974b572516abfd4a6c546728c9c38a8",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Nov2023_hourly.csv": "9b8ad8bd1cd5731fc5d2550ceda351d235a172053e0a6042e6e5485ad3ea7928",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Nov2024_daily.csv": "8a3a87bf262b987ae08bdd356472ca45477d2ef372326238bee5c2b97276d6ca",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Nov2024_hourly.csv": "6ffced7fb97e65cee40eed2929c0c60b40cf8f38806dfab7736b065ab481d2cd",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Oct2022_daily.csv": "98262d9337da2cc6f59765dc8ca4f58b75e23bf0dbadc584ffa07274eaf6b697",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Oct2022_hourly.csv": "fc2a0a2c2d9592d9476c224ca047d77a4aee86e7431defe87e519e905026497f",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Oct2023_daily.csv": "f15059a8430f46772d47e2c3aeb2b1722baf37e65b105b15c1d50b04ba88125c",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Oct2023_hourly.csv": "b75a662d482f7c53e584f29aef9c0e51eef12a2977afc8ee70534462cbe216d9",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Oct2024_daily.csv": "9c6e50f4d2df7ae00d52c880bff9fb2c1b0d2e2ac640ac5a986d5838bfa2a4be",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Oct2024_hourly.csv": "02846aac106ac15c0273a1a8d91d9443c3fbad0034cfef7599e7a6bf6be95901",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Oct2025_daily.csv": "2cfe427bc0546cd2a19b965df38ed7651b6c25fc61c9d68c44995c22e713eab2",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Oct2025_hourly.csv": "a0c7c0d71e790ce7acd820b2bc39292d07ddb3e06ce8b9b22ca666a74b2ca73f",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Sep2023_daily.csv": "657814bfd318ce58974a6b1c58101c9db6711c12b2230f7664d5392c2b6ea32d",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Sep2023_hourly.csv": "a2a8fa9d76e88a14383d4e677491c20fc4ff3ebb594e92e9bfeb6b2ae17bca7c",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Sep2024_daily.csv": "d0c10ca5cb41d9dfa4473b8bb84c7c0ba4110592764a7b154a9b71d49b0c2797",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Sep2024_hourly.csv": "ba46a73b329be592181fb931f2dd69d55c98a34238fe68de38735748d794521a",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Sept2025_daily.csv": "de45c00366f4962d91ccec623f295977c05a319cff487c7d7cbbe46c0b1ae8d8",
+    "data/processed/cavendish/PEINP_Cav_WeatherStn_Sept2025_hourly.csv": "d266ae12f9c747eaeb36b83299c9e44fc0ae5e93588a1b398d55d2694c34e3a0",
+    "data/processed/cavendish/station_daily.csv": "f3703496feb76e95a3a7ac840a6498a47de7566584edfcd33d55fe88cec354cb",
+    "data/processed/cavendish/station_hourly.csv": "f8ac45e7b4c2b5d5b9c60035c93e1e4851e4b7d5aa733e6aa5cac59c49af0f49",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Apr2023_daily.csv": "45429d75f9d975dff79f3596844d5c2187edc51e16f3bc2ea224511c13501603",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Apr2023_hourly.csv": "b5b67d7100e958fb2631a3b8d6b5dcc90c1c20fa47508d5a355103d7495e81f5",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Apr2024_daily.csv": "fcbdb264478a03972b4fc4609944f9c7c8077f3282b823aa569a634c3e60d15e",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Apr2024_hourly.csv": "1dee792a6b27fe6125a263a28b58c5e74de57e496517a9c4e4288cc10bdf9318",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Apr2025_daily.csv": "d25844d201cbfd9104b80f07d03a8b1d73c675936e8c164e5cd15f59b010ccd4",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Apr2025_hourly.csv": "f2660e49e11d472fba202ceabce5d6863f6fccf8e56af1c360c1b477632c0dac",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Aug2023_daily.csv": "1557a0c327c26b6533a52e54d132fe1b17fd02033903fc157541d1863258070a",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Aug2023_hourly.csv": "4fd467669d7989147e30f9ab5036a8314287fd679514ea1339ee1cd2d5e3b5a8",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Aug2024_daily.csv": "a76be77ae5428cd98131d4d252a9dd798eb8fb2819b14e78c39094a096d3f6f3",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Aug2024_hourly.csv": "7368039d53163a72c230e6515fac251b94d5d337b0e00f1a9df0fe2cbab0068d",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Aug2025_daily.csv": "bfb0155deebb968138c82942630e8d14da6ed91802a792f14103c965d362e46f",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Aug2025_hourly.csv": "157c9ec672bf5fcc6962b30c4cf30596b7cbdd178aa9af036fd2321e3cb1853b",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Dec2023_daily.csv": "c8c8a31132816257f5f913337d3f45a6b5db2436930b9a187065ba44e611f9dc",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Dec2023_hourly.csv": "df8359dae59b5c9778139f8b7a5b75766f351d0d8ce64baf9270c01ffaa354b8",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Dec2024_daily.csv": "73e358ad9c6565e6ee2dd903b423142af80f95111b4c0a6ad23ee98562d56918",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Dec2024_hourly.csv": "a5b2a8d2b83a28e0655e069e4989cba21d88d6d4c398a8a9761e602d3d3247cf",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Dec2025_daily.csv": "1d600d82f39e4c0169bcfc6e24980ccd32ab8b50817e3207a0f988ed7772c2fb",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Dec2025_hourly.csv": "6e235cf0e8636142555aa05a797fde06292629c70dcd7e2e18cf7009f93a4e2b",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Feb2024_daily.csv": "71da197dacbe09c1c91f39ac6d742b77f9286f0c866a7feee701c8f28976083d",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Feb2024_hourly.csv": "a733dfafb264af1196d64e728d8d37eecf9640591b4a12b37964790f714d91d9",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Feb2025_daily.csv": "4918c33381a83ea77a1f70a60b313909882804f646e60da67c953b94d2e2c044",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Feb2025_hourly.csv": "4d0cbf3150f4f7f283bf59066504211b757738117bf8d544bb83aca768ecce33",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Feb2026_daily.csv": "4c34c5416c6e8ac82bcf28ec4ee232bb7b50ecbb67ca6a76cc1070c29c5afb62",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Feb2026_hourly.csv": "a5af7ca4e2a1cbec3081a9ea36862ce1cf4dacd7511807354f38d57f82ec8530",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Jan2024_daily.csv": "71fedae71924201cac6542a80667676a85f1584d5e49115bdf4e441ba882ce0a",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Jan2024_hourly.csv": "597f5cc96b935312d2005127ef93c5ac791b3ce0fb6e748ec5432c8e9e158ad9",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Jan2025_daily.csv": "68663b8974e25705f0f8a333a46b6fd0f69c0359ca5a25c6de6722e4ba7ef96c",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Jan2025_hourly.csv": "513cb6f4b772061fec7ce1086ca5c05296ce428517ae264bcdfaf0b997c7c377",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Jan2026_daily.csv": "4ba0fab385b8b0a4b3a2c68776e5b1fa479afaa8f15fcd22455bb59cfc02e534",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Jan2026_hourly.csv": "f154346a389428fb06f83e3747ae546122af1aa621a08abccd7450233c8873a9",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Jul2023_daily.csv": "7c4943d5a68c3179199c823228692f40dbfe89be6501e8d0d9d19c084bb4f8b8",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Jul2023_hourly.csv": "74d3472c9d2d3d16dccc46684c4b28cd6640d6297a679cff05e675525d90424e",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Jul2024_daily.csv": "a857b912c6aab1306780e1c6ab1daf6a357772778ac8b2933f7080752cc91e6e",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Jul2024_hourly.csv": "fd70989fa6f5e4d55325a606f559037221312c033992c3f05307f2c80718ac78",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Jul2025_daily.csv": "c55f320ea84663feb53555d0da8de7fb667c7723b0c0590b97e6a92b77df08c3",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Jul2025_hourly.csv": "c1b31565a5473bcf05b46000d187f113c7a7515c80820e618b501fbcc5a14fc0",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Jun2023_daily.csv": "0190b7b4a0a47d15febc7d0df33e0a51261f817434d691aa65d0351ed7d223ea",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Jun2023_hourly.csv": "28b30666506cd27a8627aa37de8b99d776b2692daebc68b2e7bee0ad0f6af03f",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Jun2024_daily.csv": "dcda9abab308f86db34ec7d20363a4720a1f3e9cfe10d64a952a63c16173f976",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Jun2024_hourly.csv": "273d37e40b492019f293642fd7de4e719fdcb3aacbb1e5403ccdf4039d7ea316",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Jun2025_daily.csv": "9f11e835597dd8738670af00cc456adaa119b751617be5f8b2d47c4f9bf53c34",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Jun2025_hourly.csv": "fd29dafa1258d8ce60ffbbdd98c200556bae3359bec1caa45728127610313e5c",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Mar2024_daily.csv": "789f9e17545f26cead993b185ce9045d998ea268f19a20541f98b601cc1e08c2",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Mar2024_hourly.csv": "a064fb224812da321c2c3b52df94a4e12c9f4bc271846345ef450de03743779b",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Mar2025_daily.csv": "3a353a2538df35a634a3ff9f369b94f216971cb0a545c95b60a9934ea1279c3a",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Mar2025_hourly.csv": "8a5c93a197dcf2f4aeb1a6ce6ccc11f365bd51e80232011d25f4ae655c4e782e",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Mar2026_daily.csv": "dd66c3a07f2a8ab677c99967327b342c46af1863d04f0926d7f98654d8bdfa16",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Mar2026_hourly.csv": "061da9a5350798acbee78ecb49aad33986ee3df3bf1deb4ebefcf84221facf09",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_May2023_daily.csv": "af1c41ad177812f640f767a1b1c4b583e492ba9b652eddcd4af7559492f37c06",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_May2023_hourly.csv": "c10e6b72cf561d540c6d75f5ca741514e67560c12bdd8641d10e986eccaab0b5",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_May2024_daily.csv": "96e49e8df1f28030b89c1b5270486a66b51bfad6dcfa591891b81f1338dd5ea9",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_May2024_hourly.csv": "e19605c12c27ba5c019f9bf67351457c865a3bd202266e4753d606e420dfe8d5",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_May2025_daily.csv": "a391ff19fab071db8545a65a2ba482a46df4ca62368092f6640f2a1825778def",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_May2025_hourly.csv": "14abb7d19b33b35a9ddb68826662beffed2f4d82b8f4d8189f7578e524f8bd84",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Nov2023_daily.csv": "c61da5ce528494873434f15135069f7cb32971907ac85c91450c8e6abd6612e6",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Nov2023_hourly.csv": "a13cba32d2e78ca9696d55c27cc6d7ff486f62cb74e9c56b6ffec561d77ca3c6",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Nov2024_daily.csv": "717e0ed0eae224f774a6406374478f45f9763ab2fab54e3479ca68ac0f59b64d",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Nov2024_hourly.csv": "e0a97d40b5794572c91ba6542f168b692dba1d99324b63821eba852151cedbf5",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Nov2025_daily.csv": "f689dbda764e18bcf58e95da64ea8f7dbd92bae4d0c1553e9ac6cd0bb736fb1a",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Nov2025_hourly.csv": "5443cbe0a1d3c761ed802bd6b21872e04fe85d297059153f5442009ab7d90eea",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Oct2023_daily.csv": "43e5be2e943d92cb6babaa66194365c99bbbe8e555e09ad6e7622eb49004914d",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Oct2023_hourly.csv": "47ff08c5d4ae127a914e5b5218d90eb413e4d8dbc120bcf5451d8c286360cef7",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Oct2024_daily.csv": "4ff63e4aced0fe2806d73ea145d8e4dd42453aaa76c13b4fc51e81045c3e1429",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Oct2024_hourly.csv": "3b4b36b46d0a8be21cc8e3bf7edbbc318df6d22a9573293fac1eae1cc4bb7d1a",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Oct2025_daily.csv": "baac839ab7162c9d2cd7f07b5a310c1bbfc15d2b207db853d7395640f86ca272",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Oct2025_hourly.csv": "c335f50b2bd0136e6ad81e3d2ea969c53313378b6f4c2e29de8b8b3398a1f56e",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Sep2023_daily.csv": "c722ed8140fa19f6321338dd4d14a04e7e6208a2146279c4751e46ad458febe1",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Sep2023_hourly.csv": "b212eaf5c4055f448ac0829d83fc33c63e112afb00f7639a49767c61621b0a2b",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Sep2024_daily.csv": "06d7c5acf69927bda8ee97c0c3caa35ea01a1fb356264f2ec016fb69614d1624",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Sep2024_hourly.csv": "d1fed9cb5ba8b81248ff5249b4b32b4cb0a4ca6629c19b09ab767aa1311dd036",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Sep2025_daily.csv": "bd1479d7bb7ccbb4f2bee4dcdb86cb02441975403c142832749179f00a9054f5",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Sep2025_hourly.csv": "46b25f06c3c65e4a10b47f88620171dba1edac2147686a897fafde4e50d36c8b",
+    "data/processed/north_rustico/PEINP_TR_WeatherStn_Feb2025_daily.csv": "f829c13b9b201b5d8d308060a9c663aa4aa3f0d02b955149e8d07391ee76f164",
+    "data/processed/north_rustico/PEINP_TR_WeatherStn_Feb2025_hourly.csv": "0a8ace13d4362bbb3646f15111cba9f14ee5034f43d6a0793203db0ed7f62267",
+    "data/processed/north_rustico/station_daily.csv": "31e9b607604877a5bc865e628470cfd59300eb94d234eb2f777d39adb1e859d6",
+    "data/processed/north_rustico/station_hourly.csv": "cf78a50f21a7b393c4029404d355629bf0ce4825a950efe692d66cc2e6f46ba3",
+    "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Aug2023_daily.csv": "c8365a734e13085e4e5ba480a538f34a95646d3e8325e41f9ebc1c28b9988efc",
+    "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Aug2023_hourly.csv": "84b285887463b090aebeb2c173312d73217aef30f40c7c5285a99aab2f8b44e5",
+    "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Dec2023_daily.csv": "ad0c689ab69a9bf04125f02275f062df2c1d77cfc725ea93aabded2d2a1c5645",
+    "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Dec2023_hourly.csv": "b19842819e8bcc4e351e33b8333bbbf71f2355c71889f4139bec5434aa3ac9fa",
+    "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Dec2025_daily.csv": "698d85f54b2afb4747260c3525f489303ec4d194981ba0235eaae210c4cc18a0",
+    "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Dec2025_hourly.csv": "27bf8d9fc393eb92340db122f943027e9c9aba4f02c02829403e845f75f6259d",
+    "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Feb2026_daily.csv": "207abb7321067c21de391d96a9f7b4f03c2687198c4edc9f5704e196a682a71b",
+    "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Feb2026_hourly.csv": "2b7d2d3cae2be60c20a0ec57661994459f1addf0c5ce214b186889bd24d8f170",
+    "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Jan2026_daily.csv": "b9b82fcce7a53d9b54fd1e4c561a568acfc92ed18c5cfe5b24b6403033500c1f",
+    "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Jan2026_hourly.csv": "996f4b2048236cf2fb4fcd8bb181148fa8786b07c70a22dd0771c86453154b14",
+    "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Jul2023_daily.csv": "302a6c924329398cc508bf45a30852b8225ec7b5f8c40297627070f01364e43d",
+    "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Jul2023_hourly.csv": "e4c057f2288950dbf931c01d6b06e56e893b0e1da8229f4cea442b1e55f58d46",
+    "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Jul202_daily.csv": "79bda90a513e990b34d8796153cfe513e3b704d167c345a9acd01b5596af6936",
+    "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Jul202_hourly.csv": "467f81b367b403b287bef4d59fec687ce192713f84f08eb240dbd712ee2d44f8",
+    "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Mar2026_daily.csv": "569d133cc5cb3cdbe0b0b394319d5671d3f75b0a6ecb44c09b6e89a8ccf0e2b1",
+    "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Mar2026_hourly.csv": "c0fce38f42404dc06add55f50d92e1f97d4eb2da429b5c802821214e2daddde8",
+    "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Nov2023_daily.csv": "8b1c7a4bd810fe39987ece8351adba23b6962407aecac1fa1cc2a1c29ff6477b",
+    "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Nov2023_hourly.csv": "4adf655b09b75976ff7113523118bf4c5aea1c7db24c7a266200ba45cbc48420",
+    "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Nov2025_daily.csv": "6dc0ae9f3ccf198ace825bec4a61cab08210e90ee5a68cb5ad4cc81b791193f3",
+    "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Nov2025_hourly.csv": "29eefa98224dccb83657b7301edbf589d9973ddedc5c610ac7a4b3bc2349d5dd",
+    "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Oct2023_daily.csv": "531ae5dd49873ecbc0112f56a26b5216fdf956f92d44a372a38b20a1f193734f",
+    "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Oct2023_hourly.csv": "784d74653b64cb4f41784a7759dd4e91e164ff40bbaa9f728af9d4f2d4eac24e",
+    "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Oct2025_daily.csv": "3bdaaa8d9556bac8205e8b1f64c08df4587fdf09ef0684c6e3054da29e0ba657",
+    "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Oct2025_hourly.csv": "521393b7cac709741c7cf6008b2171e43b57d4dfbb9f709034ca18198c70ae24",
+    "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Sept2023_daily.csv": "bf7a3606b238c88db4407a0db856c10eebc4f66beadd178f62dc7cd3c33c6d89",
+    "data/processed/stanley_bridge/PEINP_SB_WeatherStn_Sept2023_hourly.csv": "782bd3845a4de4a64e1d8608ee1af711d4cd5e3403a38bd1becb98baa6df692d",
+    "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Apr2024_daily.csv": "e68c7c983485f75fc7e5fd1b05cbfa1db9193f0e169bcb0c9aa9b7ee2a6e2d7b",
+    "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Apr2024_hourly.csv": "94cca51e2c8a4b9d886e2a6befe763dc670dbba15b3acf1cf14fbd33885ceaef",
+    "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Apr2025_daily.csv": "97454a7ee2e32fb3daf673073bab27a333ba14c8a351a6810ae9fd1f46f35972",
+    "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Apr2025_hourly.csv": "72a2d9e51af236caca8e2981621015009a758343d7c895c4eeb546182b6f0264",
+    "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Aug2024_daily.csv": "d060ff52bd15eda11228ba0947314f4c532e986971b80a84be5300340e0620ae",
+    "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Aug2024_hourly.csv": "b36417e8b44283e283a6cdf8c07065e584156d04632f6032213b72cfb4d8f896",
+    "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Aug2025_daily.csv": "187d866dcc7818a85abdf7ad0a9c7a8c06c2de3e000d969ee4b1a5eb9e0c124e",
+    "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Aug2025_hourly.csv": "5bb2ed9a2496be8f242f57c71e0d8831cc423cbefaedec6630e315ec5a12457f",
+    "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Dec2024_daily.csv": "3c3fb99eab91eb3f7e47b4df28a0c3e598fe0100080da1596ad959af1f488ab9",
+    "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Dec2024_hourly.csv": "c0fa4a124974cbed4ff49e0f9867a4c4ca4753046095cb0fa04472f90dc430d0",
+    "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Feb2024_daily.csv": "ab5caa02a20f0cd2949cee445b2d7009cefb34d319794bfb5d61aa29cf243922",
+    "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Feb2024_hourly.csv": "c0e0a71d3347bf9e82a8d08df25ba2811674d604426772002bac65e227d4b510",
+    "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Feb2025_daily.csv": "a285d80800e7fffc7f8342f324767a3c5322c6cf84d6151ad5320853171323c5",
+    "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Feb2025_hourly.csv": "d0cc66f6532a48f7cc0ea6f41d645d0f9326c5789758eb28fe124e2aabf275d7",
+    "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Jan2024_daily.csv": "2f9c19ebb402e59ed7688041ad82493e42a9bbde93b5fa09417ece9b16f1ccb5",
+    "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Jan2024_hourly.csv": "9fba7d0637cc9610443d992212e95313239939a2487faf12182f09036dbc2e49",
+    "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Jan2025_daily.csv": "776345abf74e82de8b82939d8036f93f79d0def358b7b9a9584683723d1d7d19",
+    "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Jan2025_hourly.csv": "d03de6c4bce337c53b2e014e4522e89bc98f6bb77d487d3acf60012cb91cf5c9",
+    "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Jul2024_daily.csv": "fdf83ca72b5ef2f8c2e49d7666407275a3ec2ba0af534cb22dd72330500551e5",
+    "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Jul2024_hourly.csv": "b5a60323ea2be21bec8df3fd3faf0a2a8eb9a2d3f7e729ff1b1dc0a394fc08eb",
+    "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Jul2025_daily.csv": "1e91a58ce51ce6412e6b49d4a9f4e7d0605f726d7e70530041aa5b2e6ba59f64",
+    "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Jul2025_hourly.csv": "1b8393bb3a80627a92b93aa041d700bc9159affce483d4fa2929e3ee9dd60f23",
+    "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Jun2024_daily.csv": "ebb0453955ed3243ed30dc04b7fa769636754e2e3e05cf747c0bd3c6eb792704",
+    "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Jun2024_hourly.csv": "c55f00c91c43578bcf063ffff78006d19817e9152f9f02b61c274e15491bc73b",
+    "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Jun2025_daily.csv": "62cf818e0d6dad6aa49edcfaedf346d4e2c8dfd811ba46541e0dc463175a5760",
+    "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Jun2025_hourly.csv": "494acc1f834fa095124985ce6559d0d4ae57ec5c549cfe2d4876a5e749895286",
+    "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Mar2024_daily.csv": "6cc504a371e9e07f5cdd55a7c4d6d62086ca30e6a2b0b822919384d037a8a162",
+    "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Mar2024_hourly.csv": "6042060dc0ac462a2764929e337f7338dc88c376289e9d9bb5e5e3fc96aadb59",
+    "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Mar2025_daily.csv": "10846b92d8d3a6325ef07722f60b8254b62b2c2554be6273c7db8aa6919d9786",
+    "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Mar2025_hourly.csv": "b06ca69b737b33bbb967a5722873e45ce9ce876a03b5903e03026eb7f4674fcd",
+    "data/processed/stanley_bridge/PEINP_STB_WeatherStn_May2024_daily.csv": "dd8678113302b7c15c4d4cd0044f75a1416ae1f770e81d47d1c9eeeefe6e4c92",
+    "data/processed/stanley_bridge/PEINP_STB_WeatherStn_May2024_hourly.csv": "fba16864df0b9561502c7c99000844678e618b64db4465985d5aa7717171c37d",
+    "data/processed/stanley_bridge/PEINP_STB_WeatherStn_May2025_daily.csv": "bd8ef1fd1ff775fa7bd2d35504ab7203df887a2824aa77a338b2d0d8aa88a730",
+    "data/processed/stanley_bridge/PEINP_STB_WeatherStn_May2025_hourly.csv": "0d2ca43264ce965260af48c2b2138d73e13a58075a08a3a6b1ae04da84eaf3a5",
+    "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Nov2024_daily.csv": "c2728cd6cc56800c34bbef21e5ad45e58978cd76b96e0f3627525fc92fe2a54b",
+    "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Nov2024_hourly.csv": "d32116fa386e6b7367edd6d0f764d2670281ff35dbfa1743a8019a6e37fbbd1e",
+    "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Oct2024_daily.csv": "056e996f73fbd97c0dc4626cc51c856c5e835b0e9435a3ee649cf0cda2823668",
+    "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Oct2024_hourly.csv": "b5d32d5b3e69b1c07c2c4a5c3e380d620fbfcb5ed4b558ef751e88a0aaf8c35f",
+    "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Oct2025_daily.csv": "8c6803b6219c8c4b00ac867548ad3c54ae4b5a8e715d7818bf80c36baf227831",
+    "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Oct2025_hourly.csv": "87990fea8063b85be594bbf671c8ff2d5a079aeabf8811f22df1e02d7bd54d8a",
+    "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Sep2024_daily.csv": "e38eff4cbaca8f3f621e833ec4f784dd404bde82c2373c7133e28d60b898360e",
+    "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Sep2024_hourly.csv": "e4e53a314371d8eedca4d04e58e7b332f422143d9b7f973cf2b828bf9849041f",
+    "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Sep2025_daily.csv": "c3a6c34f53414839a8aaa58ebc9ba881cbcf6e74f9e32fbc631d93c443d8f9cb",
+    "data/processed/stanley_bridge/PEINP_STB_WeatherStn_Sep2025_hourly.csv": "5b3ebedfba5ff5f3ae7d5b89df6c373e69c63f8d61757e537964d30dc4ee4b91",
+    "data/processed/stanley_bridge/station_daily.csv": "3178326f74e56a19202e909283c735bd5135377e0c7c8be765ad4f1248ef9bf3",
+    "data/processed/stanley_bridge/station_hourly.csv": "72a1eab4c9f069462da8f496f0beee75ec3fba5c1541d9e399c9a46199042d47",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Apr2024_daily.csv": "13bb787f6e0c318cc3274a05c356d33b6c1082789806252c39ce4f46c0df804a",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Apr2024_hourly.csv": "2264fcddee2d20d09d00e989754641b5af7bbb8a7dc9abbc2fc9371e5243672d",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Apr2025_daily.csv": "22c47183cdfc93ed500e809b1cfe0a3dc674cf8104c44d3ed78636d62b51b56e",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Apr2025_hourly.csv": "772205fad60503b491012c675ffe2cff4fecfc49f09e898ffd360e9d5dcf51b3",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Aug2023_daily.csv": "6a150f119e8abe3b6740a5d4939bcd180d218f7606db0aa2fddfa6c8e04bdc36",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Aug2023_hourly.csv": "ab6571b9dfa5d27471302481c564a9049cdca18be63dd80adce1ad63125df6df",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Aug2024_daily.csv": "c1eaaff7d43bd7aa42d5c6f97ba54d234cba8f278a28fbbae87231bfb1e39306",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Aug2024_hourly.csv": "f8059d92b3f85baf6ae2e96082235cf9cc057eb4c68f0ae236b4d0eff6d71780",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Aug2025_daily.csv": "8f010d699cd2504d420ad3c8ae27bb4a520c6b694497b7214a7120c2748ab93f",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Aug2025_hourly.csv": "20e2f8fd51941323fbfe2105d1c811e582864f6204508381c8663c006e810952",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Dec2023_daily.csv": "de519a14453be72fd5d311c611a6a6e567c12fc32c4a72cb2de4b849cdaeff9d",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Dec2023_hourly.csv": "d3af9a65bbf16cfda817d079276f95a484bc9806ebfc0ba1b50509dd61349c2d",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Dec2024_daily.csv": "64aff49bec74345d539e8bd3ca537498d995697a7328fe564d0b6947db53aa1b",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Dec2024_hourly.csv": "7c9edf3e325843a5d1afdc70b7cbc5ae6a5a7e82c397b223f58ee32af6fc5699",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Dec2025_daily.csv": "ad8ae571846f4bffba7e4db13042bbf2116774f9d776adce5185bd617378187b",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Dec2025_hourly.csv": "3ec4b9cefe12de5aa92c84eea868003c9b42eb351d59f6adef5ab72c7b82479f",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Feb2024_daily.csv": "6715edeff8e0e670873ce8ae140f3064e9d32a87897d8c9925ed8a40584d88b3",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Feb2024_hourly.csv": "cbca55f9e1bfe19b9b7eba57d8c201fd70892bb9e8f90b22ee868ee53f1034fa",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Feb2025_daily.csv": "6970bb7a709c180aac8cb3bcf6909ad6451f7a4ea741075b6b57c3f4691ed6ec",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Feb2025_hourly.csv": "ead47fbdb508bc0fd2c8d1b676ed2adeb21ffc8cd90fc678572f10a755611d7a",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Feb2026_daily.csv": "e0714e5228b245a6b0d1d8ab688e5df24af0964a4bdcee894a3d1f219152852d",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Feb2026_hourly.csv": "3ee699ad8b17e00fdc2317b212f44ba7fc3c5b7b9859b6b73169d3febeb304e3",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Jan2024_daily.csv": "afd3625937e7f1ce745c8ab6fdf2c369a539d7a4988675108d6b0b513b9f4d44",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Jan2024_hourly.csv": "0cba4c1e59eac44a91fb318498f26cf9eac3d7f6b3e640f4293b59c039bae6fd",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Jan2025_daily.csv": "958d7398442ecc62845f6f536a601bf900f7c083e1cbd7fd6069e91742649c8b",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Jan2025_hourly.csv": "75a59ba4b620151faf0e9d6d4d61a7b179bb03a1b5c6b927b8f76aee64a94990",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Jan2026_daily.csv": "e45d0d7b5afecd8b90b600dca640d1ab016c1631b6dedd3726cfce54d8679571",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Jan2026_hourly.csv": "0305ab058ce261774becc32ac5d49b19c33695bf28cff6a89842eb65130630ff",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Jul2024_daily.csv": "dc8017917a9d3df8240f662015ce5111520898e3d5b7f113948e656fe34b3e2f",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Jul2024_hourly.csv": "1a15be8036243f89dcf737c4198abbf1072d12f6260df69f5b0afabdcf898f24",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Jul2025_daily.csv": "a929a584e48388f5e9d3a27259cce3689784ab067f0b0dac775389c55550c396",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Jul2025_hourly.csv": "0b42842ba49cd163599c0068b7209602c228757e8478169706b197e1ee7c0325",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_July2023_daily.csv": "097a54f2ae14f3c79692f2173fa81f4841a64f3e2e712bd09562cdacebfc5004",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_July2023_hourly.csv": "d7bc0c1ba34967d0f20931f7b532e87c3212511e9fb62e835fceb678b8804e50",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Jun2024_daily.csv": "53e40481cb8cdab880d34898fbc9a48a92b3a059895abf6d962cf22d14b1793c",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Jun2024_hourly.csv": "1acf3de7bdc8cdf40007f13194896fd4d5dbbdf9ebe003eb08ea832f6df8ebb9",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Jun2025_daily.csv": "3674e27a5711e9076c30521076574e27bab62806055f9886d22e7b3902ed152f",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Jun2025_hourly.csv": "11760839f2d21c4377eb5385a66fabd8eb6cf1d20bdeb271859d385fd9933981",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_June2023_daily.csv": "bdf9217d2f1222d6d5c9148f9a6b53becb3b40d0c633ab4e7158122587107b7d",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_June2023_hourly.csv": "fdb1bd7a5b87f2a07f30cf933778f3cb27a2fc47c21332199dc70303c200de3d",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Mar2024_daily.csv": "2fb807749e85547739cbc3c9977342892f8c816867a1ca8cf753036b7fdfad60",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Mar2024_hourly.csv": "e069cc50b13ce95024178d343214cfeb1eb8ade3032de9ef87ac8d6d58b04de2",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Mar2025_daily.csv": "eb0b6ed4415665ae38cf2f65fd473921b78dcd9ec2ee5ec0c6abf8bef9cbd16f",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Mar2025_hourly.csv": "faf0203a55596a4d42e00382cb6b620f561b5d119e001ff757944cada483e27d",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Mar2026_daily.csv": "8c24b91d607455c13278a718231768345119667f06032c2f05f6fbed64f0ecda",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Mar2026_hourly.csv": "88d5656717f8ea2133684f5c2e75ebf89a5c0e84ef0da1f3702c14c8d165def5",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_May2024_daily.csv": "2ea87e8e46008665b59fb4e35c6e7342701d0e713cecf905e163ba66bc27cac4",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_May2024_hourly.csv": "38c4b9193ebd826cab16f00f34a7723dcd35bd2ab8b626a1149eff550d539e66",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_May2025_daily.csv": "d089c95e4dd58e2666fa432b1d50d7dc38c97c9df4fb8840217d3349eb8362c6",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_May2025_hourly.csv": "4f87af02d3d33fd7525b87dd44cf0d158ccacc809d676d7009a4d510c060b71a",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Nov2023_daily.csv": "72f76fc31476866e4443add0593beaaf6429aeb6d77b1ea1c442a284dc5686ee",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Nov2023_hourly.csv": "87211a26719a2e26b6df82762a76d3a111b3b7cb4c0485a2ccabf2847584e916",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Nov2024_daily.csv": "a521aa1b4ad6eeb4d2a539b488805cd2e4c8f84a887f36d820255fa99f22a725",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Nov2024_hourly.csv": "401be05473f17be92ed637a3447e79a0d38526701db853489a82b41b501e1830",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Nov2025_daily.csv": "c2a04b4db2915d5e92581dcbedbdd926a092a779fb203dd1e7a1f461aecb8439",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Nov2025_hourly.csv": "67dc7d975be1fa4797e789b2bf8235f2f7be7a72d9dc7d70f7a0e6f91aad2934",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Oct2023_daily.csv": "1d945ad6d1812a5db30640facaf5f72d6bfbb198e30b3664f4c382515691d134",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Oct2023_hourly.csv": "c2c04e7861e91cc026c333b28bbc80eaeaa24c588620da6b6e6cf58bd6f6286a",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Oct2024_daily.csv": "e3584ce1f09ceaf084ec8a119c84bb3f851caa086b0810b5931007adc2743099",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Oct2024_hourly.csv": "8b346113da4f9a20218481197eb867f5fceaa3ec8342a9bcd7d3b4c1678fa26e",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Oct2025_daily.csv": "e24b8afa901fc7ca526b6a9a8e416f1faaa82bd337e120c414f1379640c815f8",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Oct2025_hourly.csv": "c6cee28a29f1631a1d71e0ce32a01286dac0f247f4023bc4ceee33aa079c885b",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Sep2023_daily.csv": "6b5d7e02cabc759cac85cd64a338d7596e665f1b99ca35ff71794e3918db8c8b",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Sep2023_hourly.csv": "3fca7f278d6318423981dda758d49e5c33b151cd74a44ce4cfa4f0408dabfad4",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Sep2024_daily.csv": "c1eaaff7d43bd7aa42d5c6f97ba54d234cba8f278a28fbbae87231bfb1e39306",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Sep2024_hourly.csv": "f8059d92b3f85baf6ae2e96082235cf9cc057eb4c68f0ae236b4d0eff6d71780",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Sept2025_daily.csv": "0c26f861c3d838152b7bd58bb51b90e1fb4b0370fe305245a868db647ac0e3c2",
+    "data/processed/tracadie/PEINP_TR_WeatherStn_Sept2025_hourly.csv": "8ea610f335f3e615e3f27df7697e708c7de1c002243dc9897adcba8c83551064",
+    "data/processed/tracadie/station_daily.csv": "474619ccd41e6f9da89c4f5efde48ff0b65fd5fe4081df4255574b8407dce39a",
+    "data/processed/tracadie/station_hourly.csv": "b708cabe3293f0b22e8eddbf43da168221979f8f9bc9742ce5fd5dbfaeb82142",
+    "data/processed/stanhope/station_daily.csv": "4caba1c6a2bc835664c2671f7a85debabc7d6483d899e8a067a4481f2309e6f8",
+    "data/processed/stanhope/station_hourly.csv": "d8d35ccba044b209357c5d8b9c57f6f62102cfc1ee3017f9a0c4232a5670472d"
   },
-  "generated_at": "2026-03-26T13:32:34.273318+00:00"
+  "generated_at": "2026-03-26T16:02:01.252518+00:00",
+  "stations": {
+    "greenwich": 86,
+    "cavendish": 88,
+    "north_rustico": 76,
+    "stanley_bridge": 72,
+    "tracadie": 70,
+    "stanhope": 2
+  },
+  "unprocessed_count": 0
 }
