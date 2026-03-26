@@ -1,7 +1,7 @@
 {
-  "last_reviewed_commit": "7a2dc82",
+  "last_reviewed_commit": "bae9efe",
   "verdict": "REJECT",
-  "reviewed_at": "2026-03-26T17:15:33.836264+00:00",
+  "reviewed_at": "2026-03-26T17:14:58Z",
   "artifact_validation": {
     "status": "SKIP",
     "errors": []
@@ -57,46 +57,51 @@
       "id": "AC-E2E-7",
       "name": "Manifest reports 0 unprocessed files",
       "status": "PASS",
-      "evidence": "Ralph's fix (9251ada, d9e3f1c) correctly excluded _licor_all pseudo-station. Manifest now shows unprocessed_count=0."
+      "evidence": "Ralph's fix (9251ada, d9e3f1c) correctly excluded _licor_all pseudo-station. Manifest shows unprocessed_count=0."
     },
     {
       "id": "AC-E2E-8",
       "name": "Full test suite passes",
       "status": "FAIL",
-      "evidence": "11 test failures across 4 files persist unchanged from prior review. (1) tests/test_validation.py: 7 failures in TestCompareStationData + 1 in TestValidateAgainstReference \u2014 tests call compare_station_data(station_name_str, df, df) but function signature is compare_station_data(ref_df, cmp_df, on=, value_cols=), causing 'str' has no attribute 'merge' at validation.py:39. The TESTS have the wrong call signature, not the function. (2) tests/test_repo_shape.py: 1 failure \u2014 requirements.lock exists in repo root but not in ALLOWED_ROOT_FILES set at line 48. (3) tests/test_pipeline_execution.py: 3 failures \u2014 daily CSV artifacts missing 'rows' field in manifest, imputation_report not tracked as typed artifact. (4) tests/test_data_refresh.py: 2 new failures introduced by Ralph's fix (9251ada) \u2014 ImportError: cannot import 'load_station_files' from normalized_loader, and ModuleNotFoundError: No module named 'src'."
+      "evidence": "11 test failures across 4 files. test_validation.py: 8 failures (tests call compare_station_data(str,df,df) but function expects (df,df,on,value_cols)). test_repo_shape.py: 1 failure (requirements.lock not in ALLOWED_ROOT_FILES). test_pipeline_execution.py: 3 failures (daily CSV artifacts missing 'rows' field, imputation_report not typed in manifest). test_data_refresh.py: 2 NEW failures from broken imports in 9251ada."
     }
   ],
   "failing_nodes": [
     {
       "file": "tests/test_validation.py",
       "line": 53,
-      "message": "Tests call compare_station_data(str, df, df) but function expects (df, df, on, value_cols)"
+      "message": "All TestCompareStationData tests call compare_station_data('greenwich', df, df) with wrong 3-arg pattern. Function signature at validation.py:14 is compare_station_data(ref_df, cmp_df, on=, value_cols=). Tests use old validate_against_reference call pattern. Fix: change to compare_station_data(stanhope_daily, greenwich_daily)."
+    },
+    {
+      "file": "tests/test_validation.py",
+      "line": 113,
+      "message": "TestValidateAgainstReference.test_delegates_to_compare also calls compare_station_data with wrong 3-arg pattern (str, df, df). Same root cause."
     },
     {
       "file": "tests/test_repo_shape.py",
       "line": 48,
-      "message": "requirements.lock not in ALLOWED_ROOT_FILES"
+      "message": "ALLOWED_ROOT_FILES set does not include 'requirements.lock'. File exists at repo root."
     },
     {
       "file": "src/pea_met_network/cleaning.py",
       "line": 755,
-      "message": "Daily CSV manifest entries missing rows field"
+      "message": "Daily CSV manifest entries missing 'rows' field. test_pipeline_execution.py:169 expects 'rows' in every artifact with 'station' key."
     },
     {
       "file": "src/pea_met_network/cleaning.py",
       "line": 755,
-      "message": "imputation_report not tracked as typed artifact in manifest"
+      "message": "imputation_report not tracked as typed artifact in manifest. Only 'processed_csv' and 'qa_qc_report' types exist."
     },
     {
       "file": "tests/test_data_refresh.py",
       "line": 64,
-      "message": "ImportError: load_station_files not in normalized_loader (broken by 9251ada)"
+      "message": "NEW FAILURE: ImportError: cannot import 'load_station_files' from normalized_loader. Broken by Ralph's fix 9251ada."
     },
     {
       "file": "tests/test_data_refresh.py",
       "line": 92,
-      "message": "ModuleNotFoundError: No module named src (broken by 9251ada)"
+      "message": "NEW FAILURE: ModuleNotFoundError: No module named 'src'. Test uses __import__('src.pea_met_network.manifest'). Broken by 9251ada."
     }
   ],
-  "summary": "Phase 7 E2E validation: REJECT. AC-E2E-7 now PASS (Ralph's pseudo-station fix works). AC-E2E-8 still FAIL with 11 test failures across 4 files. The 3 previously identified failing nodes (validation.py test signature mismatch, requirements.lock whitelist, manifest missing rows/imputation_report type) remain UNFIXED. Ralph introduced 2 NEW test failures in test_data_refresh.py via broken imports in commit 9251ada. Total: 5 distinct failing nodes (7 root causes). Next Ralph run should: (1) fix test_validation.py call signatures, (2) add requirements.lock to ALLOWED_ROOT_FILES, (3) add 'rows' field to daily CSV manifest entries and imputation_report type, (4) revert broken import changes in test_data_refresh.py."
+  "summary": "Phase 7 E2E validation: REJECT. AC-E2E-7 now PASS (pseudo-station fix works). AC-E2E-8 still FAIL with 11 test failures across 4 files. 3 previously identified failing nodes remain unfixed. Ralph introduced 2 NEW failures via broken imports in 9251ada. Total: 5 distinct failing nodes (7 root causes). Next Ralph run should: (1) fix test_validation.py call signatures, (2) add requirements.lock to ALLOWED_ROOT_FILES, (3) add rows field to daily manifest entries and imputation_report type, (4) revert broken import changes in test_data_refresh.py."
 }
