@@ -1,5 +1,5 @@
 {
-  "last_reviewed_commit": "2eee1f3",
+  "last_reviewed_commit": "bd4d940",
   "verdict": "REJECT",
   "reviewed_at": "2026-03-26T23:00:48Z",
   "artifact_validation": {
@@ -63,7 +63,7 @@
       "id": "AC-E2E-8",
       "name": "Full test suite passes",
       "status": "FAIL",
-      "evidence": "Ralph correctly fixed all 3 previously failing nodes (pandas import, race condition gate test removal, e2e marker on notebook test). However 2 tests still fail when running the full suite: (1) test_data_refresh.py:180 TestACREF7_AnalysisNotebookUpdated.test_notebook_executes_without_error fails with FileNotFoundError: jupyter not installed — marked @pytest.mark.e2e but not excluded from default test run; (2) test_v2_pipeline.py:648 test_cleaning_py_completes times out because pytest-timeout (30s) kills the subprocess before the 600s subprocess timeout completes — also marked @pytest.mark.e2e. Root cause: pyproject.toml addopts does not exclude e2e tests, so they run in the default pytest invocation. Fix: either add -m 'not e2e' to addopts in pyproject.toml, or make both tests skip when their dependencies are unavailable."
+      "evidence": "Ralph correctly fixed all 3 previously failing nodes (pandas import, race condition gate test removal, e2e marker on notebook test). However 2 tests still fail when running the full suite: (1) test_data_refresh.py:180 TestACREF7_AnalysisNotebookUpdated.test_notebook_executes_without_error fails with FileNotFoundError: jupyter not installed \u2014 marked @pytest.mark.e2e but not excluded from default test run; (2) test_v2_pipeline.py:648 test_cleaning_py_completes times out because pytest-timeout (30s) kills the subprocess before the 600s subprocess timeout completes \u2014 also marked @pytest.mark.e2e. Root cause: pyproject.toml addopts does not exclude e2e tests, so they run in the default pytest invocation. Fix: either add -m 'not e2e' to addopts in pyproject.toml, or make both tests skip when their dependencies are unavailable."
     }
   ],
   "failing_nodes": [
@@ -83,5 +83,5 @@
       "message": "test_cleaning_py_completes fails with pytest-timeout (>30s). The subprocess has timeout=600 but pytest-timeout kills at 30s. Already marked @pytest.mark.e2e. Needs either addopts exclusion or pytest.mark.timeout(600) override on this specific test."
     }
   ],
-  "summary": "Phase 7 E2E validation: REJECT. Ralph fixed all 3 previously failing nodes correctly — pandas import added, race condition gate test removed, e2e marker added to notebook test. All non-e2e tests now pass (184/185 collected). However AC-E2E-8 (full test suite) still fails because 2 e2e-marked tests are not excluded from the default pytest run: the notebook test needs jupyter (not installed), and the pipeline completion test needs >30s (pytest-timeout kills it). The fix is to add -m 'not e2e' to pyproject.toml addopts so the default suite excludes e2e tests. 7/8 AC criteria passing."
+  "summary": "Phase 7 E2E validation: REJECT. Ralph fixed all 3 previously failing nodes correctly \u2014 pandas import added, race condition gate test removed, e2e marker added to notebook test. All non-e2e tests now pass (184/185 collected). However AC-E2E-8 (full test suite) still fails because 2 e2e-marked tests are not excluded from the default pytest run: the notebook test needs jupyter (not installed), and the pipeline completion test needs >30s (pytest-timeout kills it). The fix is to add -m 'not e2e' to pyproject.toml addopts so the default suite excludes e2e tests. 7/8 AC criteria passing."
 }
