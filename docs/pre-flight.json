@@ -1,24 +1,40 @@
 {
-  "phase": "4",
-  "timestamp": "2026-03-26T04:47:56.593652+00:00",
-  "verdict": "PASS",
+  "phase": "5",
+  "timestamp": "2026-03-26T05:34:36.255625+00:00",
+  "verdict": "FAIL",
   "checks": [
     {
       "type": "function",
-      "name": "validate_against_reference",
-      "found": true,
-      "location": "src/pea_met_network/validation.py:53",
-      "error": null
+      "name": "generate_qa_qc_report",
+      "found": false,
+      "location": null,
+      "error": "Function 'generate_qa_qc_report' not found in **/*.py"
     },
     {
       "type": "function",
-      "name": "compare_station_data",
-      "found": true,
-      "location": "src/pea_met_network/validation.py:14",
-      "error": null
+      "name": "calculate_completeness",
+      "found": false,
+      "location": null,
+      "error": "Function 'calculate_completeness' not found in **/*.py"
     }
   ],
-  "missing": [],
-  "errors": [],
-  "summary": "Checked 2 structural requirements for phase 4: PASS (0 missing)"
+  "missing": [
+    {
+      "type": "function",
+      "name": "generate_qa_qc_report",
+      "file_pattern": "**/*.py",
+      "must_inherit": null
+    },
+    {
+      "type": "function",
+      "name": "calculate_completeness",
+      "file_pattern": "**/*.py",
+      "must_inherit": null
+    }
+  ],
+  "errors": [
+    "Function 'generate_qa_qc_report' not found in **/*.py",
+    "Function 'calculate_completeness' not found in **/*.py"
+  ],
+  "summary": "Checked 2 structural requirements for phase 5: FAIL (2 missing)"
 }

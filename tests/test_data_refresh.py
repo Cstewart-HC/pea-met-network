@@ -116,7 +116,7 @@ class TestACREF3_PipelineEndToEnd:
         import subprocess
 
         result = subprocess.run(
-            [sys.executable, "-m", "pea_met_network],
+            [sys.executable, "-m", "pea_met_network"],
             capture_output=True,
             text=True,
             cwd=str(REPO_ROOT),

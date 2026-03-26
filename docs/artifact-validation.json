@@ -1,38 +1,20 @@
 {
-  "phase": "4",
-  "timestamp": "2026-03-26T04:47:56.524325+00:00",
+  "phase": "5",
+  "timestamp": "2026-03-26T05:34:36.230252+00:00",
   "verdict": "PASS",
   "checks": [
     {
-      "type": "directory",
-      "path": "data/processed/stanhope",
-      "status": "PASS"
-    },
-    {
       "type": "file_exists",
-      "path": "data/processed/stanhope/station_hourly.csv",
+      "path": "data/processed/imputation_report.csv",
       "status": "PASS",
-      "fingerprint": "b58fd3c28e2e9808"
+      "fingerprint": "881aa7ec18955eb3"
     },
     {
       "type": "row_count",
-      "path": "data/processed/stanhope/station_hourly.csv",
+      "path": "data/processed/imputation_report.csv",
       "status": "PASS",
-      "message": "35064 rows",
-      "row_count": 35064
-    },
-    {
-      "type": "file_exists",
-      "path": "data/processed/stanhope/station_daily.csv",
-      "status": "PASS",
-      "fingerprint": "f8c7260c6e2158aa"
-    },
-    {
-      "type": "row_count",
-      "path": "data/processed/stanhope/station_daily.csv",
-      "status": "PASS",
-      "message": "1461 rows",
-      "row_count": 1461
+      "message": "489 rows",
+      "row_count": 489
     },
     {
       "type": "pipeline_manifest",
@@ -43,8 +25,7 @@
   ],
   "errors": [],
   "fingerprints": {
-    "data/processed/stanhope/station_hourly.csv": "b58fd3c28e2e9808",
-    "data/processed/stanhope/station_daily.csv": "f8c7260c6e2158aa"
+    "data/processed/imputation_report.csv": "881aa7ec18955eb3"
   },
-  "summary": "Validated 6 checks for phase 4: PASS (0 errors)"
+  "summary": "Validated 3 checks for phase 5: PASS (0 errors)"
 }

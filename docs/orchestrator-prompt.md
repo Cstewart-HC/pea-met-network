@@ -66,32 +66,15 @@ If you decided to **run Lisa**:
 - Read `docs/lisa-prompt.md` and follow it exactly.
 - That prompt contains all instructions for the review.
 
-**Before invoking Lisa, inject gate results into her context.** Run:
-```bash
-echo "=== GATE RESULTS (FACTS — do not dispute these) ==="
-echo ""
-echo "--- Pre-Flight Structural Lint ---"
-cat docs/pre-flight.json
-echo ""
-echo "--- Artifact Validation ---"
-cat docs/artifact-validation.json
-echo ""
-echo "=== END GATE RESULTS ==="
-```
+**Before invoking Lisa, inject gate results into her context.**
 
-Then when you invoke Lisa, prepend the above output as a **Gate Results Block** at the very top of her review context, BEFORE the lisa-prompt.md instructions. Format it exactly as:
+You already read `docs/gate-inject.md` in Step 0. Prepend the ENTIRE contents
+of that file as a **Gate Results Block** at the very top of Lisa's review
+context, BEFORE the lisa-prompt.md instructions.
 
-```
-## Gate Results — Deterministic Facts
-
-These are automated gate outputs. They are FACTS, not claims. Do not re-verify
-or re-run these checks. Base your structural and artifact claims on these results.
-
-< paste the pre-flight.json and artifact-validation.json contents here >
-```
-
-This ensures Lisa sees the gate results directly in her context window and cannot
-hallucinate around them.
+The file is already human-readable markdown — paste it verbatim. Do not re-run
+the gates. Do not read the raw JSON files. The gate-inject.md IS the source
+of truth for gate results this tick.
 - After Lisa finishes, commit `docs/validation.json` with the verdict:
   ```bash
   git add docs/validation.json

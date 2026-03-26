@@ -79,7 +79,7 @@ class TestAC_PIPE_1_AdapterArchitecture:
         """AC-ARCH-6: pea_met_network --dry-run reports
     file counts without writing."""
         result = subprocess.run(
-            [PYTHON, "-m", "pea_met_network, "--dry-run"],
+            [PYTHON, "-m", "pea_met_network", "--dry-run"],
             cwd=PROJECT_ROOT,
             capture_output=True,
             text=True,
@@ -98,7 +98,7 @@ class TestAC_PIPE_1_AdapterArchitecture:
             test_marker.unlink()
 
         subprocess.run(
-            [PYTHON, "-m", "pea_met_network, "--dry-run", "--stations", "greenwich"],
+            [PYTHON, "-m", "pea_met_network", "--dry-run", "--stations", "greenwich"],
             cwd=PROJECT_ROOT,
             capture_output=True,
             text=True,
@@ -117,7 +117,7 @@ class TestAC_PIPE_1_AdapterArchitecture:
 
         try:
             result = subprocess.run(
-                [PYTHON, "-m", "pea_met_network, "--stations", "test_station"],
+                [PYTHON, "-m", "pea_met_network", "--stations", "test_station"],
                 cwd=PROJECT_ROOT,
                 capture_output=True,
                 text=True,
@@ -302,7 +302,7 @@ class TestAC_PIPE_3_PipelineIntegration:
     def test_cleaning_py_runs_end_to_end(self):
         """AC-INT-1: pea_met_network runs end-to-end without error."""
         result = subprocess.run(
-            [PYTHON, "-m", "pea_met_network, "--stations", "greenwich"],
+            [PYTHON, "-m", "pea_met_network", "--stations", "greenwich"],
             cwd=PROJECT_ROOT,
             capture_output=True,
             text=True,
@@ -542,7 +542,7 @@ class TestAC_PIPE_6_Determinism:
 
         # Run once
         subprocess.run(
-            [PYTHON, "-m", "pea_met_network, "--force", "--stations", station],
+            [PYTHON, "-m", "pea_met_network", "--force", "--stations", station],
             cwd=PROJECT_ROOT,
             capture_output=True,
             timeout=300,
@@ -551,7 +551,7 @@ class TestAC_PIPE_6_Determinism:
 
         # Run again
         subprocess.run(
-            ["python", "-m", "pea_met_network, "--force", "--stations", station],
+            ["python", "-m", "pea_met_network", "--force", "--stations", station],
             cwd=PROJECT_ROOT,
             capture_output=True,
             timeout=300,
@@ -614,7 +614,7 @@ class TestAC_PIPE_6_Determinism:
 
         # Run without --force (should skip if newer)
         subprocess.run(
-            [PYTHON, "-m", "pea_met_network, "--stations", station],
+            [PYTHON, "-m", "pea_met_network", "--stations", station],
             cwd=PROJECT_ROOT,
             capture_output=True,
             timeout=300,
@@ -645,7 +645,7 @@ class TestAC_PIPE_7_E2EValidation:
     def test_cleaning_py_completes(self):
         """AC-E2E-1: pea_met_network completes with exit code 0."""
         result = subprocess.run(
-            [PYTHON, "-m", "pea_met_network],
+            [PYTHON, "-m", "pea_met_network"],
             cwd=PROJECT_ROOT,
             capture_output=True,
             text=True,
