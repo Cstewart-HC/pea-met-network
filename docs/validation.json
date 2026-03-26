@@ -1,16 +1,21 @@
 {
-  "last_reviewed_commit": "09d6f5b",
+  "last_reviewed_commit": "29cbde1",
   "verdict": "REJECT",
-  "reviewed_at": "2026-03-26T00:20:25.317337+00:00",
+  "reviewed_at": "2026-03-26T01:01:55.449022+00:00",
   "artifact_validation": {
     "status": "FAIL",
     "errors": [
-      "data/processed/qa_qc_report.csv does not exist in committed tree (AC-QC-1)"
+      "data/processed/qa_qc_report.csv does not exist in committed tree (AC-QC-1)",
+      "Artifact validation is stale (phase 4) \u2014 no phase 5 validation run performed"
     ]
   },
   "pre_flight": {
-    "status": "SKIP",
-    "missing": []
+    "status": "FAIL",
+    "missing": [
+      "cleaning.py removed from src/ by archive commit 1f8c9ca \u2014 pipeline entry point gone",
+      "qa_qc.py removed from src/ by archive commit 1f8c9ca",
+      "validation.py, imputation.py, resampling.py, manifest.py, normalized_loader.py, fwi.py, materialize_resampled.py all removed"
+    ]
   },
   "architecture_check": {
     "adapters_inherit_base": true,
@@ -23,50 +28,60 @@
       "id": "AC-QC-1",
       "name": "QA/QC report exists after pipeline run",
       "status": "FAIL",
-      "evidence": "data/processed/qa_qc_report.csv not found in git HEAD (09d6f5b). File has never been committed."
+      "evidence": "data/processed/qa_qc_report.csv not found in git HEAD (29cbde1). Pipeline cannot run \u2014 cleaning.py was archived/removed in commit 1f8c9ca."
     },
     {
       "id": "AC-QC-2",
       "name": "Report has row for every station processed",
       "status": "FAIL",
-      "evidence": "Cannot evaluate \u2014 report file does not exist."
+      "evidence": "Cannot evaluate \u2014 report file does not exist. cleaning.py entry point missing."
     },
     {
       "id": "AC-QC-3",
       "name": "Report includes per-variable missingness percentages",
       "status": "FAIL",
-      "evidence": "Cannot evaluate \u2014 report file does not exist."
+      "evidence": "Cannot evaluate \u2014 qa_qc.py module removed from src/ in commit 1f8c9ca."
     },
     {
       "id": "AC-QC-4",
       "name": "Report includes duplicate timestamp counts per station",
       "status": "FAIL",
-      "evidence": "Cannot evaluate \u2014 report file does not exist."
+      "evidence": "Cannot evaluate \u2014 qa_qc.py module removed."
     },
     {
       "id": "AC-QC-5",
       "name": "Report flags out-of-range values",
       "status": "FAIL",
-      "evidence": "Cannot evaluate \u2014 report file does not exist."
+      "evidence": "Cannot evaluate \u2014 qa_qc.py module removed."
     },
     {
       "id": "AC-QC-6",
       "name": "Report added to pipeline manifest artifacts",
       "status": "FAIL",
-      "evidence": "Cannot evaluate \u2014 report file does not exist."
+      "evidence": "Cannot evaluate \u2014 no pipeline, no manifest generation."
     }
   ],
   "failing_nodes": [
     {
       "file": "src/pea_met_network/cleaning.py",
-      "line": 1,
-      "message": "No generate_qa_qc_report() function found. Pipeline does not call qa_qc module or produce qa_qc_report.csv."
+      "line": 0,
+      "message": "Pipeline entry point removed by archive commit 1f8c9ca"
     },
     {
-      "file": "data/processed/qa_qc_report.csv",
+      "file": "src/pea_met_network/qa_qc.py",
       "line": 0,
-      "message": "Artifact does not exist."
+      "message": "QA/QC module removed by archive commit 1f8c9ca"
+    },
+    {
+      "file": "src/pea_met_network/validation.py",
+      "line": 0,
+      "message": "Validation module removed by archive commit 1f8c9ca"
+    },
+    {
+      "file": "tests/test_v2_pipeline.py",
+      "line": 482,
+      "message": "10 test failures in test_v2_pipeline.py"
     }
   ],
-  "summary": "Phase 5 REJECT: qa_qc_report.csv has never been committed. The qa_qc.py module exists with missingness_summary(), duplicate_timestamps(), out_of_range_values(), and coverage_summary() functions, but cleaning.py has no integration \u2014 no generate_qa_qc_report() function, no import of qa_qc functions, and no pipeline step that writes the report. All 6 acceptance criteria fail because the core deliverable (the report artifact) is missing. Exit gate: 1 failed, 4 skipped."
+  "summary": "Phase 5 REJECT: Commit 1f8c9ca archived all pipeline modules (cleaning.py, qa_qc.py, validation.py, imputation.py, resampling.py, manifest.py, normalized_loader.py, fwi.py, materialize_resampled.py) from src/ to docs/archive/v1-pipeline/. This destroyed the pipeline entry point and all phase 3+ deliverables. The test suite has 9 collection errors (ModuleNotFoundError) and 10 assertion failures. Adapters (phase 1-2) are unaffected and still passing. Ralph must rebuild cleaning.py and qa_qc.py from the phase 5 spec before any progress can be made."
 }
