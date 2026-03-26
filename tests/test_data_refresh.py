@@ -17,7 +17,7 @@ class TestACREF1_ManifestDiscovery:
     XLSX-converted files."""
 
     def test_licor_csvs_discovered_by_manifest(self):
-        from src.pea_met_network.manifest import build_raw_manifest
+        from pea_met_network.manifest import build_raw_manifest
 
         records = build_raw_manifest(REPO_ROOT)
         licor_records = [
@@ -28,7 +28,7 @@ class TestACREF1_ManifestDiscovery:
         )
 
     def test_xlsx_converted_csvs_discovered(self):
-        from src.pea_met_network.manifest import build_raw_manifest
+        from pea_met_network.manifest import build_raw_manifest
 
         records = build_raw_manifest(REPO_ROOT)
         # North Rustico Licor CSVs from XLSX conversion should exist
@@ -43,7 +43,7 @@ class TestACREF1_ManifestDiscovery:
         )
 
     def test_all_stations_have_records(self):
-        from src.pea_met_network.manifest import build_raw_manifest
+        from pea_met_network.manifest import build_raw_manifest
 
         records = build_raw_manifest(REPO_ROOT)
         stations = {r.station for r in records}
@@ -61,7 +61,7 @@ class TestACREF2_ThreeSensorNR:
     """AC-REF-2: normalized_loader handles 3-sensor NR CSVs."""
 
     def test_north_rustico_dec2022_loads_without_error(self):
-        from src.pea_met_network.normalized_loader import (
+        from pea_met_network.normalized_loader import (
             load_station_files,
         )
 

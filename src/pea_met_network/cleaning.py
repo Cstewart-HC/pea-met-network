@@ -741,6 +741,25 @@ def run_pipeline(stations: list[str], force: bool = False) -> None:
                     str(fpath.relative_to(PROJECT_ROOT))
                 ] = compute_checksum(fpath)
     manifest["generated_at"] = pd.Timestamp.now(tz="UTC").isoformat()
+
+    # Build stations summary
+    stations_summary: dict[str, int] = {}
+    for a in manifest["artifacts"]:
+        s = a.get("station", "unknown")
+        stations_summary[s] = stations_summary.get(s, 0) + 1
+    manifest["stations"] = stations_summary
+
+    # Compute unprocessed files (raw files for stations not in this run)
+    # Exclude internal keys like _licor_all which are pseudo-stations
+    all_station_files = discover_raw_files()
+    processed_set = set(stations)
+    unprocessed = sum(
+        len(files)
+        for st_name, files in all_station_files.items()
+        if st_name not in processed_set and not st_name.startswith("_")
+    )
+    manifest["unprocessed_count"] = unprocessed
+
     manifest_path.write_text(json.dumps(manifest, indent=2))
     print(f"  Manifest: {len(manifest['checksums'])} checksums")
 
@@ -797,9 +816,9 @@ def main() -> None:
     )
     parser.add_argument(
         "--stations",
-        required=True,
+        default="all",
         help=(
-            "Comma-separated station names or 'all'. "
+            "Comma-separated station names or 'all' (default). "
             f"Known: {', '.join(ALL_STATIONS)}"
         ),
     )
@@ -808,6 +827,12 @@ def main() -> None:
         action="store_true",
         default=False,
         help="Force reprocessing even if outputs are up to date",
+    )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        default=False,
+        help="Report file counts without writing any outputs",
     )
     args = parser.parse_args()
 
@@ -824,6 +849,15 @@ def main() -> None:
             file=sys.stderr,
         )
         sys.exit(1)
+
+    if args.dry_run:
+        station_files = discover_raw_files()
+        for station in target:
+            files = station_files.get(station, [])
+            print(f"Station {station}: {len(files)} file(s)")
+        total = sum(len(station_files.get(s, [])) for s in target)
+        print(f"Total: {total} file(s) across {len(target)} station(s)")
+        return
 
     run_pipeline(target, force=args.force)
 
