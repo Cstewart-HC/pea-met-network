@@ -83,11 +83,11 @@
   "current_phase": 7,
   "circuit_breaker": {
     "tripped": false,
-    "trip_reason": "",
-    "consecutive_stalls": 0,
-    "last_commit": "9d826ea",
-    "last_verdict": "PENDING",
-    "last_fail_criteria_hash": null
+    "consecutive_stalls": 2,
+    "last_tripped": null,
+    "last_commit": "6ae377d",
+    "last_verdict": "REJECT",
+    "last_fail_criteria_hash": "44338a14bd9477f2"
   },
   "decisions": [
     {
@@ -136,8 +136,11 @@
   "last_reviewed_commit": null,
   "blockers": [],
   "phase": "7",
-  "iteration": 10,
-  "status": "running",
-  "updated_at": "2026-03-26T13:59:19.877901+00:00",
-  "blocker": null
+  "iteration": 0,
+  "status": "idle",
+  "updated_at": "2026-03-26T23:16:14.875379+00:00",
+  "blocker": null,
+  "last_commit": "c01a1cd",
+  "last_verdict": "PENDING",
+  "last_updated": "2026-03-26T23:23:46.086858+00:00"
 }
