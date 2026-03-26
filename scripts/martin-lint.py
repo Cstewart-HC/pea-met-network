@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """martin-lint.py — Deterministic test quality linter for Martin.
 
-Reads docs/martin-rules.*.json (latest by CalVer filename) and scans test files.
+Reads docs/martin-rules.json and scans test files.
 Outputs structured JSON for the back-pressure gate (same pattern as Lisa's validation.json).
 
 Usage:
@@ -27,30 +27,21 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-RULES_DIR = REPO_ROOT / "docs"
+RULES_PATH = REPO_ROOT / "docs" / "martin-rules.json"
 DEFAULT_OUTPUT = REPO_ROOT / "docs" / "martin-lint.json"
 
 SEVERITY_ORDER = {"critical": 0, "high": 1, "medium": 2, "low": 3}
 
 
-# --- CalVer rules loading ---
+# --- Rules loading ---
 
-def find_latest_rules(rules_dir: Path) -> Path:
-    """Find the latest martin-rules.*.json by CalVer filename prefix."""
-    pattern = "martin-rules."
-    candidates = sorted(
-        (f for f in rules_dir.iterdir() if f.name.startswith(pattern) and f.suffix == ".json"),
-        key=lambda f: f.name,
-        reverse=True,
-    )
-    if not candidates:
-        print(f"ERROR: No {pattern}*.json found in {rules_dir}", file=sys.stderr)
-        sys.exit(2)
-    return candidates[0]
 
 
 def load_rules(rules_path: Path) -> dict:
     """Load and validate the rules config."""
+    if not rules_path.exists():
+        print(f"ERROR: Rules file not found: {rules_path}", file=sys.stderr)
+        sys.exit(2)
     try:
         data = json.loads(rules_path.read_text())
     except (json.JSONDecodeError, OSError) as e:
@@ -608,7 +599,7 @@ def main() -> int:
     filter_category = set(args.category.split(",")) if args.category else None
 
     # Find rules
-    rules_path = args.rules or find_latest_rules(RULES_DIR)
+    rules_path = args.rules or RULES_PATH
     rules_config = load_rules(rules_path)
 
     # Lint

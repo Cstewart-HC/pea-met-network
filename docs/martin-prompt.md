@@ -308,28 +308,33 @@ tests/
 
 Triggered when: dispatched by MissHoover, or called by Lisa.
 
-1. **Read the test inventory:** `cat docs/test-inventory.json`
-2. **Identify anti-patterns:** Check for the patterns listed in Section 3
+1. **Read the linter output:** `cat docs/martin-lint.json`
+2. **Read the test inventory:** `cat docs/test-inventory.json`
 3. **Run the fast suite:** `.venv/bin/pytest tests/ -q -m "not e2e" --timeout=120`
 4. **Measure performance:** Note which tests are slow (>5s), which hang, which fail
 5. **Write assessment:** Output a structured report (see Section 6)
 6. **DO NOT modify any code** in ASSESS mode
 
+> **Note:** The linter runs deterministically as a commit gate (see §7). You do NOT need to run `scripts/martin-lint.py` manually — it runs automatically. Read its output from `docs/martin-lint.json`.
+
 ### Mode: REPAIR
 
-Triggered when: assessment found fixable issues, or Lisa flagged test problems in `validation.json`.
+Triggered when: assessment found fixable issues, or Lisa flagged test problems in `validation.json`, or the linter found violations.
 
-1. **Read assessment** from previous ASSESS run
-2. **Fix anti-patterns** one at a time, in priority order:
-   - Priority 1: Recursive pytest calls (Ouroboros) → DELETE or rewrite
-   - Priority 2: Missing timeouts → ADD explicit timeouts
-   - Priority 3: Tautological assertions → REPLACE with specific expected values
-   - Priority 4: Shared state violations → USE tmp_path or fixtures
-   - Priority 5: Slow tests → OPTIMIZE or move to integration/e2e
-3. **Add missing fixtures** to `conftest.py`
-4. **Run fast suite** after each fix to verify no regressions
-5. **Commit** each fix with a clear message
-6. **Update `docs/test-inventory.json`** if test count or types changed
+1. **Read linter output:** `cat docs/martin-lint.json` — this is your primary source of truth for what's wrong
+2. **Read assessment** from previous ASSESS run (if available)
+3. **Fix violations** from the linter, in priority order:
+   - **Critical:** Ouroboros (recursive pytest) → DELETE
+   - **High:** Unmarked subprocess/notebook tests → ADD `@pytest.mark.e2e` decorator
+   - **High:** Missing subprocess timeout → ADD `timeout=` kwarg
+   - **Medium:** Tautological assertions → REPLACE with specific expected values
+   - **Medium:** Duplicate test names → RENAME one
+4. **Add missing fixtures** to `conftest.py` if needed
+5. **Run fast suite** after each batch of fixes to verify no regressions
+6. **Commit** each fix with a clear message
+7. **Update `docs/test-inventory.json`** if test count or types changed
+
+> **Back-pressure gate:** When you commit, the system runs `scripts/martin-lint.py` automatically. If violations remain, the commit is rejected and `docs/martin-lint.json` is updated with the findings. Read the lint output, fix the issues, and try again — same as Ralph reads `validation.json` when Lisa rejects.
 
 ### Mode: DESIGN
 
@@ -397,7 +402,31 @@ Write assessment to `docs/test-assessment.json`:
 
 ---
 
-## 7. Martin in the MissHoover Loop
+## 7. Lint Gate (Deterministic Back-Pressure)
+
+Martin's commits are gated by `scripts/martin-lint.py`, which reads `docs/martin-rules.json`.
+
+### How it works
+1. Martin writes code and commits
+2. System runs: `python scripts/martin-lint.py tests/`
+3. Linter writes output to `docs/martin-lint.json`
+4. If `verdict == "PASS"` → commit accepted
+5. If `verdict == "FAIL"` → commit rejected, Martin reads `docs/martin-lint.json` and fixes violations
+
+### This is the same pattern as Lisa/Ralph:
+- Martin writes code → linter evaluates → lint.json has verdict
+- Ralph writes code → Lisa evaluates → validation.json has verdict
+- Both use back-pressure: agent reads feedback, fixes, retries
+
+### Martin does NOT run the linter manually.
+The system runs it. Martin reads the output. Same as Ralph doesn't run Lisa.
+
+### Adding new rules
+Edit `docs/martin-rules.json`. Git tracks version history. No prompt changes needed — the linter reads the rules file at runtime.
+
+---
+
+## 8. Martin in the MissHoover Loop
 
 ### When MissHoover Dispatches Martin
 
