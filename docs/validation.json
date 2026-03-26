@@ -1,7 +1,7 @@
 {
   "last_reviewed_commit": "bae9efe",
   "verdict": "REJECT",
-  "reviewed_at": "2026-03-26T17:08:00.000000+00:00",
+  "reviewed_at": "2026-03-26T16:43:33Z",
   "artifact_validation": {
     "status": "SKIP",
     "errors": []
@@ -21,13 +21,13 @@
       "id": "AC-E2E-1",
       "name": "Pipeline completes exit code 0",
       "status": "PASS",
-      "evidence": "Phase 7 exit gate passed in previous review (8/8). cleaning.py runs successfully."
+      "evidence": "Phase 7 exit gate passed in previous review. cleaning.py runs successfully."
     },
     {
       "id": "AC-E2E-2",
       "name": "All 6 stations have hourly + daily CSVs",
       "status": "PASS",
-      "evidence": "Previously verified and confirmed. Manifest now lists all 6 stations with artifacts."
+      "evidence": "Manifest lists all 6 stations with artifacts."
     },
     {
       "id": "AC-E2E-3",
@@ -45,37 +45,37 @@
       "id": "AC-E2E-5",
       "name": "No gaps > 7 days in hourly data",
       "status": "PASS",
-      "evidence": "Verified by Phase 7 exit gate tests in previous review."
+      "evidence": "Verified by Phase 7 exit gate tests."
     },
     {
       "id": "AC-E2E-6",
       "name": "Continuous coverage from earliest PEINP to latest Licor",
       "status": "PASS",
-      "evidence": "Verified by Phase 7 exit gate tests in previous review."
+      "evidence": "Verified by Phase 7 exit gate tests."
     },
     {
       "id": "AC-E2E-7",
       "name": "Manifest reports 0 unprocessed files",
       "status": "PASS",
-      "evidence": "pipeline_manifest.json now contains all 6 stations (greenwich:86, cavendish:88, north_rustico:76, stanley_bridge:72, tracadie:70, stanhope:2), 395 total artifacts, unprocessed_count=0. Pseudo-station keys starting with '_' are correctly excluded."
+      "evidence": "pipeline_manifest.json shows unprocessed_count=0. Pseudo-station keys starting with '_' correctly excluded."
     },
     {
       "id": "AC-E2E-8",
       "name": "Full test suite passes",
       "status": "FAIL",
-      "evidence": "Test collection now succeeds (normalized_loader.py exists on disk), but multiple tests fail: (1) tests/test_validation.py — 7 failures in TestCompareStationData due to compare_station_data() receiving a string instead of DataFrame (validation.py line 39), (2) tests/test_repo_shape.py — 1 failure: unexpected requirements.lock file in repo root, (3) tests/test_pipeline_execution.py — 3 failures: manifest artifacts missing 'rows' field on daily CSVs, imputation_report type missing from manifest. Total: 11 test failures across 3 test files."
+      "evidence": "11 test failures across 3 files: (1) tests/test_validation.py — 7 failures in TestCompareStationData due to compare_station_data() receiving a string instead of DataFrame at validation.py line 89, (2) tests/test_repo_shape.py — 1 failure: requirements.lock not in ALLOWED_ROOT_FILES whitelist at line 48, (3) tests/test_pipeline_execution.py — 3 failures: daily CSV artifacts missing 'rows' field, imputation_report not tracked as typed artifact in manifest."
     }
   ],
   "failing_nodes": [
     {
       "file": "src/pea_met_network/validation.py",
-      "line": 39,
-      "message": "compare_station_data() receives a string instead of DataFrame — causes 7 test failures in test_validation.py"
+      "line": 89,
+      "message": "validate_against_reference() calls compare_station_data() with a string instead of DataFrame — causes 7 test failures in TestCompareStationData"
     },
     {
       "file": "tests/test_repo_shape.py",
-      "line": 48,
-      "message": "requirements.lock not in ALLOWED_ROOT_FILES whitelist"
+      "line": 5,
+      "message": "ALLOWED_ROOT_FILES set does not include 'requirements.lock', but requirements.lock exists in repo root"
     },
     {
       "file": "src/pea_met_network/cleaning.py",
@@ -83,5 +83,5 @@
       "message": "Manifest artifacts for daily CSVs missing 'rows' field; imputation_report not tracked as a typed artifact in manifest"
     }
   ],
-  "summary": "Phase 7 E2E validation: 7 of 8 acceptance criteria pass. REJECT due to AC-E2E-8 (full test suite fails). AC-E2E-7 is now FIXED — manifest covers all 6 stations with unprocessed_count=0. Remaining failures: (1) validation.py compare_station_data() has a type bug causing 7 test failures, (2) requirements.lock needs adding to repo shape whitelist, (3) manifest artifacts for daily CSVs are missing the 'rows' field and imputation_report is not tracked as a typed artifact. Additionally, normalized_loader.py exists on disk but is NOT committed to git — a clean checkout would fail test collection."
+  "summary": "Phase 7 E2E validation: 7 of 8 acceptance criteria pass. REJECT due to AC-E2E-8 (full test suite fails). Ralph's fix commit (9251ada) addressed AC-E2E-7 (unprocessed_count pseudo-station exclusion) and fixed import paths in test_data_refresh.py, but did NOT address the 3 previously identified failing nodes: (1) validation.py compare_station_data() string-vs-DataFrame bug, (2) requirements.lock missing from repo shape whitelist, (3) manifest daily artifacts missing 'rows' field and imputation_report type. These same 3 issues persist unchanged."
 }
