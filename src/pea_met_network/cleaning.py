@@ -13,6 +13,7 @@ Pipeline: discover raw files → load via adapters → concat → dedup →
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import sys
 import warnings
@@ -22,7 +23,7 @@ import numpy as np
 import pandas as pd
 
 # Add project src to path
-PROJECT_ROOT = Path(__file__).resolve().parent
+PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 from pea_met_network.adapters.registry import route_by_extension  # noqa: E402
@@ -597,6 +598,39 @@ def aggregate_daily(hourly_df: pd.DataFrame) -> pd.DataFrame:
 
 
 # ---------------------------------------------------------------------------
+# Determinism helpers
+# ---------------------------------------------------------------------------
+
+
+def compute_checksum(file_path: Path) -> str:
+    """Compute SHA256 checksum of a file.
+
+    Returns hex digest string.
+    """
+    return hashlib.sha256(file_path.read_bytes()).hexdigest()
+
+
+def verify_determinism(
+    output_path: Path,
+) -> bool:
+    """Verify that re-running the pipeline produces identical output.
+
+    Compares the SHA256 checksum of the given output file against
+    a stored reference. Returns True if the file matches the stored
+    checksum or if no reference exists yet.
+    """
+    checksum_file = output_path.with_suffix(".checksum")
+    current = compute_checksum(output_path)
+
+    if not checksum_file.exists():
+        checksum_file.write_text(current)
+        return True
+
+    previous = checksum_file.read_text().strip()
+    return current == previous
+
+
+# ---------------------------------------------------------------------------
 # Main pipeline
 # ---------------------------------------------------------------------------
 
@@ -640,15 +674,38 @@ def run_pipeline(stations: list[str]) -> None:
         out_dir.mkdir(parents=True, exist_ok=True)
 
         hourly_path = out_dir / "station_hourly.csv"
+        hourly = hourly[sorted(hourly.columns)]
         hourly.to_csv(hourly_path, index=False)
         print(f"  {station}: {len(hourly)} hourly rows")
 
         daily_path = out_dir / "station_daily.csv"
+        daily = daily[sorted(daily.columns)]
         daily.to_csv(daily_path, index=False)
         print(f"  {station}: {len(daily)} daily rows")
 
         all_hourly.append(hourly)
         all_daily.append(daily)
+
+    # Write pipeline manifest with SHA256 checksums
+    manifest_path = PROCESSED_DIR / "pipeline_manifest.json"
+    manifest = {"artifacts": [], "checksums": {}}
+    for station in stations:
+        station_dir = PROCESSED_DIR / station
+        if not station_dir.exists():
+            continue
+        for fpath in sorted(station_dir.iterdir()):
+            if fpath.is_file() and fpath.suffix == ".csv":
+                manifest["artifacts"].append({
+                    "type": "processed_csv",
+                    "path": str(fpath.relative_to(PROJECT_ROOT)),
+                    "station": station,
+                })
+                manifest["checksums"][
+                    str(fpath.relative_to(PROJECT_ROOT))
+                ] = compute_checksum(fpath)
+    manifest["generated_at"] = pd.Timestamp.now(tz="UTC").isoformat()
+    manifest_path.write_text(json.dumps(manifest, indent=2))
+    print(f"  Manifest: {len(manifest['checksums'])} checksums")
 
     # Write combined imputation report
     report_df = pd.DataFrame(

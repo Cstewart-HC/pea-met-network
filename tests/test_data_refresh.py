@@ -112,6 +112,7 @@ class TestACREF2_ThreeSensorNR:
 class TestACREF3_PipelineEndToEnd:
     """AC-REF-3: pipeline runs on expanded dataset without errors."""
 
+    @pytest.mark.serial
     def test_cleaning_py_runs(self):
         import subprocess
 
