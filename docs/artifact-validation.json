@@ -1,93 +1,38 @@
 {
-  "phase": "3",
-  "timestamp": "2026-03-26T01:52:41.045866+00:00",
-  "verdict": "FAIL",
+  "phase": "4",
+  "timestamp": "2026-03-26T04:47:56.524325+00:00",
+  "verdict": "PASS",
   "checks": [
     {
       "type": "directory",
-      "path": "data/processed/cavendish",
-      "status": "PASS"
-    },
-    {
-      "type": "directory",
-      "path": "data/processed/greenwich",
+      "path": "data/processed/stanhope",
       "status": "PASS"
     },
     {
       "type": "file_exists",
-      "path": "data/processed/cavendish/station_hourly.csv",
+      "path": "data/processed/stanhope/station_hourly.csv",
       "status": "PASS",
-      "fingerprint": "84b09fada5150c4b"
+      "fingerprint": "b58fd3c28e2e9808"
     },
     {
       "type": "row_count",
-      "path": "data/processed/cavendish/station_hourly.csv",
+      "path": "data/processed/stanhope/station_hourly.csv",
       "status": "PASS",
-      "message": "25763 rows",
-      "row_count": 25763
-    },
-    {
-      "type": "schema",
-      "path": "data/processed/cavendish/station_hourly.csv",
-      "status": "PASS",
-      "message": "Schema OK (101 rows checked)"
+      "message": "35064 rows",
+      "row_count": 35064
     },
     {
       "type": "file_exists",
-      "path": "data/processed/cavendish/station_daily.csv",
+      "path": "data/processed/stanhope/station_daily.csv",
       "status": "PASS",
-      "fingerprint": "b02c586d88193c33"
+      "fingerprint": "f8c7260c6e2158aa"
     },
     {
       "type": "row_count",
-      "path": "data/processed/cavendish/station_daily.csv",
+      "path": "data/processed/stanhope/station_daily.csv",
       "status": "PASS",
-      "message": "1185 rows",
-      "row_count": 1185
-    },
-    {
-      "type": "schema",
-      "path": "data/processed/cavendish/station_daily.csv",
-      "status": "PASS",
-      "message": "Schema OK (101 rows checked)"
-    },
-    {
-      "type": "file_exists",
-      "path": "data/processed/greenwich/station_hourly.csv",
-      "status": "PASS",
-      "fingerprint": "1810aee68cebbfc1"
-    },
-    {
-      "type": "row_count",
-      "path": "data/processed/greenwich/station_hourly.csv",
-      "status": "PASS",
-      "message": "220564 rows",
-      "row_count": 220564
-    },
-    {
-      "type": "schema",
-      "path": "data/processed/greenwich/station_hourly.csv",
-      "status": "FAIL",
-      "message": "Found 75 NaN/null values in primary key 'station' in /mnt/fast_data/workspaces/pea-met-network/data/processed/greenwich/station_hourly.csv"
-    },
-    {
-      "type": "file_exists",
-      "path": "data/processed/greenwich/station_daily.csv",
-      "status": "PASS",
-      "fingerprint": "458850ef9dbb155e"
-    },
-    {
-      "type": "row_count",
-      "path": "data/processed/greenwich/station_daily.csv",
-      "status": "PASS",
-      "message": "9191 rows",
-      "row_count": 9191
-    },
-    {
-      "type": "schema",
-      "path": "data/processed/greenwich/station_daily.csv",
-      "status": "FAIL",
-      "message": "Found 95 NaN/null values in primary key 'station' in /mnt/fast_data/workspaces/pea-met-network/data/processed/greenwich/station_daily.csv"
+      "message": "1461 rows",
+      "row_count": 1461
     },
     {
       "type": "pipeline_manifest",
@@ -96,15 +41,10 @@
       "message": "Found 417 artifacts"
     }
   ],
-  "errors": [
-    "Found 75 NaN/null values in primary key 'station' in /mnt/fast_data/workspaces/pea-met-network/data/processed/greenwich/station_hourly.csv",
-    "Found 95 NaN/null values in primary key 'station' in /mnt/fast_data/workspaces/pea-met-network/data/processed/greenwich/station_daily.csv"
-  ],
+  "errors": [],
   "fingerprints": {
-    "data/processed/cavendish/station_hourly.csv": "84b09fada5150c4b",
-    "data/processed/cavendish/station_daily.csv": "b02c586d88193c33",
-    "data/processed/greenwich/station_hourly.csv": "1810aee68cebbfc1",
-    "data/processed/greenwich/station_daily.csv": "458850ef9dbb155e"
+    "data/processed/stanhope/station_hourly.csv": "b58fd3c28e2e9808",
+    "data/processed/stanhope/station_daily.csv": "f8c7260c6e2158aa"
   },
-  "summary": "Validated 15 checks for phase 3: FAIL (2 errors)"
+  "summary": "Validated 6 checks for phase 4: PASS (0 errors)"
 }

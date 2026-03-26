@@ -1,45 +1,24 @@
 {
-  "phase": "3",
-  "timestamp": "2026-03-26T01:54:28.855946+00:00",
+  "phase": "4",
+  "timestamp": "2026-03-26T04:47:56.593652+00:00",
   "verdict": "PASS",
   "checks": [
     {
       "type": "function",
-      "name": "build_raw_manifest",
+      "name": "validate_against_reference",
       "found": true,
-      "location": "src/pea_met_network/manifest.py:77",
+      "location": "src/pea_met_network/validation.py:53",
       "error": null
     },
     {
       "type": "function",
-      "name": "resample_hourly",
+      "name": "compare_station_data",
       "found": true,
-      "location": "src/pea_met_network/resampling.py:152",
-      "error": null
-    },
-    {
-      "type": "function",
-      "name": "resample_daily",
-      "found": true,
-      "location": "src/pea_met_network/resampling.py:159",
-      "error": null
-    },
-    {
-      "type": "function",
-      "name": "impute_frame",
-      "found": true,
-      "location": "src/pea_met_network/imputation.py:113",
-      "error": null
-    },
-    {
-      "type": "function",
-      "name": "materialize_resampled_outputs",
-      "found": true,
-      "location": "src/pea_met_network/materialize_resampled.py:9",
+      "location": "src/pea_met_network/validation.py:14",
       "error": null
     }
   ],
   "missing": [],
   "errors": [],
-  "summary": "Checked 5 structural requirements for phase 3: PASS (0 missing)"
+  "summary": "Checked 2 structural requirements for phase 4: PASS (0 missing)"
 }
