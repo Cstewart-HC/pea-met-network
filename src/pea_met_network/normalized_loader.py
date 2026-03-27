@@ -4,6 +4,7 @@ from pathlib import Path
 
 import pandas as pd
 
+from pea_met_network.adapters.column_maps import coalesce_duplicate_columns
 from pea_met_network.manifest import recognize_schema
 
 COLUMN_RENAMES = {
@@ -88,8 +89,9 @@ def load_normalized_station_csv(path: Path, station: str) -> pd.DataFrame:
         if (new_name := _normalized_name(col)) is not None
     }
     renamed = frame.rename(columns=rename_map)
-    # Deduplicate columns (duplicate sensors map to same name)
-    renamed = renamed.loc[:, ~renamed.columns.duplicated()]
+    # Coalesce duplicate columns (multiple sensors mapping to same name)
+    # so that non-null values fill gaps instead of overwriting with NaN.
+    renamed = coalesce_duplicate_columns(renamed)
 
     # Parse timestamps based on schema family
     if schema.family in UNSUPPORTED_FAMILIES:

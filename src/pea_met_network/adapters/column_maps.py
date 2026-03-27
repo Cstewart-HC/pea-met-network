@@ -127,6 +127,48 @@ def rename_columns(df: pd.DataFrame) -> pd.DataFrame:
     return df.rename(columns=rename_map)
 
 
+def coalesce_duplicate_columns(df: pd.DataFrame) -> pd.DataFrame:
+    """Combine columns that share the same name by forward-filling NaNs.
+
+    When multiple raw columns map to the same canonical name (e.g., two
+    temperature sensors), instead of keeping only the last one, merge them
+    so that non-null values from earlier columns fill gaps in later ones.
+
+    This prevents dead/empty sensor columns from overwriting good data.
+    """
+    if not df.columns.duplicated().any():
+        return df
+
+    # Use iloc to access duplicate columns individually (positional indexing
+    # avoids the 2D DataFrame that df[col_name] returns for duplicates).
+    groups: dict[str, list[int]] = {}
+    for i, col in enumerate(df.columns):
+        groups.setdefault(col, []).append(i)
+
+    keep_indices: list[int] = []
+    series_map: dict[str, pd.Series] = {}
+
+    for col_name, indices in groups.items():
+        if len(indices) == 1:
+            keep_indices.append(indices[0])
+        else:
+            # Coalesce: first non-null value wins across duplicates
+            combined = pd.Series(pd.NA, index=df.index, dtype=object)
+            for idx in indices:
+                s = pd.to_numeric(df.iloc[:, idx], errors="coerce")
+                combined = combined.where(
+                    combined.notna() & (combined == combined), s
+                )
+            series_map[col_name] = combined
+
+    # Build result: non-duplicate columns by position, coalesced by name
+    result = df.iloc[:, keep_indices].copy()
+    for col_name, s in series_map.items():
+        result[col_name] = s
+
+    return result
+
+
 def derive_wind_speed_kmh(df: pd.DataFrame) -> pd.DataFrame:
     """Derive wind_speed_kmh from wind_speed_ms if only m/s is available."""
     if "wind_speed_ms" in df.columns and "wind_speed_kmh" not in df.columns:

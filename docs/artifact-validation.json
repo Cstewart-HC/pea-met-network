@@ -1,31 +1,9 @@
 {
-  "phase": "5",
-  "timestamp": "2026-03-26T05:34:36.230252+00:00",
-  "verdict": "PASS",
-  "checks": [
-    {
-      "type": "file_exists",
-      "path": "data/processed/imputation_report.csv",
-      "status": "PASS",
-      "fingerprint": "881aa7ec18955eb3"
-    },
-    {
-      "type": "row_count",
-      "path": "data/processed/imputation_report.csv",
-      "status": "PASS",
-      "message": "489 rows",
-      "row_count": 489
-    },
-    {
-      "type": "pipeline_manifest",
-      "path": "data/processed/pipeline_manifest.json",
-      "status": "PASS",
-      "message": "Found 417 artifacts"
-    }
-  ],
+  "phase": "8",
+  "timestamp": "2026-03-27T13:04:25.722743+00:00",
+  "verdict": "SKIP",
+  "checks": [],
   "errors": [],
-  "fingerprints": {
-    "data/processed/imputation_report.csv": "881aa7ec18955eb3"
-  },
-  "summary": "Validated 3 checks for phase 5: PASS (0 errors)"
+  "fingerprints": {},
+  "summary": "Phase 8 has no data artifact expectations"
 }
