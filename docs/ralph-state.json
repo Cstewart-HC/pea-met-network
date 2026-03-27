@@ -90,9 +90,21 @@
       "notes": "Quality enforcement before imputation, cleaning-config.json, flatline/rate-of-change checks. TDD: Martin starts.",
       "exit": "pytest tests/ -m 'not e2e' -v",
       "tdd_start": "martin"
+    },
+    {
+      "id": 9,
+      "name": "FWI Missingness Diagnostics & Chain Recovery",
+      "status": "pending",
+      "iteration": 0,
+      "started_at": null,
+      "completed_at": null,
+      "exit_gate": "pytest tests/ -m 'not e2e' -v",
+      "notes": "Chain break diagnostics, gap-crossing restart logic, FWI missingness report.",
+      "exit": "pytest tests/ -m 'not e2e' -v",
+      "tdd_start": "martin"
     }
   ],
-  "current_phase": 8,
+  "current_phase": 9,
   "circuit_breaker": {
     "tripped": false,
     "consecutive_stalls": 0,
@@ -149,16 +161,22 @@
       "decision": "Phase 8 uses TDD \u2014 Martin writes tests first",
       "rationale": "Data quality enforcement is new functionality. Tests define the contract before Ralph implements.",
       "date": "2026-03-27"
+    },
+    {
+      "id": "v2-d9",
+      "decision": "Phase 9 uses TDD \u2014 Martin writes tests first",
+      "rationale": "FWI chain recovery is new logic modifying existing calc functions. Tests must define recovery behavior.",
+      "date": "2026-03-27"
     }
   ],
   "last_reviewed_commit": null,
   "blockers": [],
-  "phase": "8",
-  "iteration": 3,
-  "status": "running",
+  "phase": "9",
+  "iteration": 0,
+  "status": "idle",
   "updated_at": "2026-03-27T13:04:25.753143+00:00",
   "blocker": null,
   "last_commit": "74eb500",
-  "last_verdict": "PENDING",
+  "last_verdict": null,
   "last_updated": "2026-03-27T03:00:00.000000+00:00"
 }
