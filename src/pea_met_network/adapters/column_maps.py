@@ -25,6 +25,7 @@ COLUMN_MAPS: dict[str, str] = {
     "Wind Speed - km/h": "wind_speed_kmh",
     "Average Wind Speed": "wind_speed_kmh",
     "Average wind speed": "wind_speed_kmh",
+    "Avg Wind speed": "wind_speed_kmh",
     "wind speed": "wind_speed_kmh",
     # Wind speed (m/s) — intermediate, converted to km/h later
     "S-WCF-M: Wind Speed - m/s": "wind_speed_ms",
