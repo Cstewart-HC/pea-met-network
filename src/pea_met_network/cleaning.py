@@ -831,7 +831,9 @@ def run_pipeline(stations: list[str], force: bool = False) -> None:
     if all_hourly and all_daily:
         combined_hourly = pd.concat(all_hourly, ignore_index=True)
         combined_daily = pd.concat(all_daily, ignore_index=True)
-        qa_qc_df = generate_qa_qc_report(combined_hourly, combined_daily)
+        qa_qc_df = generate_qa_qc_report(
+            combined_hourly, combined_daily, all_quality_actions
+        )
         qa_qc_path = PROCESSED_DIR / "qa_qc_report.csv"
         qa_qc_df.to_csv(qa_qc_path, index=False)
         print(f"  QA/QC report: {len(qa_qc_df)} stations")

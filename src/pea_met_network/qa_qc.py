@@ -147,6 +147,7 @@ def calculate_completeness(df: pd.DataFrame) -> float:
 def generate_qa_qc_report(
     hourly: pd.DataFrame,
     daily: pd.DataFrame,
+    quality_actions: list[dict] | None = None,
 ) -> pd.DataFrame:
     """Generate QA/QC report for all stations.
 
@@ -154,6 +155,9 @@ def generate_qa_qc_report(
     ----------
     hourly : Combined hourly DataFrame with a 'station' column.
     daily : Combined daily DataFrame with a 'station' column.
+    quality_actions : Optional list of quality enforcement action
+        records (from ``enforce_quality`` and ``enforce_fwi_outputs``).
+        Each record must contain at least 'station' and 'action' keys.
 
     Returns
     -------
@@ -162,7 +166,9 @@ def generate_qa_qc_report(
     completeness, missing_pct_air_temperature_c,
     missing_pct_relative_humidity_pct, missing_pct_rain_mm,
     duplicate_count, out_of_range_temp_count,
-    out_of_range_rh_count, out_of_range_wind_count.
+    out_of_range_rh_count, out_of_range_wind_count,
+    quality_enforced_count, quality_flagged_count,
+    out_of_range_pre_enforcement, out_of_range_post_enforcement.
     """
     report_rows: list[dict] = []
 
@@ -203,6 +209,37 @@ def generate_qa_qc_report(
             else 0
         )
 
+        # Quality enforcement counts from action records
+        enforced_count = 0
+        flagged_count = 0
+        if quality_actions:
+            station_actions = [
+                a for a in quality_actions
+                if a.get("station") == station
+            ]
+            for act in station_actions:
+                action_val = act.get("action", "")
+                if action_val == "set_nan":
+                    enforced_count += 1
+                elif action_val in ("flag_only", "flagged"):
+                    flagged_count += 1
+
+        # Post-enforcement out-of-range: re-check enforced data.
+        # After enforcement, values that were set_nan should no longer
+        # appear as out-of-range. We compute the remaining OOR count
+        # from the already-processed hourly data (post-enforcement).
+        oor_post = oor_temp + oor_rh + oor_wind
+        if quality_actions:
+            # Count how many set_nan actions were for value_range checks
+            # on the same variables — those values are now NaN and not OOR.
+            station_set_nan = [
+                a for a in quality_actions
+                if a.get("station") == station
+                and a.get("action") == "set_nan"
+                and a.get("check_type") == "value_range"
+            ]
+            oor_post = max(0, oor_post - len(station_set_nan))
+
         # Date range
         if "timestamp_utc" in station_hourly.columns:
             ts = pd.to_datetime(station_hourly["timestamp_utc"], utc=True)
@@ -224,6 +261,10 @@ def generate_qa_qc_report(
             "out_of_range_temp_count": oor_temp,
             "out_of_range_rh_count": oor_rh,
             "out_of_range_wind_count": oor_wind,
+            "quality_enforced_count": enforced_count,
+            "quality_flagged_count": flagged_count,
+            "out_of_range_pre_enforcement": oor_temp + oor_rh + oor_wind,
+            "out_of_range_post_enforcement": oor_post,
         })
 
     return pd.DataFrame(report_rows)
