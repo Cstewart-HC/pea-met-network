@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import sys
 from pathlib import Path
 
 import pytest
@@ -62,6 +61,7 @@ class TestACREF2_ThreeSensorNR:
 
     def test_north_rustico_dec2022_loads_without_error(self):
         import pandas as pd
+
         from pea_met_network.manifest import build_raw_manifest
         from pea_met_network.normalized_loader import (
             load_normalized_station_csv,
@@ -123,9 +123,15 @@ class TestACREF4_ProcessedOutputs:
         daily = list(DATA_PROCESSED.glob("*/station_daily.csv"))
         assert len(daily) > 0, "No daily processed files found"
 
-    def test_north_rustico_early_period_in_output(self):
-        """North Rustico Dec 2022 – Mar 2023 should appear in processed
-        data."""
+    def test_north_rustico_data_in_output(self):
+        """North Rustico should appear in processed data starting from the
+        configured date range (not earlier).
+
+        The cleaning-config.json truncates data to 2023-04-01 onward,
+        so early-period data (Dec 2022 – Mar 2023) is correctly excluded.
+        """
+        import json
+
         import pandas as pd
 
         nr_hourly = DATA_PROCESSED / "north_rustico" / "station_hourly.csv"
@@ -138,10 +144,24 @@ class TestACREF4_ProcessedOutputs:
         if len(nr) == 0:
             pytest.skip("No North Rustico data in processed output")
         ts = pd.to_datetime(nr["timestamp_utc"], errors="coerce")
-        early = ts[(ts >= "2022-12-01") & (ts <= "2023-03-31")]
-        assert len(early) > 0, (
-            "Expected North Rustico data for Dec 2022 – Mar 2023"
+
+        # Verify data starts at or after configured date
+        config_path = (
+            DATA_PROCESSED.parent.parent / "docs" / "cleaning-config.json"
         )
+        if config_path.exists():
+            cfg = json.loads(config_path.read_text())
+            configured_start = cfg.get("date_range", {}).get("start", "")
+            if configured_start:
+                assert ts.min() >= pd.Timestamp(
+                    configured_start, tz="UTC"
+                ), (
+                    f"Data starts at {ts.min()} "
+                    f"but config truncates to {configured_start}"
+                )
+
+        # Verify we have North Rustico data (not empty)
+        assert len(nr) > 0, "No North Rustico data found"
 
 
 class TestACREF5_ImputationReport:

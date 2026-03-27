@@ -2,44 +2,636 @@
   "artifacts": [
     {
       "type": "processed_csv",
-      "path": "data/processed/stanhope/station_daily.csv",
-      "station": "stanhope",
-      "rows": 1006,
-      "timestamp": "2026-03-27T15:14:23.527609+00:00"
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Apr2023_daily.csv",
+      "station": "north_rustico",
+      "rows": 18,
+      "timestamp": "2026-03-27T20:57:12.196564+00:00"
     },
     {
       "type": "processed_csv",
-      "path": "data/processed/stanhope/station_hourly.csv",
-      "station": "stanhope",
-      "rows": 24144,
-      "timestamp": "2026-03-27T15:14:23.568100+00:00"
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Apr2023_hourly.csv",
+      "station": "north_rustico",
+      "rows": 393,
+      "timestamp": "2026-03-27T20:57:12.197378+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Apr2024_daily.csv",
+      "station": "north_rustico",
+      "rows": 31,
+      "timestamp": "2026-03-27T20:57:12.197898+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Apr2024_hourly.csv",
+      "station": "north_rustico",
+      "rows": 720,
+      "timestamp": "2026-03-27T20:57:12.199117+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Apr2025_daily.csv",
+      "station": "north_rustico",
+      "rows": 31,
+      "timestamp": "2026-03-27T20:57:12.199659+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Apr2025_hourly.csv",
+      "station": "north_rustico",
+      "rows": 720,
+      "timestamp": "2026-03-27T20:57:12.200686+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Aug2023_daily.csv",
+      "station": "north_rustico",
+      "rows": 32,
+      "timestamp": "2026-03-27T20:57:12.201238+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Aug2023_hourly.csv",
+      "station": "north_rustico",
+      "rows": 744,
+      "timestamp": "2026-03-27T20:57:12.202172+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Aug2024_daily.csv",
+      "station": "north_rustico",
+      "rows": 32,
+      "timestamp": "2026-03-27T20:57:12.202693+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Aug2024_hourly.csv",
+      "station": "north_rustico",
+      "rows": 744,
+      "timestamp": "2026-03-27T20:57:12.203814+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Aug2025_daily.csv",
+      "station": "north_rustico",
+      "rows": 32,
+      "timestamp": "2026-03-27T20:57:12.204344+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Aug2025_hourly.csv",
+      "station": "north_rustico",
+      "rows": 744,
+      "timestamp": "2026-03-27T20:57:12.205456+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Dec2023_daily.csv",
+      "station": "north_rustico",
+      "rows": 31,
+      "timestamp": "2026-03-27T20:57:12.206011+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Dec2023_hourly.csv",
+      "station": "north_rustico",
+      "rows": 740,
+      "timestamp": "2026-03-27T20:57:12.206973+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Dec2024_daily.csv",
+      "station": "north_rustico",
+      "rows": 32,
+      "timestamp": "2026-03-27T20:57:12.207495+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Dec2024_hourly.csv",
+      "station": "north_rustico",
+      "rows": 744,
+      "timestamp": "2026-03-27T20:57:12.208608+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Dec2025_daily.csv",
+      "station": "north_rustico",
+      "rows": 32,
+      "timestamp": "2026-03-27T20:57:12.209161+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Dec2025_hourly.csv",
+      "station": "north_rustico",
+      "rows": 744,
+      "timestamp": "2026-03-27T20:57:12.210319+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Feb2024_daily.csv",
+      "station": "north_rustico",
+      "rows": 30,
+      "timestamp": "2026-03-27T20:57:12.210838+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Feb2024_hourly.csv",
+      "station": "north_rustico",
+      "rows": 696,
+      "timestamp": "2026-03-27T20:57:12.211830+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Feb2025_daily.csv",
+      "station": "north_rustico",
+      "rows": 29,
+      "timestamp": "2026-03-27T20:57:12.212349+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Feb2025_hourly.csv",
+      "station": "north_rustico",
+      "rows": 672,
+      "timestamp": "2026-03-27T20:57:12.213424+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Feb2026_daily.csv",
+      "station": "north_rustico",
+      "rows": 29,
+      "timestamp": "2026-03-27T20:57:12.213951+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Feb2026_hourly.csv",
+      "station": "north_rustico",
+      "rows": 672,
+      "timestamp": "2026-03-27T20:57:12.215057+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Jan2024_daily.csv",
+      "station": "north_rustico",
+      "rows": 32,
+      "timestamp": "2026-03-27T20:57:12.215594+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Jan2024_hourly.csv",
+      "station": "north_rustico",
+      "rows": 744,
+      "timestamp": "2026-03-27T20:57:12.216607+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Jan2025_daily.csv",
+      "station": "north_rustico",
+      "rows": 32,
+      "timestamp": "2026-03-27T20:57:12.217129+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Jan2025_hourly.csv",
+      "station": "north_rustico",
+      "rows": 744,
+      "timestamp": "2026-03-27T20:57:12.218246+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Jan2026_daily.csv",
+      "station": "north_rustico",
+      "rows": 32,
+      "timestamp": "2026-03-27T20:57:12.218776+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Jan2026_hourly.csv",
+      "station": "north_rustico",
+      "rows": 744,
+      "timestamp": "2026-03-27T20:57:12.219918+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Jul2023_daily.csv",
+      "station": "north_rustico",
+      "rows": 32,
+      "timestamp": "2026-03-27T20:57:12.220491+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Jul2023_hourly.csv",
+      "station": "north_rustico",
+      "rows": 744,
+      "timestamp": "2026-03-27T20:57:12.221496+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Jul2024_daily.csv",
+      "station": "north_rustico",
+      "rows": 32,
+      "timestamp": "2026-03-27T20:57:12.222014+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Jul2024_hourly.csv",
+      "station": "north_rustico",
+      "rows": 744,
+      "timestamp": "2026-03-27T20:57:12.223138+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Jul2025_daily.csv",
+      "station": "north_rustico",
+      "rows": 32,
+      "timestamp": "2026-03-27T20:57:12.223676+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Jul2025_hourly.csv",
+      "station": "north_rustico",
+      "rows": 744,
+      "timestamp": "2026-03-27T20:57:12.224787+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Jun2023_daily.csv",
+      "station": "north_rustico",
+      "rows": 31,
+      "timestamp": "2026-03-27T20:57:12.225346+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Jun2023_hourly.csv",
+      "station": "north_rustico",
+      "rows": 720,
+      "timestamp": "2026-03-27T20:57:12.226328+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Jun2024_daily.csv",
+      "station": "north_rustico",
+      "rows": 31,
+      "timestamp": "2026-03-27T20:57:12.226866+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Jun2024_hourly.csv",
+      "station": "north_rustico",
+      "rows": 720,
+      "timestamp": "2026-03-27T20:57:12.227967+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Jun2025_daily.csv",
+      "station": "north_rustico",
+      "rows": 31,
+      "timestamp": "2026-03-27T20:57:12.228504+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Jun2025_hourly.csv",
+      "station": "north_rustico",
+      "rows": 720,
+      "timestamp": "2026-03-27T20:57:12.229567+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Mar2024_daily.csv",
+      "station": "north_rustico",
+      "rows": 32,
+      "timestamp": "2026-03-27T20:57:12.230097+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Mar2024_hourly.csv",
+      "station": "north_rustico",
+      "rows": 743,
+      "timestamp": "2026-03-27T20:57:12.231161+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Mar2025_daily.csv",
+      "station": "north_rustico",
+      "rows": 32,
+      "timestamp": "2026-03-27T20:57:12.231693+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Mar2025_hourly.csv",
+      "station": "north_rustico",
+      "rows": 743,
+      "timestamp": "2026-03-27T20:57:12.232799+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Mar2026_daily.csv",
+      "station": "north_rustico",
+      "rows": 24,
+      "timestamp": "2026-03-27T20:57:12.233311+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Mar2026_hourly.csv",
+      "station": "north_rustico",
+      "rows": 549,
+      "timestamp": "2026-03-27T20:57:12.234256+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_May2023_daily.csv",
+      "station": "north_rustico",
+      "rows": 32,
+      "timestamp": "2026-03-27T20:57:12.234810+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_May2023_hourly.csv",
+      "station": "north_rustico",
+      "rows": 744,
+      "timestamp": "2026-03-27T20:57:12.235808+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_May2024_daily.csv",
+      "station": "north_rustico",
+      "rows": 32,
+      "timestamp": "2026-03-27T20:57:12.236325+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_May2024_hourly.csv",
+      "station": "north_rustico",
+      "rows": 744,
+      "timestamp": "2026-03-27T20:57:12.237438+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_May2025_daily.csv",
+      "station": "north_rustico",
+      "rows": 32,
+      "timestamp": "2026-03-27T20:57:12.237968+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_May2025_hourly.csv",
+      "station": "north_rustico",
+      "rows": 744,
+      "timestamp": "2026-03-27T20:57:12.239067+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Nov2023_daily.csv",
+      "station": "north_rustico",
+      "rows": 31,
+      "timestamp": "2026-03-27T20:57:12.239699+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Nov2023_hourly.csv",
+      "station": "north_rustico",
+      "rows": 721,
+      "timestamp": "2026-03-27T20:57:12.240691+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Nov2024_daily.csv",
+      "station": "north_rustico",
+      "rows": 31,
+      "timestamp": "2026-03-27T20:57:12.241208+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Nov2024_hourly.csv",
+      "station": "north_rustico",
+      "rows": 721,
+      "timestamp": "2026-03-27T20:57:12.242264+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Nov2025_daily.csv",
+      "station": "north_rustico",
+      "rows": 31,
+      "timestamp": "2026-03-27T20:57:12.242831+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Nov2025_hourly.csv",
+      "station": "north_rustico",
+      "rows": 721,
+      "timestamp": "2026-03-27T20:57:12.243929+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Oct2023_daily.csv",
+      "station": "north_rustico",
+      "rows": 32,
+      "timestamp": "2026-03-27T20:57:12.244492+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Oct2023_hourly.csv",
+      "station": "north_rustico",
+      "rows": 744,
+      "timestamp": "2026-03-27T20:57:12.245497+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Oct2024_daily.csv",
+      "station": "north_rustico",
+      "rows": 32,
+      "timestamp": "2026-03-27T20:57:12.246013+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Oct2024_hourly.csv",
+      "station": "north_rustico",
+      "rows": 744,
+      "timestamp": "2026-03-27T20:57:12.247118+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Oct2025_daily.csv",
+      "station": "north_rustico",
+      "rows": 32,
+      "timestamp": "2026-03-27T20:57:12.247656+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Oct2025_hourly.csv",
+      "station": "north_rustico",
+      "rows": 744,
+      "timestamp": "2026-03-27T20:57:12.248723+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Sep2023_daily.csv",
+      "station": "north_rustico",
+      "rows": 31,
+      "timestamp": "2026-03-27T20:57:12.249279+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Sep2023_hourly.csv",
+      "station": "north_rustico",
+      "rows": 720,
+      "timestamp": "2026-03-27T20:57:12.250268+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Sep2024_daily.csv",
+      "station": "north_rustico",
+      "rows": 31,
+      "timestamp": "2026-03-27T20:57:12.250786+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Sep2024_hourly.csv",
+      "station": "north_rustico",
+      "rows": 720,
+      "timestamp": "2026-03-27T20:57:12.251883+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Sep2025_daily.csv",
+      "station": "north_rustico",
+      "rows": 31,
+      "timestamp": "2026-03-27T20:57:12.252416+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_NR_WeatherStn_Sep2025_hourly.csv",
+      "station": "north_rustico",
+      "rows": 720,
+      "timestamp": "2026-03-27T20:57:12.253471+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_TR_WeatherStn_Feb2025_daily.csv",
+      "station": "north_rustico",
+      "rows": 29,
+      "timestamp": "2026-03-27T20:57:12.253984+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/PEINP_TR_WeatherStn_Feb2025_hourly.csv",
+      "station": "north_rustico",
+      "rows": 672,
+      "timestamp": "2026-03-27T20:57:12.254950+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/station_daily.csv",
+      "station": "north_rustico",
+      "rows": 1089,
+      "timestamp": "2026-03-27T20:57:12.257582+00:00"
+    },
+    {
+      "type": "processed_csv",
+      "path": "data/processed/north_rustico/station_hourly.csv",
+      "station": "north_rustico",
+      "rows": 26113,
+      "timestamp": "2026-03-27T20:57:12.317916+00:00"
     },
     {
       "type": "imputation_report",
       "path": "data/processed/imputation_report.csv",
-      "rows": 507,
-      "timestamp": "2026-03-27T15:14:23.581169+00:00"
+      "rows": 46,
+      "timestamp": "2026-03-27T20:57:12.330382+00:00"
     },
     {
       "type": "qa_qc_report",
       "path": "data/processed/qa_qc_report.csv",
-      "rows": 1,
-      "timestamp": "2026-03-27T15:14:23.598391+00:00"
+      "rows": 6,
+      "timestamp": "2026-03-27T20:57:12.763635+00:00"
     },
     {
       "type": "quality_enforcement_report",
       "path": "data/processed/quality_enforcement_report.csv",
-      "rows": 381,
-      "timestamp": "2026-03-27T15:14:23.599926+00:00"
+      "rows": 2646,
+      "timestamp": "2026-03-27T20:57:12.769505+00:00"
     }
   ],
   "checksums": {
-    "data/processed/stanhope/station_daily.csv": "a9d91eba4163f934a94e195cacb9f330c6a126e60e55b6b633f74d0053026248",
-    "data/processed/stanhope/station_hourly.csv": "a8160efd9dbbcf03bceeecc89db671f8020fe75237de67cd90652859814368a3"
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Apr2023_daily.csv": "45429d75f9d975dff79f3596844d5c2187edc51e16f3bc2ea224511c13501603",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Apr2023_hourly.csv": "b5b67d7100e958fb2631a3b8d6b5dcc90c1c20fa47508d5a355103d7495e81f5",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Apr2024_daily.csv": "fcbdb264478a03972b4fc4609944f9c7c8077f3282b823aa569a634c3e60d15e",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Apr2024_hourly.csv": "1dee792a6b27fe6125a263a28b58c5e74de57e496517a9c4e4288cc10bdf9318",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Apr2025_daily.csv": "d25844d201cbfd9104b80f07d03a8b1d73c675936e8c164e5cd15f59b010ccd4",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Apr2025_hourly.csv": "f2660e49e11d472fba202ceabce5d6863f6fccf8e56af1c360c1b477632c0dac",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Aug2023_daily.csv": "1557a0c327c26b6533a52e54d132fe1b17fd02033903fc157541d1863258070a",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Aug2023_hourly.csv": "4fd467669d7989147e30f9ab5036a8314287fd679514ea1339ee1cd2d5e3b5a8",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Aug2024_daily.csv": "a76be77ae5428cd98131d4d252a9dd798eb8fb2819b14e78c39094a096d3f6f3",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Aug2024_hourly.csv": "7368039d53163a72c230e6515fac251b94d5d337b0e00f1a9df0fe2cbab0068d",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Aug2025_daily.csv": "bfb0155deebb968138c82942630e8d14da6ed91802a792f14103c965d362e46f",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Aug2025_hourly.csv": "157c9ec672bf5fcc6962b30c4cf30596b7cbdd178aa9af036fd2321e3cb1853b",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Dec2023_daily.csv": "c8c8a31132816257f5f913337d3f45a6b5db2436930b9a187065ba44e611f9dc",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Dec2023_hourly.csv": "df8359dae59b5c9778139f8b7a5b75766f351d0d8ce64baf9270c01ffaa354b8",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Dec2024_daily.csv": "73e358ad9c6565e6ee2dd903b423142af80f95111b4c0a6ad23ee98562d56918",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Dec2024_hourly.csv": "a5b2a8d2b83a28e0655e069e4989cba21d88d6d4c398a8a9761e602d3d3247cf",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Dec2025_daily.csv": "1d600d82f39e4c0169bcfc6e24980ccd32ab8b50817e3207a0f988ed7772c2fb",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Dec2025_hourly.csv": "6e235cf0e8636142555aa05a797fde06292629c70dcd7e2e18cf7009f93a4e2b",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Feb2024_daily.csv": "71da197dacbe09c1c91f39ac6d742b77f9286f0c866a7feee701c8f28976083d",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Feb2024_hourly.csv": "a733dfafb264af1196d64e728d8d37eecf9640591b4a12b37964790f714d91d9",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Feb2025_daily.csv": "4918c33381a83ea77a1f70a60b313909882804f646e60da67c953b94d2e2c044",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Feb2025_hourly.csv": "4d0cbf3150f4f7f283bf59066504211b757738117bf8d544bb83aca768ecce33",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Feb2026_daily.csv": "4c34c5416c6e8ac82bcf28ec4ee232bb7b50ecbb67ca6a76cc1070c29c5afb62",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Feb2026_hourly.csv": "a5af7ca4e2a1cbec3081a9ea36862ce1cf4dacd7511807354f38d57f82ec8530",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Jan2024_daily.csv": "71fedae71924201cac6542a80667676a85f1584d5e49115bdf4e441ba882ce0a",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Jan2024_hourly.csv": "597f5cc96b935312d2005127ef93c5ac791b3ce0fb6e748ec5432c8e9e158ad9",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Jan2025_daily.csv": "68663b8974e25705f0f8a333a46b6fd0f69c0359ca5a25c6de6722e4ba7ef96c",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Jan2025_hourly.csv": "513cb6f4b772061fec7ce1086ca5c05296ce428517ae264bcdfaf0b997c7c377",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Jan2026_daily.csv": "4ba0fab385b8b0a4b3a2c68776e5b1fa479afaa8f15fcd22455bb59cfc02e534",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Jan2026_hourly.csv": "f154346a389428fb06f83e3747ae546122af1aa621a08abccd7450233c8873a9",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Jul2023_daily.csv": "7c4943d5a68c3179199c823228692f40dbfe89be6501e8d0d9d19c084bb4f8b8",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Jul2023_hourly.csv": "74d3472c9d2d3d16dccc46684c4b28cd6640d6297a679cff05e675525d90424e",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Jul2024_daily.csv": "a857b912c6aab1306780e1c6ab1daf6a357772778ac8b2933f7080752cc91e6e",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Jul2024_hourly.csv": "fd70989fa6f5e4d55325a606f559037221312c033992c3f05307f2c80718ac78",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Jul2025_daily.csv": "c55f320ea84663feb53555d0da8de7fb667c7723b0c0590b97e6a92b77df08c3",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Jul2025_hourly.csv": "c1b31565a5473bcf05b46000d187f113c7a7515c80820e618b501fbcc5a14fc0",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Jun2023_daily.csv": "0190b7b4a0a47d15febc7d0df33e0a51261f817434d691aa65d0351ed7d223ea",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Jun2023_hourly.csv": "28b30666506cd27a8627aa37de8b99d776b2692daebc68b2e7bee0ad0f6af03f",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Jun2024_daily.csv": "dcda9abab308f86db34ec7d20363a4720a1f3e9cfe10d64a952a63c16173f976",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Jun2024_hourly.csv": "273d37e40b492019f293642fd7de4e719fdcb3aacbb1e5403ccdf4039d7ea316",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Jun2025_daily.csv": "9f11e835597dd8738670af00cc456adaa119b751617be5f8b2d47c4f9bf53c34",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Jun2025_hourly.csv": "fd29dafa1258d8ce60ffbbdd98c200556bae3359bec1caa45728127610313e5c",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Mar2024_daily.csv": "789f9e17545f26cead993b185ce9045d998ea268f19a20541f98b601cc1e08c2",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Mar2024_hourly.csv": "a064fb224812da321c2c3b52df94a4e12c9f4bc271846345ef450de03743779b",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Mar2025_daily.csv": "3a353a2538df35a634a3ff9f369b94f216971cb0a545c95b60a9934ea1279c3a",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Mar2025_hourly.csv": "8a5c93a197dcf2f4aeb1a6ce6ccc11f365bd51e80232011d25f4ae655c4e782e",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Mar2026_daily.csv": "dd66c3a07f2a8ab677c99967327b342c46af1863d04f0926d7f98654d8bdfa16",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Mar2026_hourly.csv": "061da9a5350798acbee78ecb49aad33986ee3df3bf1deb4ebefcf84221facf09",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_May2023_daily.csv": "af1c41ad177812f640f767a1b1c4b583e492ba9b652eddcd4af7559492f37c06",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_May2023_hourly.csv": "c10e6b72cf561d540c6d75f5ca741514e67560c12bdd8641d10e986eccaab0b5",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_May2024_daily.csv": "96e49e8df1f28030b89c1b5270486a66b51bfad6dcfa591891b81f1338dd5ea9",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_May2024_hourly.csv": "e19605c12c27ba5c019f9bf67351457c865a3bd202266e4753d606e420dfe8d5",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_May2025_daily.csv": "a391ff19fab071db8545a65a2ba482a46df4ca62368092f6640f2a1825778def",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_May2025_hourly.csv": "14abb7d19b33b35a9ddb68826662beffed2f4d82b8f4d8189f7578e524f8bd84",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Nov2023_daily.csv": "c61da5ce528494873434f15135069f7cb32971907ac85c91450c8e6abd6612e6",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Nov2023_hourly.csv": "a13cba32d2e78ca9696d55c27cc6d7ff486f62cb74e9c56b6ffec561d77ca3c6",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Nov2024_daily.csv": "717e0ed0eae224f774a6406374478f45f9763ab2fab54e3479ca68ac0f59b64d",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Nov2024_hourly.csv": "e0a97d40b5794572c91ba6542f168b692dba1d99324b63821eba852151cedbf5",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Nov2025_daily.csv": "f689dbda764e18bcf58e95da64ea8f7dbd92bae4d0c1553e9ac6cd0bb736fb1a",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Nov2025_hourly.csv": "5443cbe0a1d3c761ed802bd6b21872e04fe85d297059153f5442009ab7d90eea",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Oct2023_daily.csv": "43e5be2e943d92cb6babaa66194365c99bbbe8e555e09ad6e7622eb49004914d",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Oct2023_hourly.csv": "47ff08c5d4ae127a914e5b5218d90eb413e4d8dbc120bcf5451d8c286360cef7",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Oct2024_daily.csv": "4ff63e4aced0fe2806d73ea145d8e4dd42453aaa76c13b4fc51e81045c3e1429",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Oct2024_hourly.csv": "3b4b36b46d0a8be21cc8e3bf7edbbc318df6d22a9573293fac1eae1cc4bb7d1a",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Oct2025_daily.csv": "baac839ab7162c9d2cd7f07b5a310c1bbfc15d2b207db853d7395640f86ca272",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Oct2025_hourly.csv": "c335f50b2bd0136e6ad81e3d2ea969c53313378b6f4c2e29de8b8b3398a1f56e",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Sep2023_daily.csv": "c722ed8140fa19f6321338dd4d14a04e7e6208a2146279c4751e46ad458febe1",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Sep2023_hourly.csv": "b212eaf5c4055f448ac0829d83fc33c63e112afb00f7639a49767c61621b0a2b",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Sep2024_daily.csv": "06d7c5acf69927bda8ee97c0c3caa35ea01a1fb356264f2ec016fb69614d1624",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Sep2024_hourly.csv": "d1fed9cb5ba8b81248ff5249b4b32b4cb0a4ca6629c19b09ab767aa1311dd036",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Sep2025_daily.csv": "bd1479d7bb7ccbb4f2bee4dcdb86cb02441975403c142832749179f00a9054f5",
+    "data/processed/north_rustico/PEINP_NR_WeatherStn_Sep2025_hourly.csv": "46b25f06c3c65e4a10b47f88620171dba1edac2147686a897fafde4e50d36c8b",
+    "data/processed/north_rustico/PEINP_TR_WeatherStn_Feb2025_daily.csv": "f829c13b9b201b5d8d308060a9c663aa4aa3f0d02b955149e8d07391ee76f164",
+    "data/processed/north_rustico/PEINP_TR_WeatherStn_Feb2025_hourly.csv": "0a8ace13d4362bbb3646f15111cba9f14ee5034f43d6a0793203db0ed7f62267",
+    "data/processed/north_rustico/station_daily.csv": "1f7f47f956605821be7cabdd32920e46246a35ee151756bebb75a1753299979f",
+    "data/processed/north_rustico/station_hourly.csv": "4e8dd9afe6ec00fd649a56bfd8e3c7c8a2b346b1c5a53bca7c6fd1c3afd5c3cd"
   },
-  "generated_at": "2026-03-27T15:14:23.599939+00:00",
+  "generated_at": "2026-03-27T20:57:12.769518+00:00",
   "stations": {
-    "stanhope": 2
+    "north_rustico": 76
   },
-  "unprocessed_count": 217
+  "unprocessed_count": 0
 }

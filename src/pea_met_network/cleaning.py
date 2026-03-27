@@ -123,46 +123,51 @@ def _infer_station_from_path(path: Path) -> str | None:
 # ---------------------------------------------------------------------------
 
 
-def load_all_files(
+def load_station_files(
     station_files: dict[str, list[Path]],
-    target_stations: list[str],
-) -> dict[str, pd.DataFrame]:
-    """Load all raw files per station via adapters."""
-    station_dfs: dict[str, list[pd.DataFrame]] = {}
+    station: str,
+) -> pd.DataFrame | None:
+    """Load raw files for a single station via adapters.
+
+    Returns concatenated DataFrame or None if no data.
+    """
+    frames: list[pd.DataFrame] = []
     errors: list[str] = []
 
-    # Handle Licor separately — devices.json loads all stations
-    licor_files = station_files.pop("_licor_all", [])
+    # Handle Licor files that may contain this station
+    # Cache Licor data to avoid re-reading devices.json for each station
+    if not hasattr(load_station_files, "_licor_cache"):
+        load_station_files._licor_cache = {}
+    licor_files = station_files.get("_licor_all", [])
     for fpath in licor_files:
         try:
-            adapter = route_by_extension(fpath)
-            df = adapter.load(fpath)
+            fpath_key = str(fpath)
+            if fpath_key not in load_station_files._licor_cache:
+                adapter = route_by_extension(fpath)
+                load_station_files._licor_cache[fpath_key] = adapter.load(fpath)
+            df = load_station_files._licor_cache[fpath_key]
             if len(df) > 0 and "station" in df.columns:
                 for station_name, group in df.groupby("station"):
-                    if station_name in target_stations:
-                        station_dfs.setdefault(
-                            station_name, []
-                        ).append(group)
+                    if station_name == station:
+                        frames.append(group)
         except Exception as e:
             errors.append(f"Licor load error {fpath}: {e}")
 
     # Load per-station files
-    for station in target_stations:
-        files = station_files.get(station, [])
-        for fpath in files:
-            try:
-                adapter = route_by_extension(fpath)
-                df = adapter.load(fpath)
-                if len(df) > 0:
-                    if "station" not in df.columns:
-                        df["station"] = station
-                    station_dfs.setdefault(station, []).append(df)
-            except Exception as e:
-                errors.append(f"Load error {fpath}: {e}")
+    for fpath in station_files.get(station, []):
+        try:
+            adapter = route_by_extension(fpath)
+            df = adapter.load(fpath)
+            if len(df) > 0:
+                if "station" not in df.columns:
+                    df["station"] = station
+                frames.append(df)
+        except Exception as e:
+            errors.append(f"Load error {fpath}: {e}")
 
     if errors:
         warnings.warn(
-            f"{len(errors)} file load errors:\n"
+            f"{len(errors)} file load errors for {station}:\n"
             + "\n".join(errors[:5])
             + (
                 f"\n... and {len(errors) - 5} more"
@@ -171,15 +176,28 @@ def load_all_files(
             ),
         )
 
-    # Concatenate per-station
-    result: dict[str, pd.DataFrame] = {}
-    for station, frames in station_dfs.items():
-        if not frames:
-            continue
-        df = pd.concat(frames, ignore_index=True)
-        df["station"] = station
-        result[station] = df
+    if not frames:
+        return None
 
+    df = pd.concat(frames, ignore_index=True)
+    df["station"] = station
+    return df
+
+
+def load_all_files(
+    station_files: dict[str, list[Path]],
+    target_stations: list[str],
+) -> dict[str, pd.DataFrame]:
+    """Load all raw files per station via adapters.
+
+    Deprecated: prefer load_station_files for memory-efficient
+    per-station loading.
+    """
+    result: dict[str, pd.DataFrame] = {}
+    for station in target_stations:
+        df = load_station_files(station_files, station)
+        if df is not None:
+            result[station] = df
     return result
 
 
@@ -673,12 +691,69 @@ def should_process(station: str, force: bool = False) -> bool:
 # ---------------------------------------------------------------------------
 
 
+def _collect_qa_qc_data(
+    current_hourly: list[pd.DataFrame],
+    current_daily: list[pd.DataFrame],
+    current_stations: list[str],
+) -> tuple[list[pd.DataFrame], list[pd.DataFrame]]:
+    """Collect hourly/daily data for QA/QC from current run + disk.
+
+    Includes stations from the current run plus any other stations
+    that have existing processed output, so a single-station re-run
+    doesn't clobber the multi-station report.
+    """
+    all_hourly = list(current_hourly)
+    all_daily = list(current_daily)
+    for station in ALL_STATIONS:
+        if station in current_stations:
+            continue
+        h_path = PROCESSED_DIR / station / "station_hourly.csv"
+        d_path = PROCESSED_DIR / station / "station_daily.csv"
+        if h_path.exists() and d_path.exists():
+            try:
+                oh = pd.read_csv(h_path)
+                od = pd.read_csv(d_path)
+                if len(oh) > 0:
+                    all_hourly.append(oh)
+                if len(od) > 0:
+                    all_daily.append(od)
+            except Exception:
+                pass
+    return all_hourly, all_daily
+
+
+def _register_manifest_artifact(
+    artifact_type: str,
+    path: Path,
+    rows: int,
+) -> None:
+    """Register a pipeline artifact in the manifest.
+
+    Removes any existing entry of the same type to avoid duplicates.
+    """
+    manifest_path = PROCESSED_DIR / "pipeline_manifest.json"
+    if not manifest_path.exists():
+        return
+    manifest = json.loads(manifest_path.read_text())
+    manifest["artifacts"] = [
+        a for a in manifest["artifacts"]
+        if a.get("type") != artifact_type
+    ]
+    manifest["artifacts"].append({
+        "type": artifact_type,
+        "path": str(path.relative_to(PROJECT_ROOT)),
+        "rows": rows,
+        "timestamp": pd.Timestamp.now(tz="UTC").isoformat(),
+    })
+    manifest["generated_at"] = pd.Timestamp.now(tz="UTC").isoformat()
+    manifest_path.write_text(json.dumps(manifest, indent=2))
+
+
 def run_pipeline(stations: list[str], force: bool = False) -> None:
     """Execute the full pipeline for given stations."""
     print(f"Pipeline: {len(stations)} stations")
 
     station_files = discover_raw_files()
-    station_dfs = load_all_files(station_files, stations)
 
     all_reports: list[dict] = []
     all_quality_actions: list[dict] = []
@@ -690,11 +765,11 @@ def run_pipeline(stations: list[str], force: bool = False) -> None:
             print(f"  {station}: skipping (output up to date)")
             continue
 
-        if station not in station_dfs:
+        # Load station data on-demand to avoid OOM with many stations
+        df = load_station_files(station_files, station)
+        if df is None:
             print(f"  WARNING: no data for {station}", file=sys.stderr)
             continue
-
-        df = station_dfs[station]
         print(
             f"  {station}: {len(df)} raw rows",
             file=sys.stderr,
@@ -749,6 +824,9 @@ def run_pipeline(stations: list[str], force: bool = False) -> None:
         all_hourly.append(hourly)
         all_daily.append(daily)
 
+        # Free per-station memory before loading next
+        del df, hourly, daily
+
     # Write pipeline manifest with SHA256 checksums
     manifest_path = PROCESSED_DIR / "pipeline_manifest.json"
     manifest = {"artifacts": [], "checksums": {}}
@@ -781,14 +859,19 @@ def run_pipeline(stations: list[str], force: bool = False) -> None:
         stations_summary[s] = stations_summary.get(s, 0) + 1
     manifest["stations"] = stations_summary
 
-    # Compute unprocessed files (raw files for stations not in this run)
-    # Exclude internal keys like _licor_all which are pseudo-stations
+    # Compute unprocessed files: raw files for stations that have no
+    # processed output on disk (hourly CSV). This ensures a single-station
+    # re-run doesn't inflate unprocessed_count.
     all_station_files = discover_raw_files()
-    processed_set = set(stations)
+    stations_with_output = {
+        s for s in ALL_STATIONS
+        if (PROCESSED_DIR / s / "station_hourly.csv").exists()
+    }
     unprocessed = sum(
         len(files)
         for st_name, files in all_station_files.items()
-        if st_name not in processed_set and not st_name.startswith("_")
+        if st_name not in stations_with_output
+        and not st_name.startswith("_")
     )
     manifest["unprocessed_count"] = unprocessed
 
@@ -812,25 +895,18 @@ def run_pipeline(stations: list[str], force: bool = False) -> None:
     print(f"  Imputation report: {len(report_df)} entries")
 
     # Register imputation report in pipeline manifest
-    if manifest_path.exists():
-        manifest = json.loads(manifest_path.read_text())
-        manifest["artifacts"] = [
-            a for a in manifest["artifacts"]
-            if a.get("type") != "imputation_report"
-        ]
-        manifest["artifacts"].append({
-            "type": "imputation_report",
-            "path": str(report_path.relative_to(PROJECT_ROOT)),
-            "rows": len(report_df),
-            "timestamp": pd.Timestamp.now(tz="UTC").isoformat(),
-        })
-        manifest["generated_at"] = pd.Timestamp.now(tz="UTC").isoformat()
-        manifest_path.write_text(json.dumps(manifest, indent=2))
+    _register_manifest_artifact(
+        "imputation_report", report_path, len(report_df)
+    )
 
-    # QA/QC report
-    if all_hourly and all_daily:
-        combined_hourly = pd.concat(all_hourly, ignore_index=True)
-        combined_daily = pd.concat(all_daily, ignore_index=True)
+    # QA/QC report — include all stations with processed output
+    all_qa_hourly, all_qa_daily = _collect_qa_qc_data(
+        all_hourly, all_daily, stations
+    )
+
+    if all_qa_hourly and all_qa_daily:
+        combined_hourly = pd.concat(all_qa_hourly, ignore_index=True)
+        combined_daily = pd.concat(all_qa_daily, ignore_index=True)
         qa_qc_df = generate_qa_qc_report(
             combined_hourly, combined_daily, all_quality_actions
         )
@@ -839,23 +915,10 @@ def run_pipeline(stations: list[str], force: bool = False) -> None:
         print(f"  QA/QC report: {len(qa_qc_df)} stations")
 
         # Register QA/QC report in pipeline manifest
-        manifest_path = PROCESSED_DIR / "pipeline_manifest.json"
-        if manifest_path.exists():
-            manifest = json.loads(manifest_path.read_text())
-            # Remove any existing qa_qc_report entries to avoid duplicates
-            manifest["artifacts"] = [
-                a for a in manifest["artifacts"]
-                if a.get("type") != "qa_qc_report"
-            ]
-            manifest["artifacts"].append({
-                "type": "qa_qc_report",
-                "path": str(qa_qc_path.relative_to(PROJECT_ROOT)),
-                "rows": len(qa_qc_df),
-                "timestamp": pd.Timestamp.now(tz="UTC").isoformat(),
-            })
-            manifest["generated_at"] = pd.Timestamp.now(tz="UTC").isoformat()
-            manifest_path.write_text(json.dumps(manifest, indent=2))
-            print("  Manifest: qa_qc_report registered")
+        _register_manifest_artifact(
+            "qa_qc_report", qa_qc_path, len(qa_qc_df)
+        )
+        print("  Manifest: qa_qc_report registered")
 
     # Quality enforcement report
     if all_quality_actions:
@@ -864,23 +927,13 @@ def run_pipeline(stations: list[str], force: bool = False) -> None:
         quality_report_df.to_csv(quality_report_path, index=False)
         print(f"  Quality enforcement report: {len(quality_report_df)} actions")
 
-        # Register quality enforcement report in pipeline manifest
-        manifest_path = PROCESSED_DIR / "pipeline_manifest.json"
-        if manifest_path.exists():
-            manifest = json.loads(manifest_path.read_text())
-            manifest["artifacts"] = [
-                a for a in manifest["artifacts"]
-                if a.get("type") != "quality_enforcement_report"
-            ]
-            manifest["artifacts"].append({
-                "type": "quality_enforcement_report",
-                "path": str(quality_report_path.relative_to(PROJECT_ROOT)),
-                "rows": len(quality_report_df),
-                "timestamp": pd.Timestamp.now(tz="UTC").isoformat(),
-            })
-            manifest["generated_at"] = pd.Timestamp.now(tz="UTC").isoformat()
-            manifest_path.write_text(json.dumps(manifest, indent=2))
-            print("  Manifest: quality_enforcement_report registered")
+        # Register quality enforcement report in manifest
+        _register_manifest_artifact(
+            "quality_enforcement_report",
+            quality_report_path,
+            len(quality_report_df),
+        )
+        print("  Manifest: quality_enforcement_report registered")
 
     print("Done.")
 
