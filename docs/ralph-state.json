@@ -1,4 +1,3 @@
-
 {
   "project": "pea-met-network",
   "version": "2.0.0",
@@ -16,7 +15,7 @@
     },
     {
       "id": 2,
-      "name": "Format Adapters — All Formats (CSV/XLSX/XLE/JSON)",
+      "name": "Format Adapters \u2014 All Formats (CSV/XLSX/XLE/JSON)",
       "status": "done",
       "iteration": 0,
       "started_at": null,
@@ -33,7 +32,7 @@
       "started_at": null,
       "completed_at": null,
       "exit_gate": "pytest tests/test_v2_pipeline.py::TestAC_PIPE_3_PipelineIntegration -v",
-      "notes": "Wire adapters into cleaning.py: concat → dedup → resample → impute → FWI. Single SSOT output.",
+      "notes": "Wire adapters into cleaning.py: concat \u2192 dedup \u2192 resample \u2192 impute \u2192 FWI. Single SSOT output.",
       "exit": "pytest tests/test_v2_pipeline.py::TestAC_PIPE_3_PipelineIntegration -v"
     },
     {
@@ -98,9 +97,9 @@
     "tripped": false,
     "consecutive_stalls": 0,
     "last_tripped": null,
-    "last_commit": "74eb500",
-    "last_verdict": "PASS",
-    "last_fail_criteria_hash": null
+    "last_commit": "b400629",
+    "last_verdict": "REJECT",
+    "last_fail_criteria_hash": "f763fced6077fa58"
   },
   "decisions": [
     {
@@ -142,12 +141,12 @@
     {
       "id": "v2-d7",
       "decision": "Tests define the contract",
-      "rationale": "Each phase has failing tests that pass when implementation is complete. Red → green.",
+      "rationale": "Each phase has failing tests that pass when implementation is complete. Red \u2192 green.",
       "date": "2026-03-25"
     },
     {
       "id": "v2-d8",
-      "decision": "Phase 8 uses TDD — Martin writes tests first",
+      "decision": "Phase 8 uses TDD \u2014 Martin writes tests first",
       "rationale": "Data quality enforcement is new functionality. Tests define the contract before Ralph implements.",
       "date": "2026-03-27"
     }
@@ -155,9 +154,9 @@
   "last_reviewed_commit": null,
   "blockers": [],
   "phase": "8",
-  "iteration": 0,
-  "status": "idle",
-  "updated_at": "2026-03-27T03:00:00.000000+00:00",
+  "iteration": 2,
+  "status": "running",
+  "updated_at": "2026-03-27T11:23:59.290915+00:00",
   "blocker": null,
   "last_commit": "74eb500",
   "last_verdict": "PENDING",

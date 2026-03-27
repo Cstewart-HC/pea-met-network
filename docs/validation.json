@@ -1,5 +1,5 @@
 {
-  "last_reviewed_commit": "84e3c12365bc9519ae292d71420b3e6141e7e9a2",
+  "last_reviewed_commit": "b400629",
   "verdict": "REJECT",
   "reviewed_at": "2026-03-27T11:11:50.000000+00:00",
   "artifact_validation": {
@@ -75,7 +75,7 @@
       "id": "AC-DQ-10",
       "name": "Fast Test Suite Passes",
       "status": "FAIL",
-      "evidence": "4 test failures in tests/test_quality_enforcement.py — all Martin test-design bugs, not production code issues: (1) test_clean_data_passes_through_unchanged: sample_hourly fixture uses 24 identical values for all 3 flatline-monitored variables, triggering flatline detection; (2) test_flatline_does_not_modify_values: wind_speed_kmh list has 15 elements vs 8-row DataFrame (ValueError); (3) test_flatline_action_is_flagged: asserts action=='flagged' but config-driven action is 'flag_only'; (4) test_flatline_with_nan_gap: NaN gap only in temperature but RH and wind have 7 identical values each, exceeding threshold. Martin needs to fix these test fixtures."
+      "evidence": "4 test failures in tests/test_quality_enforcement.py \u2014 all Martin test-design bugs, not production code issues: (1) test_clean_data_passes_through_unchanged: sample_hourly fixture uses 24 identical values for all 3 flatline-monitored variables, triggering flatline detection; (2) test_flatline_does_not_modify_values: wind_speed_kmh list has 15 elements vs 8-row DataFrame (ValueError); (3) test_flatline_action_is_flagged: asserts action=='flagged' but config-driven action is 'flag_only'; (4) test_flatline_with_nan_gap: NaN gap only in temperature but RH and wind have 7 identical values each, exceeding threshold. Martin needs to fix these test fixtures."
     },
     {
       "id": "AC-DQ-11",
@@ -112,5 +112,5 @@
       "message": "Martin test-design bug: test_flatline_with_nan_gap puts NaN gap only in air_temperature_c (3+NaN+3=7, below threshold 6) but relative_humidity_pct and wind_speed_kmh have 7 identical values each, exceeding threshold. All 3 flatline variables need the NaN gap."
     }
   ],
-  "summary": "Ralph fixed AC-DQ-8: generate_qa_qc_report() now outputs quality_enforced_count, quality_flagged_count, out_of_range_pre_enforcement, and out_of_range_post_enforcement columns, with all_quality_actions passed from cleaning.py. All 9 QA/QC tests pass. 11 of 12 criteria now PASS. AC-DQ-10 still FAILs due to 4 Martin test-design bugs in tests/test_quality_enforcement.py — these are broken test fixtures/assertions, not production code issues. Martin needs to fix: (1) sample_hourly fixture constant values triggering flatline, (2) wrong list length in flatline test, (3) wrong action string assertion, (4) incomplete NaN gap across flatline variables."
+  "summary": "Ralph fixed AC-DQ-8: generate_qa_qc_report() now outputs quality_enforced_count, quality_flagged_count, out_of_range_pre_enforcement, and out_of_range_post_enforcement columns, with all_quality_actions passed from cleaning.py. All 9 QA/QC tests pass. 11 of 12 criteria now PASS. AC-DQ-10 still FAILs due to 4 Martin test-design bugs in tests/test_quality_enforcement.py \u2014 these are broken test fixtures/assertions, not production code issues. Martin needs to fix: (1) sample_hourly fixture constant values triggering flatline, (2) wrong list length in flatline test, (3) wrong action string assertion, (4) incomplete NaN gap across flatline variables."
 }
