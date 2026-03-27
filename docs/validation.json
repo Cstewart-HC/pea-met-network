@@ -1,10 +1,14 @@
 {
-  "last_reviewed_commit": "3e53eea",
-  "verdict": "PASS",
-  "reviewed_at": "2026-03-27T11:55:02.157434+00:00",
+  "last_reviewed_commit": "652151b",
+  "verdict": "REJECT",
+  "reviewed_at": "2026-03-27T20:14:26.358087+00:00",
   "artifact_validation": {
-    "status": "SKIP",
-    "errors": []
+    "status": "FAIL",
+    "errors": [
+      "Pipeline re-run in commit 7a4b54f regressed: unprocessed_count went from 0 to 217",
+      "QA/QC report at HEAD has only 1 station (stanhope) vs 5+ at last reviewed commit",
+      "North Rustico early-period data (Dec 2022 - Mar 2023) missing from processed output after pipeline re-run"
+    ]
   },
   "pre_flight": {
     "status": "SKIP",
@@ -18,78 +22,23 @@
   },
   "criteria": [
     {
-      "id": "AC-DQ-1",
-      "name": "Cleaning Config",
-      "status": "PASS",
-      "evidence": "docs/cleaning-config.json exists with all required sections (value_ranges, fwi_output_ranges, cross_variable_checks, rate_of_change, flatline, enforcement). Verified by prior review."
-    },
-    {
-      "id": "AC-DQ-2",
-      "name": "enforce_quality() Function",
-      "status": "PASS",
-      "evidence": "quality.py implements enforce_quality() with config-driven enforcement actions. Verified by prior review."
-    },
-    {
-      "id": "AC-DQ-3",
-      "name": "Pipeline Integration",
-      "status": "PASS",
-      "evidence": "cleaning.py inserts enforce_quality() after resample, before impute. Verified by prior review."
-    },
-    {
-      "id": "AC-DQ-4",
-      "name": "FWI Output Enforcement",
-      "status": "PASS",
-      "evidence": "cleaning.py calls enforce_fwi_outputs() after calculate_fwi(). Verified by prior review."
-    },
-    {
-      "id": "AC-DQ-5",
-      "name": "Quality Enforcement Report",
-      "status": "PASS",
-      "evidence": "quality_enforcement_report.csv is generated and registered in manifest. Verified by prior review."
-    },
-    {
-      "id": "AC-DQ-6",
-      "name": "Manifest Registration",
-      "status": "PASS",
-      "evidence": "Quality enforcement report registered in pipeline_manifest.json. Verified by prior review."
-    },
-    {
-      "id": "AC-DQ-7",
-      "name": "Quality Flags Column",
-      "status": "PASS",
-      "evidence": "_quality_flags column added by enforce_quality(). Verified by prior review."
-    },
-    {
-      "id": "AC-DQ-8",
-      "name": "QA/QC Report Enhancement",
-      "status": "PASS",
-      "evidence": "Ralph added quality_enforced_count, quality_flagged_count, out_of_range_pre_enforcement, out_of_range_post_enforcement columns to generate_qa_qc_report(). Function now accepts optional quality_actions parameter. cleaning.py passes all_quality_actions. All 9 QA/QC tests pass."
-    },
-    {
-      "id": "AC-DQ-9",
-      "name": "Date Range Truncation",
-      "status": "PASS",
-      "evidence": "truncate_date_range() filters records before 2023-04-01. Verified by prior review."
-    },
-    {
       "id": "AC-DQ-10",
       "name": "Fast Test Suite Passes",
-      "status": "PASS",
-      "evidence": "Martin fixed all 4 test-design bugs in tests/test_quality_enforcement.py (commit b400629): (1) sample_hourly fixture now uses varying values (20.0 + 0.5*i etc.) so flatline detection does not trigger on clean data; (2) wind_speed_kmh list length matches DataFrame rows; (3) assertion uses 'flag_only' matching config; (4) NaN gap applied to all 3 flatline-monitored variables. All 63 quality enforcement + QA/QC tests pass. Full fast suite green."
-    },
-    {
-      "id": "AC-DQ-11",
-      "name": "No Out-of-Range FWI Inputs",
-      "status": "PASS",
-      "evidence": "enforce_quality() runs before impute, setting out-of-range values to NaN. Verified by prior review."
-    },
-    {
-      "id": "AC-DQ-12",
-      "name": "Flatline Detection",
-      "status": "PASS",
-      "evidence": "Flatline detection uses config-driven flag_only action. Does not modify values. Verified by prior review."
+      "status": "FAIL",
+      "evidence": "3 tests fail at HEAD that pass at last_reviewed_commit (3e53eea): test_north_rustico_early_period_in_output (expects Dec 2022-Mar 2023 data, but pipeline re-run only starts at 2023-04-01), test_qa_qc_has_all_stations (1 station vs >=3 required), test_zero_unprocessed_files (217 unprocessed vs 0). All 3 regressions stem from the pipeline re-run in commit 7a4b54f."
     }
   ],
-  "failing_nodes": [],
-  "summary": "All 12 acceptance criteria PASS. Phase 8 data quality enforcement is complete. Martin's 4 test-design bugs in test_quality_enforcement.py were fixed in commit b400629 \u2014 the only remaining FAIL (AC-DQ-10) now passes. Production code was already correct; tests were the issue. Fast test suite is green."
+  "failing_nodes": [
+    {
+      "file": "data/processed/pipeline_manifest.json",
+      "line": 1,
+      "message": "unprocessed_count is 217 at HEAD, was 0 at last reviewed commit. Pipeline re-run in commit 7a4b54f regressed."
+    },
+    {
+      "file": "data/processed/qa_qc_report.csv",
+      "line": 1,
+      "message": "QA/QC report has only 1 station (stanhope) at HEAD, was 5+ at last reviewed commit."
+    }
+  ],
+  "summary": "The 3 commits touching src/ introduce good bug fixes (column dedup via coalesce_duplicate_columns, ECCC prefix-stripped column mappings, defensive redundancy.py get) and new code (fwi.py, normalized_loader.py). However, commit 7a4b54f re-ran the pipeline with these fixes and the re-run REGRESSED: unprocessed_count jumped from 0 to 217, QA/QC report dropped from 5+ stations to 1 (stanhope only), and North Rustico early-period data disappeared. The source code changes look correct in isolation, but the pipeline re-run they triggered produced broken output. Ralph needs to investigate why the re-run failed to process most stations \u2014 likely the new column mappings changed file recognition or the coalesce logic altered column shapes enough to break station processing."
 }
