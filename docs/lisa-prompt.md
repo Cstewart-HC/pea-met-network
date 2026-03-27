@@ -6,12 +6,12 @@ with a primary focus on data quality and structural compliance.
 
 You are the TOCK. Ralph is the TICK. Ralph builds, you verify.
 
-## MissHoover V2: Data-Centric Determinism + OpenLineage
+## MissHoover V2: Data-Centric Determinism
 
 The loop now enforces **Hard Gates** on both structure and data quality:
 - `pre_flight.py` runs BEFORE phase exit (structural lint)
 - `validate_artifacts.py` runs AFTER phase exit but BEFORE your review
-- All events are tracked via OpenLineage in `docs/lineage.jsonl`
+- All events are tracked in `docs/loop-log.jsonl`
 
 If either gate fails, the loop auto-rejects and Ralph is notified.
 
@@ -178,7 +178,7 @@ Write `docs/validation.json` with this structure before recording the verdict.
 
 **For REJECT verdicts:** The `failing_nodes` array must contain at least one
 entry mapping the failure to a specific file and line number. This enables
-deterministic tracking in the lineage system.
+deterministic tracking in the loop log.
 
 **MANDATORY:** Every criterion ID in your review MUST come from the actual
 spec file for the current phase (e.g., `AC-INT-1`, `AC-INT-2` from

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Record Lisa's verdict deterministically.
 
-MissHoover V2: Enhanced with structured failure nodes and lineage tracking.
+MissHoover V2: Enhanced with structured failure nodes.
 
 Usage:
     python3 scripts/record_verdict.py PASS
@@ -20,7 +20,6 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 VALIDATION_FILE = REPO_ROOT / "docs" / "validation.json"
-LINEAGE_FILE = REPO_ROOT / "docs" / "lineage.jsonl"
 
 
 def git(*args: str) -> str:
@@ -30,41 +29,6 @@ def git(*args: str) -> str:
         sys.exit(result.returncode)
     return result.stdout.strip()
 
-
-def emit_lineage_event(verdict: str, failing_nodes: list[dict] | None = None) -> None:
-    """Emit a lineage event for the verdict."""
-    if not LINEAGE_FILE.parent.exists():
-        LINEAGE_FILE.parent.mkdir(parents=True, exist_ok=True)
-
-    # Read state for phase info
-    state_file = REPO_ROOT / "docs" / "ralph-state.json"
-    phase = "?"
-    if state_file.exists():
-        try:
-            state = json.loads(state_file.read_text())
-            phase = str(state.get("phase", "?"))
-        except json.JSONDecodeError:
-            pass
-
-    event = {
-        "eventType": "LISA_VERDICT",
-        "eventTime": datetime.now(timezone.utc).astimezone().isoformat(),
-        "run": {
-            "runId": f"lisa-{datetime.now().strftime('%Y%m%d%H%M%S')}",
-            "facets": {
-                "verdict": verdict,
-                "failing_nodes": failing_nodes or [],
-            },
-        },
-        "job": {
-            "namespace": "misshoover://pea-met-network",
-            "name": f"phase-{phase}-lisa-review",
-        },
-        "producer": "record_verdict.py",
-    }
-
-    with open(LINEAGE_FILE, "a") as f:
-        f.write(json.dumps(event) + "\n")
 
 
 def main() -> None:
@@ -115,15 +79,7 @@ def main() -> None:
     # Write validation
     VALIDATION_FILE.write_text(json.dumps(validation, indent=2) + "\n")
 
-    # Emit lineage event
-    emit_lineage_event(args.verdict, failing_nodes)
-
-    # Git commit
     git("add", "docs/validation.json")
-
-    # Also add lineage file if it exists
-    if LINEAGE_FILE.exists():
-        git("add", "docs/lineage.jsonl")
 
     result = subprocess.run(["git", "-C", str(REPO_ROOT), "diff", "--staged", "--quiet"])
     if result.returncode != 0:

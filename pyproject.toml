@@ -24,8 +24,6 @@ dependencies = [
     # HTTP / caching
     "requests>=2.32",
     "httpx>=0.28",
-    # Lineage / state tracking
-    "openlineage-python>=1.45",
     # Quality
     "pytest>=9.0",
     "ruff>=0.15",

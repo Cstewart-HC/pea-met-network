@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 """sync_state.py — Ralph loop state synchronizer (spec-driven).
 
-MissHoover V2: Data-Centric Determinism + OpenLineage
+MissHoover V2: Data-Centric Determinism
 - Calls pre_flight.py before phase exit gate (structural lint)
 - Calls validate_artifacts.py after pytest but before Lisa (Hard Gate)
-- Emits OpenLineage events for data provenance tracking
 - Generates STALL_REPORT.md on circuit breaker trip
 """
 from __future__ import annotations
@@ -17,14 +16,6 @@ from datetime import datetime, timezone
 from hashlib import sha256
 from pathlib import Path
 
-# Import OpenLineage client
-try:
-    from scripts.utils.lineage_client import LineageClient
-    LINEAGE_AVAILABLE = True
-except ImportError:
-    LINEAGE_AVAILABLE = False
-    LineageClient = None
-
 REPO_ROOT = Path(__file__).resolve().parent.parent
 STATE_FILE = REPO_ROOT / "docs" / "ralph-state.json"
 TESTS_DIR = REPO_ROOT / "tests"
@@ -32,22 +23,7 @@ VALIDATION_FILE = REPO_ROOT / "docs" / "validation.json"
 LOOP_LOG_FILE = REPO_ROOT / "docs" / "loop-log.jsonl"
 ARTIFACT_VALIDATION_FILE = REPO_ROOT / "docs" / "artifact-validation.json"
 PRE_FLIGHT_FILE = REPO_ROOT / "docs" / "pre-flight.json"
-LINEAGE_FILE = REPO_ROOT / "docs" / "lineage.jsonl"
 STALL_REPORT_FILE = REPO_ROOT / "docs" / "STALL_REPORT.md"
-
-# Global lineage client (initialized lazily)
-_lineage_client = None
-
-
-def get_lineage_client() -> LineageClient | None:
-    """Get or create the lineage client."""
-    global _lineage_client
-    if not LINEAGE_AVAILABLE:
-        return None
-    if _lineage_client is None:
-        _lineage_client = LineageClient()
-    return _lineage_client
-
 
 def run_artifact_validation() -> tuple[bool, dict]:
     """Run validate_artifacts.py and return (passes, result_dict).
@@ -982,15 +958,6 @@ def main() -> None:
         state["blocker"] = None
         state_mgr.save_state(state)
 
-    # Emit START lineage event
-    lineage_client = get_lineage_client()
-    if lineage_client:
-        phase = state.get("phase", "?")
-        lineage_client.emit_start(
-            f"phase-{phase}-sync",
-            description=f"MissHoover V2 sync for phase {phase}",
-        )
-
     if handle_view_mode(view_arg, state):
         return
 
@@ -1058,19 +1025,6 @@ def main() -> None:
         state_mgr.save_validation(validation)
         verdict = "REJECT"  # Update local verdict for subsequent logic
 
-        # Emit FAIL lineage event
-        lineage_client = get_lineage_client()
-        if lineage_client:
-            lineage_client.emit_fail(
-                f"phase-{state.get('phase', '?')}-pipeline",
-                error=artifact_summary,
-                failing_nodes=[
-                    {"file": c.get("path", "unknown"), "error": c.get("message", "")}
-                    for c in artifact_result.get("checks", [])
-                    if c.get("status") == "FAIL"
-                ],
-            )
-
     # 1.6. MissHoover V2: Pre-Flight Structural Lint
     # Run BEFORE phase exit gate. If structural requirements fail, REJECT.
     pre_flight_passes, pre_flight_result = run_pre_flight()
@@ -1096,18 +1050,6 @@ def main() -> None:
         ]
         state_mgr.save_validation(validation)
         verdict = "REJECT"  # Update local verdict for subsequent logic
-
-        # Emit FAIL lineage event
-        lineage_client = get_lineage_client()
-        if lineage_client:
-            lineage_client.emit_fail(
-                f"phase-{state.get('phase', '?')}-pipeline",
-                error=pre_flight_summary,
-                failing_nodes=[
-                    {"type": m.get("type"), "name": m.get("name"), "file_pattern": m.get("file_pattern")}
-                    for m in pre_flight_result.get("missing", [])
-                ],
-            )
 
     # 2. Pipeline Execution
     tripped = update_circuit_breaker(state, head_sha, validation, verdict)
@@ -1157,18 +1099,6 @@ def main() -> None:
     committed = auto_commit_if_changed() if auto_commit else False
     append_loop_log(state, head_sha, phase_advanced, committed, verdict)
 
-    # 6. Emit COMPLETE lineage event
-    lineage_client = get_lineage_client()
-    if lineage_client:
-        phase = state.get("phase", "?")
-        lineage_client.emit_complete(
-            f"phase-{phase}-sync",
-            outputs=[
-                {"name": str(STATE_FILE.relative_to(REPO_ROOT))},
-                {"name": str(VALIDATION_FILE.relative_to(REPO_ROOT))},
-                {"name": str(LOOP_LOG_FILE.relative_to(REPO_ROOT))},
-            ]
-        )
 
 
 if __name__ == "__main__":
