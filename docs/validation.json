@@ -1,7 +1,7 @@
 {
   "last_reviewed_commit": "4778174",
-  "verdict": "PASS",
-  "reviewed_at": "2026-03-27T00:31:55.355267+00:00",
+  "verdict": "PENDING",
+  "reviewed_at": "2026-03-27T03:42:34.190121+00:00",
   "artifact_validation": {
     "status": "SKIP",
     "errors": []
@@ -16,56 +16,7 @@
     "canonical_schema_compliant": true,
     "issues": []
   },
-  "criteria": [
-    {
-      "id": "AC-E2E-1",
-      "name": "Pipeline completes exit code 0",
-      "status": "PASS",
-      "evidence": "Phase 7 exit gate tests pass. python -m pea_met_network completes successfully for all stations."
-    },
-    {
-      "id": "AC-E2E-2",
-      "name": "All 6 stations have hourly + daily CSVs",
-      "status": "PASS",
-      "evidence": "Manifest confirms 6 stations (greenwich, cavendish, north_rustico, stanley_bridge, tracadie, stanhope) each with station_hourly.csv and station_daily.csv containing rows."
-    },
-    {
-      "id": "AC-E2E-3",
-      "name": "Stations with RH data have populated FWI columns",
-      "status": "PASS",
-      "evidence": "Previously verified. FWI columns (ffmc, dmc, dc, isi, bui, fwi) populated in committed CSVs where relative_humidity_pct data exists."
-    },
-    {
-      "id": "AC-E2E-4",
-      "name": "All 4 report artifacts exist",
-      "status": "PASS",
-      "evidence": "Previously verified. pipeline_manifest.json, imputation_report.csv, qa_qc_report.csv, stanhope_validation.csv all present in committed data/processed/."
-    },
-    {
-      "id": "AC-E2E-5",
-      "name": "No gaps > 7 days in hourly data",
-      "status": "PASS",
-      "evidence": "Verified by Phase 7 exit gate tests (TestAC_PIPE_7_E2EValidation)."
-    },
-    {
-      "id": "AC-E2E-6",
-      "name": "Continuous coverage from earliest PEINP to latest Licor",
-      "status": "PASS",
-      "evidence": "Verified by Phase 7 exit gate tests (TestAC_PIPE_7_E2EValidation)."
-    },
-    {
-      "id": "AC-E2E-7",
-      "name": "Manifest reports 0 unprocessed files",
-      "status": "PASS",
-      "evidence": "pipeline_manifest.json unprocessed_files field is empty array []. All raw files processed."
-    },
-    {
-      "id": "AC-E2E-8",
-      "name": "Full test suite passes",
-      "status": "PASS",
-      "evidence": "176/176 tests pass (9 e2e deselected via -m not e2e, 1 skip). pyproject.toml addopts includes -m \"not e2e\" to exclude long-running e2e tests from default suite. Zero failures."
-    }
-  ],
+  "criteria": [],
   "failing_nodes": [],
-  "summary": "Phase 7 E2E validation: PASS. All 8 acceptance criteria satisfied. Ralph fixed the remaining AC-E2E-8 issue by adding -m \"not e2e\" to pyproject.toml addopts (commit bd4d940), which excludes long-running e2e tests (jupyter notebook execution, pipeline subprocess) from the default test invocation. The test suite now passes cleanly at 176/176 with 9 e2e tests properly deselected. All data artifacts verified via git show HEAD: \u2014 manifest has 0 unprocessed files, all 6 stations have hourly+daily CSVs, and all report artifacts are present."
+  "summary": "Phase 8 activated; stale PASS reset. Awaiting Lisa review."
 }
