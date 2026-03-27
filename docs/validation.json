@@ -1,7 +1,7 @@
 {
-  "last_reviewed_commit": "44c6c54b6112f93a81583a58c0e4c07f5ded7e62",
+  "last_reviewed_commit": "48ef1ed01beb6947ecda57c78914def62909615a",
   "verdict": "REJECT",
-  "reviewed_at": "2026-03-27T04:37:56.193714+00:00",
+  "reviewed_at": "2026-03-27T05:38:53.418961+00:00",
   "artifact_validation": {
     "status": "SKIP",
     "errors": []
@@ -21,91 +21,116 @@
       "id": "AC-DQ-1",
       "name": "Cleaning Config",
       "status": "FAIL",
-      "evidence": "docs/cleaning-config.json does not exist. TestCleaningConfig fixture fails with FileNotFoundError. Ralph must create this file per spec."
+      "evidence": "docs/cleaning-config.json exists but has multiple mismatches with spec Section Deliverables 1: (1) air_temperature_c range is [-60.0, 60.0] but spec says [-50.0, 60.0]; (2) relative_humidity_pct range is [0.0, 100.0] but spec says [0.0, 105.0]; (3) FWI output ranges for dmc/dc/isi/bui/fwi have finite upper bounds (300/1500/100/300/200) but spec says null (no upper limit); (4) enforcement.actions only has flatline entry, missing out_of_range/fwi_out_of_range/cross_variable/rate_of_change entries that spec defines; (5) cross_variable_checks.rain_rh_correlation missing enabled/rule/variables/threshold_rh fields from spec."
     },
     {
       "id": "AC-DQ-2",
       "name": "enforce_quality() Function",
       "status": "FAIL",
-      "evidence": "src/pea_met_network/quality.py does not exist. All TestEnforceQualitySignature, TestValueRangeChecks, TestActionRecords, TestQualityFlagsColumn, TestFlatlineDetection, TestRateOfChange, TestCrossVariableChecks tests fail with ModuleNotFoundError. Ralph must create this module."
+      "evidence": "quality.py exists and is well-structured with enforce_quality(), enforce_fwi_outputs(), truncate_date_range(). However cross-variable check hardcodes action=flagged (line ~165) instead of reading from config enforcement.actions which spec says should be set_nan for cross_variable. The implementation does not consult the enforcement config block to determine per-check-type actions."
     },
     {
       "id": "AC-DQ-3",
       "name": "Pipeline Integration",
       "status": "FAIL",
-      "evidence": "No pipeline integration test yet. Ralph must wire enforce_quality() into the pipeline after resample and before impute."
+      "evidence": "enforce_quality() is not imported or called anywhere in the pipeline code. grep of src/pea_met_network/ (excluding quality.py) shows zero references to enforce_quality, enforce_fwi_outputs, or truncate_date_range."
     },
     {
       "id": "AC-DQ-4",
       "name": "FWI Output Enforcement",
       "status": "FAIL",
-      "evidence": "enforce_fwi_outputs() not importable — quality.py does not exist. TestFWIOutputEnforcement tests fail with ModuleNotFoundError."
+      "evidence": "enforce_fwi_outputs() exists in quality.py but is not wired into the pipeline after calculate_fwi(). No import or call found outside quality.py."
     },
     {
       "id": "AC-DQ-5",
       "name": "Quality Enforcement Report",
       "status": "FAIL",
-      "evidence": "Depends on enforce_quality() which does not exist. TestQualityEnforcementReport fails with ModuleNotFoundError."
+      "evidence": "No quality_enforcement_report.csv generation. The actions list from enforce_quality() is returned but never written to a CSV artifact. No code produces data/processed/quality_enforcement_report.csv."
     },
     {
       "id": "AC-DQ-6",
       "name": "Manifest Registration",
       "status": "FAIL",
-      "evidence": "No test or implementation for registering quality_enforcement_report.csv in pipeline manifest."
+      "evidence": "quality_enforcement_report is not registered in the pipeline manifest. Depends on AC-DQ-5."
     },
     {
       "id": "AC-DQ-7",
       "name": "Quality Flags Column",
-      "status": "FAIL",
-      "evidence": "Depends on enforce_quality() which does not exist. TestQualityFlagsColumn fails with ModuleNotFoundError."
+      "status": "PASS",
+      "evidence": "enforce_quality() correctly adds _quality_flags column as JSON-encoded string of flag arrays. 51/54 tests pass including TestQualityFlagsColumn tests."
     },
     {
       "id": "AC-DQ-8",
       "name": "QA/QC Report Enhancement",
       "status": "FAIL",
-      "evidence": "No test for enhanced QA/QC report with enforcement counts. Ralph must implement and Martin should add tests."
+      "evidence": "QA/QC report does not include quality_enforced_count, quality_flagged_count, out_of_range_pre_enforcement, or out_of_range_post_enforcement columns. No changes to qa_qc.py for Phase 8."
     },
     {
       "id": "AC-DQ-9",
       "name": "Date Range Truncation",
       "status": "FAIL",
-      "evidence": "truncate_date_range() not importable — quality.py does not exist. TestDateRangeTruncation fails with ModuleNotFoundError."
+      "evidence": "truncate_date_range() exists in quality.py but is not called anywhere in the pipeline. No import found outside quality.py."
     },
     {
       "id": "AC-DQ-10",
       "name": "Fast Test Suite Passes",
-      "status": "PASS",
-      "evidence": "Existing tests (excluding test_quality_enforcement.py) pass. Martin's 54 new tests correctly fail (TDD red phase)."
+      "status": "FAIL",
+      "evidence": "226 passed, 3 failed, 1 skipped, 9 deselected (e2e). 3 failures are in test_quality_enforcement.py \u2014 all Martin test-design bugs: (1) test_clean_data_passes_through_unchanged uses 24 identical values triggering flatline detection; (2) test_flatline_does_not_modify_values has wind_speed_kmh list of 15 elements vs 8-row DataFrame (construction error); (3) test_flatline_with_nan_gap has NaN gap only in temperature but 7 identical values for RH and wind triggering flatline."
     },
     {
       "id": "AC-DQ-11",
       "name": "No Out-of-Range FWI Inputs",
       "status": "FAIL",
-      "evidence": "enforce_quality() does not exist. Pipeline does not run quality enforcement before FWI calculation."
+      "evidence": "enforce_quality() is not wired into the pipeline (AC-DQ-3 FAIL), so out-of-range values still reach calculate_fwi(). The function exists but is never called."
     },
     {
       "id": "AC-DQ-12",
       "name": "Flatline Detection",
-      "status": "FAIL",
-      "evidence": "Depends on enforce_quality() which does not exist. TestFlatlineDetection fails with ModuleNotFoundError."
+      "status": "PASS",
+      "evidence": "Flatline detection correctly uses flag_only action \u2014 does not modify values, only adds quality flags. Implementation correctly resets run_length on NaN gaps. 8/9 flatline-specific tests pass."
     }
   ],
   "failing_nodes": [
     {
       "file": "docs/cleaning-config.json",
-      "line": 0,
-      "message": "File does not exist. Ralph must create per spec Section 'Deliverables > 1. Cleaning Config'."
+      "line": 1,
+      "message": "Value range mismatches with spec: air_temperature_c [-60,60] should be [-50,60]; relative_humidity_pct [0,100] should be [0,105]. FWI output ranges have finite upper bounds where spec says null. enforcement.actions missing entries for out_of_range, fwi_out_of_range, cross_variable, rate_of_change. cross_variable_checks.rain_rh_correlation missing spec-required fields (enabled, rule, variables, threshold_rh)."
+    },
+    {
+      "file": "src/pea_met_network/quality.py",
+      "line": 165,
+      "message": "Cross-variable check hardcodes action=flagged instead of reading from config enforcement.actions. Spec says cross_variable action should be set_nan."
     },
     {
       "file": "src/pea_met_network/quality.py",
       "line": 0,
-      "message": "Module does not exist. Ralph must create with enforce_quality(), enforce_fwi_outputs(), and truncate_date_range() functions."
+      "message": "Module not integrated into pipeline. enforce_quality(), enforce_fwi_outputs(), truncate_date_range() are never imported or called outside quality.py. AC-DQ-3,4,9,11 all depend on pipeline wiring."
+    },
+    {
+      "file": "src/pea_met_network/quality.py",
+      "line": 0,
+      "message": "No quality enforcement report generation. enforce_quality() returns actions list but nothing writes it to data/processed/quality_enforcement_report.csv. AC-DQ-5,6."
+    },
+    {
+      "file": "src/pea_met_network/quality.py",
+      "line": 0,
+      "message": "enforce_quality() does not consult enforcement config block to determine per-check-type actions. Actions are hardcoded per check function rather than driven by config."
     },
     {
       "file": "tests/test_quality_enforcement.py",
-      "line": 1,
-      "message": "All 54 tests fail — expected TDD red phase. Tests are well-structured and cover AC-DQ-1,2,4,5,7,9,12."
+      "line": 40,
+      "message": "Martin test-design bug: sample_hourly fixture uses 24 identical values for all 3 flatline-monitored variables, causing flatline detection to fire in test_clean_data_passes_through_unchanged. Fixture needs variation in at least some values."
+    },
+    {
+      "file": "tests/test_quality_enforcement.py",
+      "line": 480,
+      "message": "Martin test-design bug: wind_speed_kmh has 15 elements but DataFrame has 8 rows (periods=8). Causes ValueError on construction."
+    },
+    {
+      "file": "tests/test_quality_enforcement.py",
+      "line": 527,
+      "message": "Martin test-design bug: test_flatline_with_nan_gap puts NaN gap only in temperature (3 values + NaN + 3 values = 7, below threshold 6) but RH and wind have 7 identical values triggering flatline. All 3 flatline variables need the NaN gap."
     }
   ],
-  "summary": "TDD red phase review. Martin committed 54 well-designed tests for Phase 8 covering 7 of 12 acceptance criteria. The implementation (quality.py + cleaning-config.json) does not exist yet — all tests fail with FileNotFoundError/ModuleNotFoundError as expected. Ralph must: (1) create docs/cleaning-config.json per spec, (2) create src/pea_met_network/quality.py with enforce_quality(), enforce_fwi_outputs(), and truncate_date_range(), (3) wire quality enforcement into the pipeline. AC-DQ-3,6,8 have no tests yet — Martin may need a second pass after Ralph's initial implementation."
+  "summary": "Ralph made solid progress \u2014 quality.py is well-structured with enforce_quality(), enforce_fwi_outputs(), and truncate_date_range() all functional. 51/54 tests pass. However three categories of issues remain: (1) cleaning-config.json has multiple mismatches with the spec (value ranges, FWI upper bounds, enforcement actions, cross-variable fields); (2) nothing is wired into the pipeline \u2014 the three functions exist in isolation with zero imports elsewhere; (3) no quality enforcement report generation or manifest registration. The 3 test failures are all Martin test-design bugs (fixture uses constant values triggering flatline, wrong list length, incomplete NaN gap). Ralph should fix config spec compliance, wire all three functions into the pipeline, add report generation, and the 3 test bugs are for Martin to fix."
 }
