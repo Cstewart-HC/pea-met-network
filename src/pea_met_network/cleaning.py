@@ -28,6 +28,11 @@ sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 from pea_met_network.adapters.registry import route_by_extension  # noqa: E402
 from pea_met_network.qa_qc import generate_qa_qc_report  # noqa: E402
+from pea_met_network.quality import (  # noqa: E402
+    enforce_fwi_outputs,
+    enforce_quality,
+    truncate_date_range,
+)
 
 RAW_DIR = PROJECT_ROOT / "data" / "raw"
 PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
@@ -676,6 +681,7 @@ def run_pipeline(stations: list[str], force: bool = False) -> None:
     station_dfs = load_all_files(station_files, stations)
 
     all_reports: list[dict] = []
+    all_quality_actions: list[dict] = []
     all_hourly: list[pd.DataFrame] = []
     all_daily: list[pd.DataFrame] = []
 
@@ -701,10 +707,30 @@ def run_pipeline(stations: list[str], force: bool = False) -> None:
             file=sys.stderr,
         )
 
+        # Load cleaning config for quality enforcement
+        config_path = PROJECT_ROOT / "docs" / "cleaning-config.json"
+        quality_config = (
+            json.loads(config_path.read_text())
+            if config_path.exists()
+            else {}
+        )
+
+        # Truncate date range to configured start date
+        hourly = truncate_date_range(hourly, quality_config)
+
+        # Quality enforcement before imputation
+        hourly, quality_actions = enforce_quality(hourly, quality_config)
+        all_quality_actions.extend(quality_actions)
+
         hourly, report = impute(hourly, station)
         all_reports.extend(report)
 
         hourly = calculate_fwi(hourly)
+
+        # FWI output enforcement after FWI calculation
+        hourly, fwi_actions = enforce_fwi_outputs(hourly, quality_config)
+        all_quality_actions.extend(fwi_actions)
+
         daily = aggregate_daily(hourly)
 
         out_dir = PROCESSED_DIR / station
@@ -828,6 +854,31 @@ def run_pipeline(stations: list[str], force: bool = False) -> None:
             manifest["generated_at"] = pd.Timestamp.now(tz="UTC").isoformat()
             manifest_path.write_text(json.dumps(manifest, indent=2))
             print("  Manifest: qa_qc_report registered")
+
+    # Quality enforcement report
+    if all_quality_actions:
+        quality_report_df = pd.DataFrame(all_quality_actions)
+        quality_report_path = PROCESSED_DIR / "quality_enforcement_report.csv"
+        quality_report_df.to_csv(quality_report_path, index=False)
+        print(f"  Quality enforcement report: {len(quality_report_df)} actions")
+
+        # Register quality enforcement report in pipeline manifest
+        manifest_path = PROCESSED_DIR / "pipeline_manifest.json"
+        if manifest_path.exists():
+            manifest = json.loads(manifest_path.read_text())
+            manifest["artifacts"] = [
+                a for a in manifest["artifacts"]
+                if a.get("type") != "quality_enforcement_report"
+            ]
+            manifest["artifacts"].append({
+                "type": "quality_enforcement_report",
+                "path": str(quality_report_path.relative_to(PROJECT_ROOT)),
+                "rows": len(quality_report_df),
+                "timestamp": pd.Timestamp.now(tz="UTC").isoformat(),
+            })
+            manifest["generated_at"] = pd.Timestamp.now(tz="UTC").isoformat()
+            manifest_path.write_text(json.dumps(manifest, indent=2))
+            print("  Manifest: quality_enforcement_report registered")
 
     print("Done.")
 

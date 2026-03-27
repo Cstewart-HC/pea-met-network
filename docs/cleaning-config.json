@@ -4,21 +4,25 @@
     "start": "2023-04-01T00:00:00Z"
   },
   "value_ranges": {
-    "air_temperature_c": [-60.0, 60.0],
-    "relative_humidity_pct": [0.0, 100.0],
+    "air_temperature_c": [-50.0, 60.0],
+    "relative_humidity_pct": [0.0, 105.0],
     "wind_speed_kmh": [0.0, 200.0],
     "rain_mm": [0.0, 500.0]
   },
   "fwi_output_ranges": {
     "ffmc": [0.0, 101.0],
-    "dmc": [0.0, 300.0],
-    "dc": [0.0, 1500.0],
-    "isi": [0.0, 100.0],
-    "bui": [0.0, 300.0],
-    "fwi": [0.0, 200.0]
+    "dmc": [0.0, null],
+    "dc": [0.0, null],
+    "isi": [0.0, null],
+    "bui": [0.0, null],
+    "fwi": [0.0, null]
   },
   "cross_variable_checks": {
     "rain_rh_correlation": {
+      "enabled": true,
+      "rule": "rain_with_low_rh",
+      "variables": ["rain_mm", "relative_humidity_pct"],
+      "threshold_rh": 70.0,
       "min_rh_for_rain": 70.0
     }
   },
@@ -42,6 +46,10 @@
   "enforcement": {
     "default_action": "set_nan",
     "actions": {
+      "out_of_range": "set_nan",
+      "fwi_out_of_range": "set_nan",
+      "cross_variable": "set_nan",
+      "rate_of_change": "set_nan",
       "flatline": "flag_only"
     }
   }
