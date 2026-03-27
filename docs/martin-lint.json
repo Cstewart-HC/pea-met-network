@@ -1,20 +1,20 @@
 {
-  "linted_at": "2026-03-27T11:37:01.218243+00:00",
+  "linted_at": "2026-03-27T23:47:49.959598+00:00",
   "rules_version": "2026.03",
   "verdict": "FAIL",
   "files_scanned": 21,
   "total_violations": 66,
   "by_severity": {
-    "medium": 39,
-    "low": 27
+    "medium": 40,
+    "low": 26
   },
   "by_rule": {
-    "AP027": 4,
+    "AP027": 5,
     "AP006": 14,
     "AP005": 12,
     "AP014": 7,
     "AP026": 2,
-    "AP021": 13,
+    "AP021": 12,
     "AP012": 1,
     "AP024": 12,
     "AP015": 1
@@ -72,10 +72,19 @@
       "auto_fix": null
     },
     {
+      "rule_id": "AP027",
+      "severity": "medium",
+      "file": "tests/test_data_refresh.py",
+      "line": 126,
+      "test": "test_north_rustico_data_in_output",
+      "message": "[complex_test_logic] 'test_north_rustico_data_in_output' has 5 branches (max 3)",
+      "auto_fix": null
+    },
+    {
       "rule_id": "AP006",
       "severity": "medium",
       "file": "tests/test_data_refresh.py",
-      "line": 152,
+      "line": 172,
       "test": "test_imputation_artifact_exists",
       "message": "[shared_state_write] pytest.skip(\"data/processed/ does not exist yet\")",
       "auto_fix": null
@@ -389,15 +398,6 @@
     {
       "rule_id": "AP021",
       "severity": "low",
-      "file": "tests/test_data_refresh.py",
-      "line": 5,
-      "test": null,
-      "message": "[unused_import_in_test] Possibly unused import: import sys",
-      "auto_fix": null
-    },
-    {
-      "rule_id": "AP021",
-      "severity": "low",
       "file": "tests/test_fwi_vectors.py",
       "line": 3,
       "test": null,
@@ -621,5 +621,5 @@
       "auto_fix": null
     }
   ],
-  "summary": "66 violation(s) across 21 file(s): 39 medium, 27 low"
+  "summary": "66 violation(s) across 21 file(s): 40 medium, 26 low"
 }
