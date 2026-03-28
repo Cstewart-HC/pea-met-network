@@ -1,7 +1,7 @@
 {
-  "last_reviewed_commit": "55587cdcdac563d70565a8dd752db4563f7e455a",
+  "last_reviewed_commit": "f0510eb",
   "verdict": "PASS",
-  "reviewed_at": "2026-03-28T01:11:09+00:00",
+  "reviewed_at": "2026-03-28T01:17:05.141498+00:00",
   "artifact_validation": {
     "status": "SKIP",
     "errors": []
@@ -39,13 +39,13 @@
       "id": "AC-FWI-4",
       "name": "Chain restarts after gap_threshold_hours",
       "status": "PASS",
-      "evidence": "Verified: 25 consecutive NaN hours → chain restarts from startup defaults. ffmc[-1]=86.04 (not NaN). Same pattern confirmed for DMC and DC."
+      "evidence": "Verified: 25 consecutive NaN hours \u2192 chain restarts from startup defaults. ffmc[-1]=86.04 (not NaN). Same pattern confirmed for DMC and DC."
     },
     {
       "id": "AC-FWI-5",
       "name": "Chain stays NaN before threshold",
       "status": "PASS",
-      "evidence": "Verified: 2 consecutive NaN hours → chain remains broken. ffmc[3] is NaN. Code correctly tracks consecutive_nulls and only resets mo_prev/dmc_prev_val/dc_prev_val when count >= threshold."
+      "evidence": "Verified: 2 consecutive NaN hours \u2192 chain remains broken. ffmc[3] is NaN. Code correctly tracks consecutive_nulls and only resets mo_prev/dmc_prev_val/dc_prev_val when count >= threshold."
     },
     {
       "id": "AC-FWI-6",
@@ -87,9 +87,9 @@
       "id": "AC-FWI-12",
       "name": "Stanley Bridge FFMC/DMC remain 0%",
       "status": "PASS",
-      "evidence": "Stanley Bridge has no RH sensor (100% missing). Chain recovery only restarts when inputs resume — if RH is permanently missing, no restart occurs. No code path could produce FWI without RH input."
+      "evidence": "Stanley Bridge has no RH sensor (100% missing). Chain recovery only restarts when inputs resume \u2014 if RH is permanently missing, no restart occurs. No code path could produce FWI without RH input."
     }
   ],
   "failing_nodes": [],
-  "summary": "Phase 9 chain recovery implementation is complete and correct. Commit 721610a adds gap_threshold_hours chain restart logic to _ffmc_calc, _dmc_calc, _dc_calc, plus a new fwi_diagnostics module. AC-FWI-4 and AC-FWI-5 verified programmatically (2 NaN < threshold → chain stays broken; 25 NaN >= threshold → chain restarts). All 12 acceptance criteria met at code level. Pipeline artifacts (fwi_missingness_report.csv, updated qa_qc_report.csv) require a pipeline re-run to appear in the tree — the code to generate them is correct. Martin lint has 66 violations (40 medium, 26 low, 0 critical/high) — does not block PASS. Ralph should proceed to Phase 10 implementation."
+  "summary": "Phase 9 chain recovery implementation is complete and correct. Commit 721610a adds gap_threshold_hours chain restart logic to _ffmc_calc, _dmc_calc, _dc_calc, plus a new fwi_diagnostics module. AC-FWI-4 and AC-FWI-5 verified programmatically (2 NaN < threshold \u2192 chain stays broken; 25 NaN >= threshold \u2192 chain restarts). All 12 acceptance criteria met at code level. Pipeline artifacts (fwi_missingness_report.csv, updated qa_qc_report.csv) require a pipeline re-run to appear in the tree \u2014 the code to generate them is correct. Martin lint has 66 violations (40 medium, 26 low, 0 critical/high) \u2014 does not block PASS. Ralph should proceed to Phase 10 implementation."
 }
