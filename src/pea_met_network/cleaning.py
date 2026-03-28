@@ -27,6 +27,10 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 from pea_met_network.adapters.registry import route_by_extension  # noqa: E402
+from pea_met_network.fwi_diagnostics import (  # noqa: E402
+    chain_breaks_to_dataframe,
+    diagnose_chain_breaks,
+)
 from pea_met_network.qa_qc import generate_qa_qc_report  # noqa: E402
 from pea_met_network.quality import (  # noqa: E402
     enforce_fwi_outputs,
@@ -346,12 +350,19 @@ def _ffmc_calc(
     wind: np.ndarray,
     rain: np.ndarray,
     ffmc_prev: float = 85.0,
+    gap_threshold_hours: int = 24,
 ) -> np.ndarray:
-    """Calculate Fine Fuel Moisture Code iteratively."""
+    """Calculate Fine Fuel Moisture Code iteratively.
+
+    When inputs are NaN for >= gap_threshold_hours consecutive hours and
+    then become valid again, the chain restarts from startup defaults.
+    Short gaps (< threshold) keep the chain broken (NaN propagation).
+    """
     n = len(temp)
     ffmc = np.full(n, np.nan)
 
     mo_prev = 147.2 * (101.0 - ffmc_prev) / (59.5 + ffmc_prev)
+    consecutive_nulls = 0
 
     for i in range(n):
         t = temp[i]
@@ -362,8 +373,19 @@ def _ffmc_calc(
         if np.isnan(t) or np.isnan(h) or np.isnan(w):
             ffmc[i] = np.nan
             mo_prev = np.nan
+            consecutive_nulls += 1
             continue
 
+        # Inputs are valid — check if chain should restart
+        if np.isnan(mo_prev) and consecutive_nulls >= gap_threshold_hours:
+            mo_prev = 147.2 * (101.0 - ffmc_prev) / (59.5 + ffmc_prev)
+            consecutive_nulls = 0
+        elif np.isnan(mo_prev):
+            consecutive_nulls += 1
+            ffmc[i] = np.nan
+            continue
+
+        consecutive_nulls = 0
         rf = 0.0 if np.isnan(r) else float(r)
 
         # Rain adjustment
@@ -419,8 +441,13 @@ def _dmc_calc(
     rain: np.ndarray,
     month: np.ndarray,
     dmc_prev: float = 6.0,
+    gap_threshold_hours: int = 24,
 ) -> np.ndarray:
-    """Calculate Duff Moisture Code iteratively."""
+    """Calculate Duff Moisture Code iteratively.
+
+    When inputs are NaN for >= gap_threshold_hours consecutive hours and
+    then become valid again, the chain restarts from startup defaults.
+    """
     n = len(temp)
     dmc = np.full(n, np.nan)
 
@@ -430,6 +457,7 @@ def _dmc_calc(
     }
 
     dmc_prev_val = dmc_prev
+    consecutive_nulls = 0
     for i in range(n):
         t = temp[i]
         h = rh[i]
@@ -438,7 +466,13 @@ def _dmc_calc(
 
         if np.isnan(t) or np.isnan(h):
             dmc[i] = np.nan
+            consecutive_nulls += 1
             continue
+
+        # Inputs valid — check if chain should restart
+        if consecutive_nulls >= gap_threshold_hours:
+            dmc_prev_val = dmc_prev
+        consecutive_nulls = 0
 
         rf = 0.0 if np.isnan(r) else float(r)
 
@@ -483,8 +517,13 @@ def _dc_calc(
     rain: np.ndarray,
     month: np.ndarray,
     dc_prev: float = 15.0,
+    gap_threshold_hours: int = 24,
 ) -> np.ndarray:
-    """Calculate Drought Code iteratively."""
+    """Calculate Drought Code iteratively.
+
+    When inputs are NaN for >= gap_threshold_hours consecutive hours and
+    then become valid again, the chain restarts from startup defaults.
+    """
     n = len(temp)
     dc = np.full(n, np.nan)
 
@@ -494,6 +533,7 @@ def _dc_calc(
     }
 
     dc_prev_val = dc_prev
+    consecutive_nulls = 0
     for i in range(n):
         t = temp[i]
         r = rain[i]
@@ -501,7 +541,13 @@ def _dc_calc(
 
         if np.isnan(t):
             dc[i] = np.nan
+            consecutive_nulls += 1
             continue
+
+        # Inputs valid — check if chain should restart
+        if consecutive_nulls >= gap_threshold_hours:
+            dc_prev_val = dc_prev
+        consecutive_nulls = 0
 
         rf = 0.0 if np.isnan(r) else float(r)
 
@@ -519,8 +565,18 @@ def _dc_calc(
     return dc
 
 
-def calculate_fwi(df: pd.DataFrame) -> pd.DataFrame:
-    """Calculate all FWI indices for hourly station data."""
+def calculate_fwi(
+    df: pd.DataFrame,
+    gap_threshold_hours: int = 24,
+) -> pd.DataFrame:
+    """Calculate all FWI indices for hourly station data.
+
+    Args:
+        df: Hourly station dataframe with required weather columns.
+        gap_threshold_hours: When the FWI chain has been broken for
+            this many consecutive hours and valid inputs resume,
+            restart the chain from startup defaults.
+    """
     df = df.copy()
 
     missing = [c for c in FWI_REQUIRED if c not in df.columns]
@@ -543,9 +599,15 @@ def calculate_fwi(df: pd.DataFrame) -> pd.DataFrame:
     )
     month = df["timestamp_utc"].dt.month.to_numpy(dtype=float)
 
-    ffmc = _ffmc_calc(temp, rh, wind, rain)
-    dmc = _dmc_calc(temp, rh, rain, month)
-    dc = _dc_calc(temp, rain, month)
+    ffmc = _ffmc_calc(
+        temp, rh, wind, rain, gap_threshold_hours=gap_threshold_hours,
+    )
+    dmc = _dmc_calc(
+        temp, rh, rain, month, gap_threshold_hours=gap_threshold_hours,
+    )
+    dc = _dc_calc(
+        temp, rain, month, gap_threshold_hours=gap_threshold_hours,
+    )
 
     # ISI
     mo = 147.2 * (101.0 - ffmc) / (59.5 + ffmc)
@@ -757,6 +819,7 @@ def run_pipeline(stations: list[str], force: bool = False) -> None:
 
     all_reports: list[dict] = []
     all_quality_actions: list[dict] = []
+    all_chain_breaks: list = []
     all_hourly: list[pd.DataFrame] = []
     all_daily: list[pd.DataFrame] = []
 
@@ -800,11 +863,21 @@ def run_pipeline(stations: list[str], force: bool = False) -> None:
         hourly, report = impute(hourly, station)
         all_reports.extend(report)
 
-        hourly = calculate_fwi(hourly)
+        # Read FWI config for chain recovery threshold
+        fwi_config = quality_config.get("fwi", {})
+        gap_threshold = fwi_config.get("gap_threshold_hours", 24)
+
+        hourly = calculate_fwi(hourly, gap_threshold_hours=gap_threshold)
 
         # FWI output enforcement after FWI calculation
         hourly, fwi_actions = enforce_fwi_outputs(hourly, quality_config)
         all_quality_actions.extend(fwi_actions)
+
+        # FWI chain break diagnostics
+        station_breaks = diagnose_chain_breaks(
+            hourly, station, quality_actions
+        )
+        all_chain_breaks.extend(station_breaks)
 
         daily = aggregate_daily(hourly)
 
@@ -908,7 +981,8 @@ def run_pipeline(stations: list[str], force: bool = False) -> None:
         combined_hourly = pd.concat(all_qa_hourly, ignore_index=True)
         combined_daily = pd.concat(all_qa_daily, ignore_index=True)
         qa_qc_df = generate_qa_qc_report(
-            combined_hourly, combined_daily, all_quality_actions
+            combined_hourly, combined_daily, all_quality_actions,
+            chain_breaks=all_chain_breaks,
         )
         qa_qc_path = PROCESSED_DIR / "qa_qc_report.csv"
         qa_qc_df.to_csv(qa_qc_path, index=False)
@@ -918,6 +992,20 @@ def run_pipeline(stations: list[str], force: bool = False) -> None:
         _register_manifest_artifact(
             "qa_qc_report", qa_qc_path, len(qa_qc_df)
         )
+
+    # FWI chain break missingness report
+    if all_chain_breaks:
+        breaks_df = chain_breaks_to_dataframe(all_chain_breaks)
+        missingness_path = PROCESSED_DIR / "fwi_missingness_report.csv"
+        breaks_df.to_csv(missingness_path, index=False)
+        print(
+            f"  FWI missingness report: {len(breaks_df)} chain breaks"
+        )
+        _register_manifest_artifact(
+            "fwi_missingness_report", missingness_path, len(breaks_df)
+        )
+    else:
+        print("  FWI missingness report: no chain breaks detected")
         print("  Manifest: qa_qc_report registered")
 
     # Quality enforcement report

@@ -148,6 +148,7 @@ def generate_qa_qc_report(
     hourly: pd.DataFrame,
     daily: pd.DataFrame,
     quality_actions: list[dict] | None = None,
+    chain_breaks: list | None = None,
 ) -> pd.DataFrame:
     """Generate QA/QC report for all stations.
 
@@ -265,6 +266,10 @@ def generate_qa_qc_report(
             "quality_flagged_count": flagged_count,
             "out_of_range_pre_enforcement": oor_temp + oor_rh + oor_wind,
             "out_of_range_post_enforcement": oor_post,
+            "fwi_chain_breaks": sum(
+                1 for b in (chain_breaks or [])
+                if b.station == station
+            ),
         })
 
     return pd.DataFrame(report_rows)
