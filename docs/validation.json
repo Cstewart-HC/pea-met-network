@@ -1,7 +1,7 @@
 {
-  "last_reviewed_commit": "c15bdea",
-  "verdict": "PASS",
-  "reviewed_at": "2026-03-28T02:51:41.425388+00:00",
+  "last_reviewed_commit": "a362618",
+  "verdict": "PENDING",
+  "reviewed_at": "2026-03-28T03:22:07.276754+00:00",
   "artifact_validation": {
     "status": "SKIP",
     "errors": []
@@ -16,80 +16,7 @@
     "canonical_schema_compliant": true,
     "issues": []
   },
-  "criteria": [
-    {
-      "id": "AC-FWI-1",
-      "name": "fwi_diagnostics.py exists with diagnose_chain_breaks()",
-      "status": "PASS",
-      "evidence": "src/pea_met_network/fwi_diagnostics.py exists at HEAD with ChainBreak dataclass and diagnose_chain_breaks() function."
-    },
-    {
-      "id": "AC-FWI-2",
-      "name": "diagnose_chain_breaks() correctly identifies chain breaks",
-      "status": "PASS",
-      "evidence": "Function compares null patterns of FFI codes against input dependencies using _find_null_regions(), determines cause via _determine_cause(), and produces ChainBreak objects."
-    },
-    {
-      "id": "AC-FWI-3",
-      "name": "_ffmc_calc, _dmc_calc, _dc_calc accept gap_threshold_hours",
-      "status": "PASS",
-      "evidence": "All three functions have gap_threshold_hours: int = 24 parameter."
-    },
-    {
-      "id": "AC-FWI-4",
-      "name": "Chain restarts after gap_threshold_hours null hours",
-      "status": "PASS",
-      "evidence": "All three functions reset carry-over to startup defaults when consecutive_nulls >= gap_threshold after a NaN gap."
-    },
-    {
-      "id": "AC-FWI-5",
-      "name": "Chain remains NaN for gaps below threshold (no premature restart)",
-      "status": "PASS",
-      "evidence": "c15bdea fixes _dmc_calc and _dc_calc to set carry-over (dmc_prev_val/dc_prev_val) to NaN when inputs are missing, matching _ffmc_calc's pattern. When inputs resume after gap < threshold, carry-over is NaN so output stays NaN. Verified by code inspection \u2014 identical pattern to _ffmc_calc lines 380-385."
-    },
-    {
-      "id": "AC-FWI-6",
-      "name": "cleaning-config.json has fwi section",
-      "status": "PASS",
-      "evidence": "docs/cleaning-config.json contains fwi.gap_threshold_hours=24 and fwi.startup_defaults."
-    },
-    {
-      "id": "AC-FWI-7",
-      "name": "fwi_missingness_report.csv generated",
-      "status": "PASS",
-      "evidence": "run_pipeline() calls chain_breaks_to_dataframe() and writes to data/processed/fwi_missingness_report.csv."
-    },
-    {
-      "id": "AC-FWI-8",
-      "name": "FWI missingness report registered in manifest",
-      "status": "PASS",
-      "evidence": "_register_manifest_artifact('fwi_missingness_report', ...) called after writing the report."
-    },
-    {
-      "id": "AC-FWI-9",
-      "name": "QA/QC report includes fwi_chain_breaks column",
-      "status": "PASS",
-      "evidence": "generate_qa_qc_report() accepts chain_breaks parameter and counts breaks per station."
-    },
-    {
-      "id": "AC-FWI-10",
-      "name": "pytest tests/ -m 'not e2e' -v passes",
-      "status": "PASS",
-      "evidence": "229 passed, 1 skipped (--ignore=tests/test_cross_station_impute.py for Phase 10 TDD)."
-    },
-    {
-      "id": "AC-FWI-11",
-      "name": "Greenwich FFMC coverage increases after chain recovery",
-      "status": "PASS",
-      "evidence": "Chain restart logic ensures FFMC resumes after gaps >= 24h."
-    },
-    {
-      "id": "AC-FWI-12",
-      "name": "Stanley Bridge FFMC/DMC remain 0%",
-      "status": "PASS",
-      "evidence": "Stanley Bridge has no RH sensor \u2014 chain never starts."
-    }
-  ],
+  "criteria": [],
   "failing_nodes": [],
-  "summary": "Ralph's fix in c15bdea correctly resolves AC-FWI-5 by setting dmc_prev_val and dc_prev_val to NaN when inputs are missing, mirroring _ffmc_calc's proven gap-threshold pattern. All 12 Phase 9 acceptance criteria now pass. 229 tests pass. Martin lint has 66 medium/low violations (none critical/high) \u2014 not blocking."
+  "summary": "Phase 10 activated; stale PASS reset. Awaiting Lisa review."
 }
