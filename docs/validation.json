@@ -1,7 +1,7 @@
 {
-  "last_reviewed_commit": "65b949b",
-  "verdict": "REJECT",
-  "reviewed_at": "2026-03-28T02:08:05.224589+00:00",
+  "last_reviewed_commit": "c15bdea",
+  "verdict": "PASS",
+  "reviewed_at": "2026-03-28T02:51:41.425388+00:00",
   "artifact_validation": {
     "status": "SKIP",
     "errors": []
@@ -27,37 +27,37 @@
       "id": "AC-FWI-2",
       "name": "diagnose_chain_breaks() correctly identifies chain breaks",
       "status": "PASS",
-      "evidence": "Function compares null patterns of FFI codes against input dependencies using _find_null_regions(), determines cause via _determine_cause(), and produces ChainBreak objects with break_start, break_end, cause, missing_input, rows_affected."
+      "evidence": "Function compares null patterns of FFI codes against input dependencies using _find_null_regions(), determines cause via _determine_cause(), and produces ChainBreak objects."
     },
     {
       "id": "AC-FWI-3",
       "name": "_ffmc_calc, _dmc_calc, _dc_calc accept gap_threshold_hours",
       "status": "PASS",
-      "evidence": "All three functions have gap_threshold_hours: int = 24 parameter. calculate_fwi() also accepts it and passes it through."
+      "evidence": "All three functions have gap_threshold_hours: int = 24 parameter."
     },
     {
       "id": "AC-FWI-4",
       "name": "Chain restarts after gap_threshold_hours null hours",
       "status": "PASS",
-      "evidence": "_ffmc_calc resets mo_prev from ffmc_prev when consecutive_nulls >= gap_threshold. _dmc_calc resets dmc_prev_val to dmc_prev. _dc_calc resets dc_prev_val to dc_prev."
+      "evidence": "All three functions reset carry-over to startup defaults when consecutive_nulls >= gap_threshold after a NaN gap."
     },
     {
       "id": "AC-FWI-5",
       "name": "Chain remains NaN for gaps below threshold (no premature restart)",
-      "status": "FAIL",
-      "evidence": "_ffmc_calc correctly handles this (sets mo_prev=NaN on input NaN, checks np.isnan(mo_prev) on resume). BUT _dmc_calc and _dc_calc do NOT set their carry-over (dmc_prev_val, dc_prev_val) to NaN when inputs are missing. When inputs resume after a short gap (< threshold), these functions silently calculate from the stale pre-gap carry-over value instead of producing NaN. This violates the spec requirement that short gaps produce NaN."
+      "status": "PASS",
+      "evidence": "c15bdea fixes _dmc_calc and _dc_calc to set carry-over (dmc_prev_val/dc_prev_val) to NaN when inputs are missing, matching _ffmc_calc's pattern. When inputs resume after gap < threshold, carry-over is NaN so output stays NaN. Verified by code inspection \u2014 identical pattern to _ffmc_calc lines 380-385."
     },
     {
       "id": "AC-FWI-6",
       "name": "cleaning-config.json has fwi section",
       "status": "PASS",
-      "evidence": "docs/cleaning-config.json contains fwi.gap_threshold_hours=24 and fwi.startup_defaults with ffmc/dmc/dc."
+      "evidence": "docs/cleaning-config.json contains fwi.gap_threshold_hours=24 and fwi.startup_defaults."
     },
     {
       "id": "AC-FWI-7",
       "name": "fwi_missingness_report.csv generated",
       "status": "PASS",
-      "evidence": "run_pipeline() calls chain_breaks_to_dataframe() and writes to data/processed/fwi_missingness_report.csv when chain breaks exist."
+      "evidence": "run_pipeline() calls chain_breaks_to_dataframe() and writes to data/processed/fwi_missingness_report.csv."
     },
     {
       "id": "AC-FWI-8",
@@ -69,38 +69,27 @@
       "id": "AC-FWI-9",
       "name": "QA/QC report includes fwi_chain_breaks column",
       "status": "PASS",
-      "evidence": "generate_qa_qc_report() accepts chain_breaks parameter and counts breaks per station as fwi_chain_breaks column."
+      "evidence": "generate_qa_qc_report() accepts chain_breaks parameter and counts breaks per station."
     },
     {
       "id": "AC-FWI-10",
       "name": "pytest tests/ -m 'not e2e' -v passes",
       "status": "PASS",
-      "evidence": "229 passed, 1 skipped with --ignore=tests/test_cross_station_impute.py. Martin's Phase 10 TDD tests (test_cross_station_impute.py) fail to collect due to missing modules \u2014 expected TDD behavior, not a regression."
+      "evidence": "229 passed, 1 skipped (--ignore=tests/test_cross_station_impute.py for Phase 10 TDD)."
     },
     {
       "id": "AC-FWI-11",
       "name": "Greenwich FFMC coverage increases after chain recovery",
       "status": "PASS",
-      "evidence": "Chain restart logic ensures FFMC resumes after gaps >= 24h. The 1762-hour Greenwich RH gap will trigger restart when RH returns."
+      "evidence": "Chain restart logic ensures FFMC resumes after gaps >= 24h."
     },
     {
       "id": "AC-FWI-12",
       "name": "Stanley Bridge FFMC/DMC remain 0%",
       "status": "PASS",
-      "evidence": "Stanley Bridge has no RH sensor. _ffmc_calc and _dmc_calc both require RH as input. Since RH is never valid, the chain never restarts."
+      "evidence": "Stanley Bridge has no RH sensor \u2014 chain never starts."
     }
   ],
-  "failing_nodes": [
-    {
-      "file": "src/pea_met_network/cleaning.py",
-      "line": 458,
-      "message": "AC-FWI-5 FAIL: _dmc_calc does not set dmc_prev_val to NaN when inputs are missing"
-    },
-    {
-      "file": "src/pea_met_network/cleaning.py",
-      "line": 535,
-      "message": "AC-FWI-5 FAIL: _dc_calc does not set dc_prev_val to NaN when temp is missing"
-    }
-  ],
-  "summary": "Phase 9 chain recovery implementation is well-structured overall: fwi_diagnostics.py is clean, cleaning-config.json has the right structure, pipeline integration is correct, and QA/QC report enhancement works. However, _dmc_calc and _dc_calc have a gap-threshold enforcement bug: they don't set their carry-over state to NaN when inputs are missing, so short gaps (< 24h) silently produce values from stale carry-over instead of NaN. _ffmc_calc handles this correctly \u2014 _dmc_calc and _dc_calc need the same pattern. Martin lint has 66 violations (medium/low only) \u2014 noted but not blocking."
+  "failing_nodes": [],
+  "summary": "Ralph's fix in c15bdea correctly resolves AC-FWI-5 by setting dmc_prev_val and dc_prev_val to NaN when inputs are missing, mirroring _ffmc_calc's proven gap-threshold pattern. All 12 Phase 9 acceptance criteria now pass. 229 tests pass. Martin lint has 66 medium/low violations (none critical/high) \u2014 not blocking."
 }
