@@ -466,12 +466,19 @@ def _dmc_calc(
 
         if np.isnan(t) or np.isnan(h):
             dmc[i] = np.nan
+            dmc_prev_val = np.nan
             consecutive_nulls += 1
             continue
 
         # Inputs valid — check if chain should restart
-        if consecutive_nulls >= gap_threshold_hours:
+        if np.isnan(dmc_prev_val) and consecutive_nulls >= gap_threshold_hours:
             dmc_prev_val = dmc_prev
+            consecutive_nulls = 0
+        elif np.isnan(dmc_prev_val):
+            consecutive_nulls += 1
+            dmc[i] = np.nan
+            continue
+
         consecutive_nulls = 0
 
         rf = 0.0 if np.isnan(r) else float(r)
@@ -541,12 +548,19 @@ def _dc_calc(
 
         if np.isnan(t):
             dc[i] = np.nan
+            dc_prev_val = np.nan
             consecutive_nulls += 1
             continue
 
         # Inputs valid — check if chain should restart
-        if consecutive_nulls >= gap_threshold_hours:
+        if np.isnan(dc_prev_val) and consecutive_nulls >= gap_threshold_hours:
             dc_prev_val = dc_prev
+            consecutive_nulls = 0
+        elif np.isnan(dc_prev_val):
+            consecutive_nulls += 1
+            dc[i] = np.nan
+            continue
+
         consecutive_nulls = 0
 
         rf = 0.0 if np.isnan(r) else float(r)
