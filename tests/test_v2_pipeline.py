@@ -167,7 +167,7 @@ class TestAC_PIPE_2_AllFormatAdapters:
     CSVs with different schema."""
         from pea_met_network.adapters.csv_adapter import CSVAdapter
 
-        stanhope_dir = DATA_RAW / "stanhope"
+        stanhope_dir = DATA_RAW / "eccc" / "stanhope"
         csv_files = list(stanhope_dir.glob("*.csv"))
 
         if not csv_files:

@@ -962,6 +962,14 @@ def _collect_qa_qc_data(
             try:
                 oh = pd.read_csv(h_path)
                 od = pd.read_csv(d_path)
+                if "station" not in oh.columns:
+                    oh["station"] = station
+                else:
+                    oh["station"] = oh["station"].fillna(station)
+                if "station" not in od.columns:
+                    od["station"] = station
+                else:
+                    od["station"] = od["station"].fillna(station)
                 if len(oh) > 0:
                     all_hourly.append(oh)
                 if len(od) > 0:
@@ -1122,6 +1130,9 @@ def run_pipeline(stations: list[str], force: bool = False) -> None:
         # --- Write outputs ---
         out_dir = PROCESSED_DIR / station
         out_dir.mkdir(parents=True, exist_ok=True)
+
+        hourly["station"] = station
+        daily["station"] = station
 
         hourly_path = out_dir / "station_hourly.csv"
         hourly = hourly[sorted(hourly.columns)]
