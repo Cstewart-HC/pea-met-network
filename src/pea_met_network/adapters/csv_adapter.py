@@ -41,9 +41,14 @@ def _load_peinp_csv(path: Path) -> pd.DataFrame:
         date_str = df["Date"].astype(str).str.strip()
         time_str = df["Time"].astype(str).str.strip()
         ts_text = date_str + " " + time_str
-        timestamp_utc = pd.to_datetime(
-            ts_text, format="%m/%d/%Y %H:%M:%S %z", utc=True
-        )
+        # Try standard PEINP format first; fall back to ISO for
+        # Licor CSVs that use YYYY-MM-DD HH:MM:SS.
+        try:
+            timestamp_utc = pd.to_datetime(
+                ts_text, format="%m/%d/%Y %H:%M:%S %z", utc=True
+            )
+        except (ValueError, TypeError):
+            timestamp_utc = pd.to_datetime(ts_text, utc=True)
     else:
         raise ValueError(
             f"PEINP CSV missing Date/Time columns: {list(df.columns[:5])}"
