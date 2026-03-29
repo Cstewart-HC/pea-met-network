@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import io
 from pathlib import Path
+import warnings
 
 import pandas as pd
 
@@ -12,6 +14,31 @@ from pea_met_network.adapters.column_maps import (
     derive_wind_speed_kmh,
     rename_columns,
 )
+
+
+def _skip_licor_metadata(path: Path) -> int | None:
+    """Detect Licor-style CSV with metadata header block.
+
+    Returns the 0-based row index of the actual header line, or None if
+    the file does not have a Licor metadata preamble.  A Licor preamble
+    starts with ``Serial_number:`` and the real header contains ``Date,Time``.
+    """
+    try:
+        first_line = ""
+        with open(path, encoding="utf-8", errors="replace") as fh:
+            for i, raw in enumerate(fh):
+                line = raw.strip()
+                if i == 0:
+                    first_line = line
+                if i > 50:
+                    break  # safety: don't scan huge files
+                if line.startswith("Date,Time") or line.startswith("Date, Time"):
+                    if first_line.startswith("Serial_number"):
+                        return i
+                    return None
+    except OSError:
+        return None
+    return None
 
 
 def _detect_csv_schema(df: pd.DataFrame) -> str:
@@ -25,12 +52,12 @@ def _detect_csv_schema(df: pd.DataFrame) -> str:
     return "peinp"
 
 
-def _load_peinp_csv(path: Path) -> pd.DataFrame:
+def _load_peinp_csv(path: Path, skiprows: int | None = None) -> pd.DataFrame:
     """Load a PEINP-format CSV file."""
     try:
-        df = pd.read_csv(path)
+        df = pd.read_csv(path, skiprows=skiprows)
     except UnicodeDecodeError:
-        df = pd.read_csv(path, encoding="latin-1")
+        df = pd.read_csv(path, skiprows=skiprows, encoding="latin-1")
     if len(df) == 0:
         return pd.DataFrame()
 
@@ -124,16 +151,26 @@ class CSVAdapter(BaseAdapter):
 
     def load(self, path: Path) -> pd.DataFrame:
         """Load a CSV file and return canonical DataFrame."""
+        skip = _skip_licor_metadata(path)
         try:
-            df = pd.read_csv(path)
+            df = pd.read_csv(path, skiprows=skip, encoding="utf-8")
         except UnicodeDecodeError:
-            df = pd.read_csv(path, encoding="latin-1")
+            df = pd.read_csv(path, skiprows=skip, encoding="latin-1")
+
+        if skip is not None:
+            warnings.warn(
+                f"Licor metadata preamble detected in {path.name}, "
+                f"skipped {skip} rows",
+                UserWarning,
+                stacklevel=2,
+            )
+
         schema = _detect_csv_schema(df)
 
         if schema == "eccc":
             result = _load_eccc_csv(path)
         else:
-            result = _load_peinp_csv(path)
+            result = _load_peinp_csv(path, skiprows=skip)
 
         stn = (
             "stanhope" if schema == "eccc"
