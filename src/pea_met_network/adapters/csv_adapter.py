@@ -27,7 +27,10 @@ def _detect_csv_schema(df: pd.DataFrame) -> str:
 
 def _load_peinp_csv(path: Path) -> pd.DataFrame:
     """Load a PEINP-format CSV file."""
-    df = pd.read_csv(path)
+    try:
+        df = pd.read_csv(path)
+    except UnicodeDecodeError:
+        df = pd.read_csv(path, encoding="latin-1")
     if len(df) == 0:
         return pd.DataFrame()
 
