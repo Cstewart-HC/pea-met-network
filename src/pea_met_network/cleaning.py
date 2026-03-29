@@ -1202,7 +1202,7 @@ def run_pipeline(stations: list[str], force: bool = False) -> None:
         for fpath in sorted(station_dir.iterdir()):
             if fpath.is_file() and fpath.suffix == ".csv":
                 try:
-                    row_count = len(pd.read_csv(fpath))
+                    row_count = len(pd.read_csv(fpath, low_memory=False))
                 except Exception:
                     row_count = -1
                 manifest["artifacts"].append({

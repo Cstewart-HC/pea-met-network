@@ -8,6 +8,7 @@ import pandas as pd
 
 from pea_met_network.adapters.base import BaseAdapter
 from pea_met_network.adapters.column_maps import (
+    coalesce_duplicate_columns,
     derive_wind_speed_kmh,
     rename_columns,
 )
@@ -30,10 +31,24 @@ class XLSXAdapter(BaseAdapter):
             return True
         return False
 
+    # Known-good single-station XLSX schemas max out at 16 columns.
+    # Multi-station convenience exports (e.g. Parks Canada UPEI summaries)
+    # have 60+ columns and crash rename_columns().  Skip them early.
+    _MAX_SINGLE_STATION_COLS = 20
+
     def load(self, path: Path) -> pd.DataFrame:
         """Load an XLSX file and return canonical DataFrame."""
         # Read raw to detect header row — these files often have a title row
         df_raw = pd.read_excel(path, engine="openpyxl", header=None, nrows=6)
+
+        # Skip multi-station summary files (60+ columns)
+        if df_raw.shape[1] > self._MAX_SINGLE_STATION_COLS:
+            import warnings
+            warnings.warn(
+                f"Skipping multi-station file ({df_raw.shape[1]} cols): {path.name}",
+                stacklevel=2,
+            )
+            return pd.DataFrame()
 
         # Find the row that looks like a header (contains "Date" or "Line#")
         header_row_idx = 0
@@ -56,6 +71,13 @@ class XLSXAdapter(BaseAdapter):
         if "Line#" in df.columns:
             df = df.drop(columns=["Line#"])
 
+        # Merge separate Date + Time columns into a single Date column.
+        # Some PEINP exports (e.g. N. Rustico Spring 2023) store date and
+        # time in distinct columns, both containing mixed types (datetime
+        # objects from 2012 contamination + strings for the target period).
+        if "Date" in df.columns and "Time" in df.columns:
+            df = self._merge_date_time(df)
+
         # Skip non-data rows (unit rows like 'mm/dd/yy', header repeats)
         if "Date" in df.columns and len(df) > 0:
             mask = df["Date"].apply(self._is_date_value)
@@ -66,12 +88,24 @@ class XLSXAdapter(BaseAdapter):
             return pd.DataFrame()
 
         df = rename_columns(df)
+        df = coalesce_duplicate_columns(df)
         df = derive_wind_speed_kmh(df)
 
-        # Parse timestamps
+        # Parse timestamps — use errors="coerce" so mixed-type columns
+        # (datetime objects + strings) don't crash; NaT rows are dropped.
         if "Date" in df.columns:
-            timestamp_utc = pd.to_datetime(df["Date"], utc=True)
+            timestamp_utc = pd.to_datetime(df["Date"], utc=True, errors="coerce")
             result = pd.DataFrame({"timestamp_utc": timestamp_utc})
+            # Drop rows where timestamp couldn't be parsed
+            before = len(result)
+            result = result.dropna(subset=["timestamp_utc"]).reset_index(drop=True)
+            dropped = before - len(result)
+            if dropped > 0:
+                import warnings
+                warnings.warn(
+                    f"Dropped {dropped} rows with unparseable timestamps in {path.name}",
+                    stacklevel=2,
+                )
         else:
             raise ValueError(
                 f"XLSX missing Date column: {list(df.columns[:5])}"
@@ -89,6 +123,33 @@ class XLSXAdapter(BaseAdapter):
         if station:
             result["station"] = station
         return result
+
+    @staticmethod
+    def _merge_date_time(df: pd.DataFrame) -> pd.DataFrame:
+        """Merge separate Date and Time columns into a single Date string.
+
+        Handles mixed-type columns where openpyxl returns datetime objects
+        for some rows and strings for others (common in PEINP exports that
+        contain data from multiple time periods).
+        """
+        import datetime as _dt
+
+        def _fmt_date(val) -> str:
+            if isinstance(val, _dt.datetime):
+                return val.strftime("%m/%d/%y")
+            return str(val)
+
+        def _fmt_time(val) -> str:
+            if isinstance(val, _dt.time):
+                return val.strftime("%H:%M:%S")
+            return str(val)
+
+        merged = (
+            df["Date"].apply(_fmt_date) + " " + df["Time"].apply(_fmt_time)
+        )
+        df = df.drop(columns=["Time"])
+        df["Date"] = merged
+        return df
 
     @staticmethod
     def _infer_station(path: Path) -> str | None:
