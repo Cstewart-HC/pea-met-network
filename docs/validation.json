@@ -1,7 +1,7 @@
 {
-  "last_reviewed_commit": "76e90c0",
+  "last_reviewed_commit": "858dddf",
   "verdict": "REJECT",
-  "reviewed_at": "2026-03-30T09:31:49.638650+00:00",
+  "reviewed_at": "2026-03-30T10:08:29.210580+00:00",
   "artifact_validation": {
     "status": "SKIP",
     "errors": []
@@ -19,39 +19,35 @@
   "criteria": [
     {
       "id": "12.1",
-      "name": "Canonical hourly FFMC in _hffmc_calc",
+      "name": "New Function: _hffmc_calc",
       "status": "FAIL",
-      "evidence": "tests/test_phase12_wagner_hourly.py fails against the cffdrs reference vectors. In src/pea_met_network/cleaning.py:494, _hffmc_calc still uses daily-style behavior: rain threshold >0.5mm, a special <1.5mm branch, simplified wetting logic, and an upper cap of 101.0. This violates the Phase 12 spec requirement for Van Wagner 1977 hourly FFMC (0.0579 scale factor, all rain >0, separate drying/wetting formulas, no upper cap)."
+      "evidence": "Required review run `.venv/bin/pytest tests/ -q` now has one remaining failure: tests/test_phase12_wagner_hourly.py::TestHFFMCAgainstCFFDRS::test_no_upper_cap_on_ffmc. Under the spec's extreme drying scenario, `_hffmc_calc` returns 99.62 instead of exceeding 101.0 as required by the canonical hourly formulation. The failing implementation is at src/pea_met_network/cleaning.py:567, where FFMC is computed in a way that still does not satisfy the no-upper-cap acceptance behavior under the supplied cffdrs-derived test vector."
     },
     {
       "id": "12.2",
-      "name": "Daily DMC/DC from 14:00 LST observation",
-      "status": "FAIL",
-      "evidence": "tests/test_phase12_wagner_hourly.py::TestDailyDMCDC::test_single_day_14lstm fails, showing DMC varies within the same day when it should be constant across all hours for that local date. The issue maps to src/pea_met_network/cleaning.py:815 in _daily_dmc_dc_calc."
+      "name": "New Function: _daily_dmc_dc_calc",
+      "status": "PASS",
+      "evidence": "The previously failing daily DMC/DC invariants now pass in the full review run; no remaining pytest failures point to `_daily_dmc_dc_calc`."
+    },
+    {
+      "id": "12.3",
+      "name": "New Function: calculate_fwi_hourly",
+      "status": "PASS",
+      "evidence": "End-to-end hourly FWI path tests pass except for the remaining `_hffmc_calc` edge case above; the new hourly entry point is active and distinct enough for the current suite."
     },
     {
       "id": "12.4",
-      "name": "Legacy function retained only for comparison",
-      "status": "FAIL",
-      "evidence": "tests/test_phase12_wagner_hourly.py::TestCalculateFWIHourly::test_legacy_produces_different_ffmc fails with max diff 0.0000, meaning calculate_fwi_hourly and _calculate_fwi_legacy currently produce identical FFMC output. That indicates the new hourly path is not meaningfully different from the legacy implementation; see src/pea_met_network/cleaning.py:729 and :870."
+      "name": "Rename Current Function",
+      "status": "PASS",
+      "evidence": "Legacy function is retained as `_calculate_fwi_legacy` and the active wrapper routes to `calculate_fwi_hourly`; comparison/regression tests no longer fail on this criterion in the full suite."
     }
   ],
   "failing_nodes": [
     {
       "file": "src/pea_met_network/cleaning.py",
-      "line": 494,
-      "message": "_hffmc_calc does not implement the Phase 12 canonical hourly FFMC algorithm: it ignores sub-0.5mm rain, retains a daily-style rain branch, caps FFMC at 101, and does not match cffdrs reference vectors."
-    },
-    {
-      "file": "src/pea_met_network/cleaning.py",
-      "line": 815,
-      "message": "_daily_dmc_dc_calc does not keep DMC/DC constant within a local day as required by the Phase 12 spec and failing tests."
-    },
-    {
-      "file": "src/pea_met_network/cleaning.py",
-      "line": 870,
-      "message": "calculate_fwi_hourly is not producing FFMC output materially different from _calculate_fwi_legacy, so the new hourly path is not yet replacing the broken legacy behavior."
+      "line": 567,
+      "message": "_hffmc_calc still fails the Phase 12 canonical hourly FFMC acceptance case for no upper cap: the review test TestHFFMCAgainstCFFDRS::test_no_upper_cap_on_ffmc reports FFMC 99.62 where the spec requires the hourly formulation to exceed 101.0 under the supplied extreme drying vector."
     }
   ],
-  "summary": "Lisa review REJECT for Phase 12. Gate results show artifact validation and pre-flight both SKIP for this phase, and Martin lint reports only medium/low findings, so lint is not the blocker. The actual blocker is functional: the required test run (.venv/bin/pytest tests/ -q) fails 9 Phase 12 tests, all centered on the new hourly FWI implementation. The failures show that _hffmc_calc does not match the canonical cffdrs/Van Wagner 1977 hourly FFMC behavior, _daily_dmc_dc_calc does not preserve one DMC/DC value per local day, and calculate_fwi_hourly is still effectively behaving like the legacy path instead of the new hourly implementation."
+  "summary": "Lisa review REJECT for Phase 12. Gate injection shows lint failures only at medium/low severity, with artifact validation and pre-flight both SKIP for this phase, so those are not blockers. The deterministic review run `.venv/bin/pytest tests/ -q` now has exactly one remaining failure, and it is still in the Phase 12 hourly FFMC implementation: `_hffmc_calc` does not satisfy the canonical no-upper-cap acceptance behavior under the cffdrs-derived extreme drying test vector. Daily DMC/DC behavior and the legacy/hourly routing issues appear fixed, but Phase 12 cannot pass until the remaining hourly FFMC edge case is corrected."
 }
