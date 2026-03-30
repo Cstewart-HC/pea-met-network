@@ -4,14 +4,14 @@
   "schema_version": "1.0",
   "conftest_fixtures": [],
   "summary": {
-    "total_files": 20,
-    "total_tests": 183,
+    "total_files": 21,
+    "total_tests": 192,
     "total_classes": 43,
     "by_type": {
-      "unit": 68,
-      "integration": 28,
+      "unit": 74,
+      "integration": 30,
       "smoke": 28,
-      "e2e": 59
+      "e2e": 60
     },
     "by_risk": {
       "subprocess": 13,
@@ -37,7 +37,9 @@
     {
       "path": "tests/test_smoke.py",
       "line_count": 7,
-      "imports": ["pea_met_network"],
+      "imports": [
+        "pea_met_network"
+      ],
       "shared_fixtures_used": [],
       "tests": [
         {
@@ -45,7 +47,9 @@
           "name": "test_package_imports",
           "type": "smoke",
           "description": "Package has a docstring (basic import check)",
-          "imports_modules": ["pea_met_network"],
+          "imports_modules": [
+            "pea_met_network"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": false,
@@ -73,7 +77,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 15
         }
       ]
@@ -81,7 +87,9 @@
     {
       "path": "tests/test_manifest.py",
       "line_count": 51,
-      "imports": ["pea_met_network.manifest"],
+      "imports": [
+        "pea_met_network.manifest"
+      ],
       "shared_fixtures_used": [],
       "tests": [
         {
@@ -89,13 +97,17 @@
           "name": "test_build_raw_manifest_finds_expected_station",
           "type": "integration",
           "description": "Manifest discovers cavendish, greenwich, tracadie from real data directory",
-          "imports_modules": ["pea_met_network.manifest"],
+          "imports_modules": [
+            "pea_met_network.manifest"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 7
         },
         {
@@ -103,13 +115,17 @@
           "name": "test_build_raw_manifest_sets_year_for_station_csvs",
           "type": "integration",
           "description": "Manifest records year for cavendish station CSVs",
-          "imports_modules": ["pea_met_network.manifest"],
+          "imports_modules": [
+            "pea_met_network.manifest"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 6
         },
         {
@@ -117,7 +133,9 @@
           "name": "test_recognize_schema_for_hoboware_date_time_family",
           "type": "unit",
           "description": "Schema recognizer identifies hoboware_date_time_family columns",
-          "imports_modules": ["pea_met_network.manifest"],
+          "imports_modules": [
+            "pea_met_network.manifest"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": false,
@@ -131,7 +149,9 @@
           "name": "test_recognize_schema_for_legacy_dual_wind_family",
           "type": "unit",
           "description": "Schema recognizer identifies legacy_dual_wind_family (21-col fallback)",
-          "imports_modules": ["pea_met_network.manifest"],
+          "imports_modules": [
+            "pea_met_network.manifest"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": false,
@@ -145,7 +165,10 @@
     {
       "path": "tests/test_explore_smoke.py",
       "line_count": 43,
-      "imports": ["nbformat", "nbconvert.preprocessors"],
+      "imports": [
+        "nbformat",
+        "nbconvert.preprocessors"
+      ],
       "shared_fixtures_used": [],
       "tests": [
         {
@@ -187,7 +210,11 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["notebook_execution", "external_data", "slow"],
+          "risk_flags": [
+            "notebook_execution",
+            "external_data",
+            "slow"
+          ],
           "lines_of_code": 8
         }
       ]
@@ -195,7 +222,9 @@
     {
       "path": "tests/test_fwi_vectors.py",
       "line_count": 131,
-      "imports": ["pea_met_network.fwi"],
+      "imports": [
+        "pea_met_network.fwi"
+      ],
       "shared_fixtures_used": [],
       "tests": [
         {
@@ -203,7 +232,9 @@
           "name": "test_ffmc_vectors",
           "type": "unit",
           "description": "FFMC calculation matches reference vectors (3 parametrized cases)",
-          "imports_modules": ["pea_met_network.fwi"],
+          "imports_modules": [
+            "pea_met_network.fwi"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": false,
@@ -217,7 +248,9 @@
           "name": "test_dmc_vectors",
           "type": "unit",
           "description": "DMC calculation matches reference vectors (3 parametrized cases)",
-          "imports_modules": ["pea_met_network.fwi"],
+          "imports_modules": [
+            "pea_met_network.fwi"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": false,
@@ -231,7 +264,9 @@
           "name": "test_dc_vectors",
           "type": "unit",
           "description": "DC calculation matches reference vectors (3 parametrized cases)",
-          "imports_modules": ["pea_met_network.fwi"],
+          "imports_modules": [
+            "pea_met_network.fwi"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": false,
@@ -245,7 +280,9 @@
     {
       "path": "tests/test_normalized_loader.py",
       "line_count": 97,
-      "imports": ["pea_met_network.normalized_loader"],
+      "imports": [
+        "pea_met_network.normalized_loader"
+      ],
       "shared_fixtures_used": [],
       "tests": [
         {
@@ -253,13 +290,17 @@
           "name": "test_load_normalized_station_csv_maps_canonical_columns",
           "type": "integration",
           "description": "Loader produces canonical columns from Cavendish 2022 CSV",
-          "imports_modules": ["pea_met_network.normalized_loader"],
+          "imports_modules": [
+            "pea_met_network.normalized_loader"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 21
         },
         {
@@ -267,13 +308,17 @@
           "name": "test_load_hoboware_date_time_family",
           "type": "integration",
           "description": "Loader handles hoboware_date_time_family (Tracadie Wharf 2025)",
-          "imports_modules": ["pea_met_network.normalized_loader"],
+          "imports_modules": [
+            "pea_met_network.normalized_loader"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 22
         },
         {
@@ -281,13 +326,17 @@
           "name": "test_load_legacy_dual_wind_family",
           "type": "integration",
           "description": "Loader handles legacy_dual_wind_family (Tracadie Wharf 2023)",
-          "imports_modules": ["pea_met_network.normalized_loader"],
+          "imports_modules": [
+            "pea_met_network.normalized_loader"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 22
         }
       ]
@@ -295,7 +344,10 @@
     {
       "path": "tests/test_real_resampling_pipeline.py",
       "line_count": 29,
-      "imports": ["pea_met_network.normalized_loader", "pea_met_network.resampling"],
+      "imports": [
+        "pea_met_network.normalized_loader",
+        "pea_met_network.resampling"
+      ],
       "shared_fixtures_used": [],
       "tests": [
         {
@@ -303,13 +355,18 @@
           "name": "test_real_file_resampling_produces_hourly_and_daily_frames",
           "type": "integration",
           "description": "Resampling on real Cavendish 2022 CSV produces valid hourly/daily frames",
-          "imports_modules": ["pea_met_network.normalized_loader", "pea_met_network.resampling"],
+          "imports_modules": [
+            "pea_met_network.normalized_loader",
+            "pea_met_network.resampling"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 18
         }
       ]
@@ -317,21 +374,32 @@
     {
       "path": "tests/test_materialize_resampled.py",
       "line_count": 33,
-      "imports": ["pea_met_network.materialize_resampled"],
-      "shared_fixtures_used": ["tmp_path"],
+      "imports": [
+        "pea_met_network.materialize_resampled"
+      ],
+      "shared_fixtures_used": [
+        "tmp_path"
+      ],
       "tests": [
         {
           "class": null,
           "name": "test_materialize_resampled_outputs_writes_expected_files",
           "type": "integration",
           "description": "materialize_resampled writes hourly+daily CSVs for Cavendish 2022",
-          "imports_modules": ["pea_met_network.materialize_resampled"],
-          "uses_fixtures": ["tmp_path"],
+          "imports_modules": [
+            "pea_met_network.materialize_resampled"
+          ],
+          "uses_fixtures": [
+            "tmp_path"
+          ],
           "uses_subprocess": false,
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data", "file_io_write"],
+          "risk_flags": [
+            "external_data",
+            "file_io_write"
+          ],
           "lines_of_code": 20
         }
       ]
@@ -339,7 +407,9 @@
     {
       "path": "tests/test_imputation.py",
       "line_count": 112,
-      "imports": ["pea_met_network.imputation"],
+      "imports": [
+        "pea_met_network.imputation"
+      ],
       "shared_fixtures_used": [],
       "tests": [
         {
@@ -347,7 +417,9 @@
           "name": "test_no_missing_returns_empty_audit",
           "type": "unit",
           "description": "No missing values returns unchanged series and empty audit",
-          "imports_modules": ["pea_met_network.imputation"],
+          "imports_modules": [
+            "pea_met_network.imputation"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": false,
@@ -361,7 +433,9 @@
           "name": "test_short_gap_interpolated",
           "type": "unit",
           "description": "Short gap (1 NaN) is interpolated, audit record created",
-          "imports_modules": ["pea_met_network.imputation"],
+          "imports_modules": [
+            "pea_met_network.imputation"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": false,
@@ -375,7 +449,9 @@
           "name": "test_long_gap_preserved",
           "type": "unit",
           "description": "Long gap (5 NaN) is preserved, audit method=preserve",
-          "imports_modules": ["pea_met_network.imputation"],
+          "imports_modules": [
+            "pea_met_network.imputation"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": false,
@@ -389,7 +465,9 @@
           "name": "test_audit_record_fields",
           "type": "unit",
           "description": "AuditRecord has all required fields with correct types",
-          "imports_modules": ["pea_met_network.imputation"],
+          "imports_modules": [
+            "pea_met_network.imputation"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": false,
@@ -403,7 +481,9 @@
           "name": "test_ffill_strategy",
           "type": "unit",
           "description": "Forward-fill strategy fills consecutive NaN gaps",
-          "imports_modules": ["pea_met_network.imputation"],
+          "imports_modules": [
+            "pea_met_network.imputation"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": false,
@@ -417,7 +497,9 @@
           "name": "test_imputes_all_numeric_columns",
           "type": "unit",
           "description": "impute_frame handles multiple numeric columns independently",
-          "imports_modules": ["pea_met_network.imputation"],
+          "imports_modules": [
+            "pea_met_network.imputation"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": false,
@@ -431,7 +513,9 @@
           "name": "test_per_station_audit",
           "type": "unit",
           "description": "Audit records are separated per station",
-          "imports_modules": ["pea_met_network.imputation"],
+          "imports_modules": [
+            "pea_met_network.imputation"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": false,
@@ -445,7 +529,9 @@
           "name": "test_empty_records",
           "type": "unit",
           "description": "Empty audit records produce correct schema with 0 rows",
-          "imports_modules": ["pea_met_network.imputation"],
+          "imports_modules": [
+            "pea_met_network.imputation"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": false,
@@ -459,7 +545,9 @@
           "name": "test_records_to_dataframe",
           "type": "unit",
           "description": "Audit records convert to DataFrame with correct values",
-          "imports_modules": ["pea_met_network.imputation"],
+          "imports_modules": [
+            "pea_met_network.imputation"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": false,
@@ -473,16 +561,24 @@
     {
       "path": "tests/test_qa_qc.py",
       "line_count": 115,
-      "imports": ["pea_met_network.qa_qc"],
-      "shared_fixtures_used": ["sample_frame"],
+      "imports": [
+        "pea_met_network.qa_qc"
+      ],
+      "shared_fixtures_used": [
+        "sample_frame"
+      ],
       "tests": [
         {
           "class": "TestMissingnessSummary",
           "name": "test_detects_missing_values",
           "type": "unit",
           "description": "missingness_summary reports correct missing count per variable",
-          "imports_modules": ["pea_met_network.qa_qc"],
-          "uses_fixtures": ["sample_frame"],
+          "imports_modules": [
+            "pea_met_network.qa_qc"
+          ],
+          "uses_fixtures": [
+            "sample_frame"
+          ],
           "uses_subprocess": false,
           "uses_file_io": false,
           "uses_network": false,
@@ -495,7 +591,9 @@
           "name": "test_no_missing",
           "type": "unit",
           "description": "missingness_summary returns 0 for complete data",
-          "imports_modules": ["pea_met_network.qa_qc"],
+          "imports_modules": [
+            "pea_met_network.qa_qc"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": false,
@@ -509,7 +607,9 @@
           "name": "test_detects_duplicates",
           "type": "unit",
           "description": "duplicate_timestamps finds duplicate timestamps per station",
-          "imports_modules": ["pea_met_network.qa_qc"],
+          "imports_modules": [
+            "pea_met_network.qa_qc"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": false,
@@ -523,8 +623,12 @@
           "name": "test_no_duplicates",
           "type": "unit",
           "description": "duplicate_timestamps returns empty for unique timestamps",
-          "imports_modules": ["pea_met_network.qa_qc"],
-          "uses_fixtures": ["sample_frame"],
+          "imports_modules": [
+            "pea_met_network.qa_qc"
+          ],
+          "uses_fixtures": [
+            "sample_frame"
+          ],
           "uses_subprocess": false,
           "uses_file_io": false,
           "uses_network": false,
@@ -537,8 +641,12 @@
           "name": "test_detects_out_of_range",
           "type": "unit",
           "description": "out_of_range_values flags temp=-70, rh=110, rain=-1",
-          "imports_modules": ["pea_met_network.qa_qc"],
-          "uses_fixtures": ["sample_frame"],
+          "imports_modules": [
+            "pea_met_network.qa_qc"
+          ],
+          "uses_fixtures": [
+            "sample_frame"
+          ],
           "uses_subprocess": false,
           "uses_file_io": false,
           "uses_network": false,
@@ -551,7 +659,9 @@
           "name": "test_custom_ranges",
           "type": "unit",
           "description": "out_of_range_values accepts custom range dict",
-          "imports_modules": ["pea_met_network.qa_qc"],
+          "imports_modules": [
+            "pea_met_network.qa_qc"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": false,
@@ -565,7 +675,9 @@
           "name": "test_no_oov",
           "type": "unit",
           "description": "out_of_range_values returns empty for in-range data",
-          "imports_modules": ["pea_met_network.qa_qc"],
+          "imports_modules": [
+            "pea_met_network.qa_qc"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": false,
@@ -579,8 +691,12 @@
           "name": "test_coverage_counts",
           "type": "unit",
           "description": "coverage_summary reports per-station record counts",
-          "imports_modules": ["pea_met_network.qa_qc"],
-          "uses_fixtures": ["sample_frame"],
+          "imports_modules": [
+            "pea_met_network.qa_qc"
+          ],
+          "uses_fixtures": [
+            "sample_frame"
+          ],
           "uses_subprocess": false,
           "uses_file_io": false,
           "uses_network": false,
@@ -593,7 +709,9 @@
           "name": "test_missing_station_column_raises",
           "type": "unit",
           "description": "coverage_summary raises ValueError without station column",
-          "imports_modules": ["pea_met_network.qa_qc"],
+          "imports_modules": [
+            "pea_met_network.qa_qc"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": false,
@@ -607,16 +725,26 @@
     {
       "path": "tests/test_validation.py",
       "line_count": 129,
-      "imports": ["pea_met_network.validation"],
-      "shared_fixtures_used": ["stanhope_daily", "greenwich_daily"],
+      "imports": [
+        "pea_met_network.validation"
+      ],
+      "shared_fixtures_used": [
+        "stanhope_daily",
+        "greenwich_daily"
+      ],
       "tests": [
         {
           "class": "TestCompareStationData",
           "name": "test_returns_overlap_days",
           "type": "unit",
           "description": "compare_station_data returns 3 overlapping days",
-          "imports_modules": ["pea_met_network.validation"],
-          "uses_fixtures": ["stanhope_daily", "greenwich_daily"],
+          "imports_modules": [
+            "pea_met_network.validation"
+          ],
+          "uses_fixtures": [
+            "stanhope_daily",
+            "greenwich_daily"
+          ],
           "uses_subprocess": false,
           "uses_file_io": false,
           "uses_network": false,
@@ -629,8 +757,13 @@
           "name": "test_computes_fwi_mae",
           "type": "unit",
           "description": "FWI MAE between Stanhope and Greenwich < 1.0",
-          "imports_modules": ["pea_met_network.validation"],
-          "uses_fixtures": ["stanhope_daily", "greenwich_daily"],
+          "imports_modules": [
+            "pea_met_network.validation"
+          ],
+          "uses_fixtures": [
+            "stanhope_daily",
+            "greenwich_daily"
+          ],
           "uses_subprocess": false,
           "uses_file_io": false,
           "uses_network": false,
@@ -643,8 +776,13 @@
           "name": "test_computes_all_fwi_components",
           "type": "unit",
           "description": "Merged data has ref/cmp columns for ffmc,dmc,dc,isi,bui,fwi",
-          "imports_modules": ["pea_met_network.validation"],
-          "uses_fixtures": ["stanhope_daily", "greenwich_daily"],
+          "imports_modules": [
+            "pea_met_network.validation"
+          ],
+          "uses_fixtures": [
+            "stanhope_daily",
+            "greenwich_daily"
+          ],
           "uses_subprocess": false,
           "uses_file_io": false,
           "uses_network": false,
@@ -657,8 +795,12 @@
           "name": "test_no_overlap",
           "type": "unit",
           "description": "No temporal overlap returns empty result",
-          "imports_modules": ["pea_met_network.validation"],
-          "uses_fixtures": ["stanhope_daily"],
+          "imports_modules": [
+            "pea_met_network.validation"
+          ],
+          "uses_fixtures": [
+            "stanhope_daily"
+          ],
           "uses_subprocess": false,
           "uses_file_io": false,
           "uses_network": false,
@@ -671,8 +813,12 @@
           "name": "test_empty_station_df",
           "type": "unit",
           "description": "Empty comparison station returns empty result",
-          "imports_modules": ["pea_met_network.validation"],
-          "uses_fixtures": ["stanhope_daily"],
+          "imports_modules": [
+            "pea_met_network.validation"
+          ],
+          "uses_fixtures": [
+            "stanhope_daily"
+          ],
           "uses_subprocess": false,
           "uses_file_io": false,
           "uses_network": false,
@@ -685,8 +831,12 @@
           "name": "test_empty_stanhope_df",
           "type": "unit",
           "description": "Empty Stanhope reference returns empty result",
-          "imports_modules": ["pea_met_network.validation"],
-          "uses_fixtures": ["greenwich_daily"],
+          "imports_modules": [
+            "pea_met_network.validation"
+          ],
+          "uses_fixtures": [
+            "greenwich_daily"
+          ],
           "uses_subprocess": false,
           "uses_file_io": false,
           "uses_network": false,
@@ -699,8 +849,13 @@
           "name": "test_delegates_to_compare",
           "type": "unit",
           "description": "validate_against_reference delegates to compare_station_data",
-          "imports_modules": ["pea_met_network.validation"],
-          "uses_fixtures": ["stanhope_daily", "greenwich_daily"],
+          "imports_modules": [
+            "pea_met_network.validation"
+          ],
+          "uses_fixtures": [
+            "stanhope_daily",
+            "greenwich_daily"
+          ],
           "uses_subprocess": false,
           "uses_file_io": false,
           "uses_network": false,
@@ -713,8 +868,13 @@
           "name": "test_returns_station_name",
           "type": "unit",
           "description": "validate_against_reference returns station name in dict",
-          "imports_modules": ["pea_met_network.validation"],
-          "uses_fixtures": ["stanhope_daily", "greenwich_daily"],
+          "imports_modules": [
+            "pea_met_network.validation"
+          ],
+          "uses_fixtures": [
+            "stanhope_daily",
+            "greenwich_daily"
+          ],
           "uses_subprocess": false,
           "uses_file_io": false,
           "uses_network": false,
@@ -727,7 +887,10 @@
     {
       "path": "tests/test_uncertainty.py",
       "line_count": 348,
-      "imports": ["pea_met_network.redundancy", "pea_met_network.uncertainty"],
+      "imports": [
+        "pea_met_network.redundancy",
+        "pea_met_network.uncertainty"
+      ],
       "shared_fixtures_used": [],
       "tests": [
         {
@@ -735,7 +898,9 @@
           "name": "test_quantify_station_removal_risk_returns_distributional_bounds",
           "type": "unit",
           "description": "Risk quantification returns station/risk_band/ci columns with valid ranges",
-          "imports_modules": ["pea_met_network.uncertainty"],
+          "imports_modules": [
+            "pea_met_network.uncertainty"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": false,
@@ -749,7 +914,9 @@
           "name": "test_quantify_station_removal_risk_intervals_widen_with_less_overlap",
           "type": "unit",
           "description": "CI width increases as overlap decreases (alpha<beta<gamma)",
-          "imports_modules": ["pea_met_network.uncertainty"],
+          "imports_modules": [
+            "pea_met_network.uncertainty"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": false,
@@ -763,7 +930,9 @@
           "name": "test_quantify_station_removal_risk_surfaces_sample_size_limitations",
           "type": "unit",
           "description": "Low-overlap station flagged 'insufficient', high-overlap 'adequate'",
-          "imports_modules": ["pea_met_network.uncertainty"],
+          "imports_modules": [
+            "pea_met_network.uncertainty"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": false,
@@ -777,7 +946,9 @@
           "name": "test_quantify_station_removal_risk_reports_distributional_assumptions",
           "type": "unit",
           "description": "Assumptions string mentions gaussian_kde",
-          "imports_modules": ["pea_met_network.uncertainty"],
+          "imports_modules": [
+            "pea_met_network.uncertainty"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": false,
@@ -791,7 +962,9 @@
           "name": "test_quantify_station_removal_risk_assigns_moderate_band_to_mixed_signal",
           "type": "unit",
           "description": "Beta station (moderate similarity) gets 'moderate' risk band",
-          "imports_modules": ["pea_met_network.uncertainty"],
+          "imports_modules": [
+            "pea_met_network.uncertainty"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": false,
@@ -805,13 +978,19 @@
           "name": "test_quantify_station_removal_risk_uses_real_observation_samples",
           "type": "integration",
           "description": "Risk quantification on real 5-station observation data (reads 5 CSVs)",
-          "imports_modules": ["pea_met_network.uncertainty", "pea_met_network.redundancy"],
+          "imports_modules": [
+            "pea_met_network.uncertainty",
+            "pea_met_network.redundancy"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data", "slow"],
+          "risk_flags": [
+            "external_data",
+            "slow"
+          ],
           "lines_of_code": 22
         },
         {
@@ -819,13 +998,18 @@
           "name": "test_distribution_samples_follow_empirical_delta_distribution",
           "type": "integration",
           "description": "KDE samples preserve empirical quantile structure from real data",
-          "imports_modules": ["pea_met_network.uncertainty"],
+          "imports_modules": [
+            "pea_met_network.uncertainty"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data", "slow"],
+          "risk_flags": [
+            "external_data",
+            "slow"
+          ],
           "lines_of_code": 75
         },
         {
@@ -833,13 +1017,18 @@
           "name": "test_quantify_station_removal_risk_kde_samples_follow_observed_signal",
           "type": "integration",
           "description": "KDE samples from real benchmark preserve low<high signal ordering",
-          "imports_modules": ["pea_met_network.uncertainty"],
+          "imports_modules": [
+            "pea_met_network.uncertainty"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data", "slow"],
+          "risk_flags": [
+            "external_data",
+            "slow"
+          ],
           "lines_of_code": 28
         }
       ]
@@ -847,15 +1036,21 @@
     {
       "path": "tests/test_stanhope_cache.py",
       "line_count": 197,
-      "imports": ["pea_met_network.stanhope_cache"],
-      "shared_fixtures_used": ["tmp_path"],
+      "imports": [
+        "pea_met_network.stanhope_cache"
+      ],
+      "shared_fixtures_used": [
+        "tmp_path"
+      ],
       "tests": [
         {
           "class": null,
           "name": "test_build_hourly_url_uses_expected_station_and_month",
           "type": "unit",
           "description": "URL builder uses stationID=6545 and correct Year/Month/timeframe params",
-          "imports_modules": ["pea_met_network.stanhope_cache"],
+          "imports_modules": [
+            "pea_met_network.stanhope_cache"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": false,
@@ -869,13 +1064,21 @@
           "name": "test_fetch_stanhope_hourly_month_downloads_and_records_provenance",
           "type": "unit",
           "description": "Fetch downloads CSV and writes provenance.json with station/climate IDs",
-          "imports_modules": ["pea_met_network.stanhope_cache"],
-          "uses_fixtures": ["tmp_path"],
+          "imports_modules": [
+            "pea_met_network.stanhope_cache"
+          ],
+          "uses_fixtures": [
+            "tmp_path"
+          ],
           "uses_subprocess": false,
           "uses_file_io": true,
           "uses_network": false,
-          "mocks": ["StanhopeClient"],
-          "risk_flags": ["file_io_write"],
+          "mocks": [
+            "StanhopeClient"
+          ],
+          "risk_flags": [
+            "file_io_write"
+          ],
           "lines_of_code": 20
         },
         {
@@ -883,13 +1086,21 @@
           "name": "test_fetch_stanhope_hourly_month_reuses_existing_cache",
           "type": "unit",
           "description": "Existing cached CSV is reused, no network call made",
-          "imports_modules": ["pea_met_network.stanhope_cache"],
-          "uses_fixtures": ["tmp_path"],
+          "imports_modules": [
+            "pea_met_network.stanhope_cache"
+          ],
+          "uses_fixtures": [
+            "tmp_path"
+          ],
           "uses_subprocess": false,
           "uses_file_io": true,
           "uses_network": false,
-          "mocks": ["StanhopeClient"],
-          "risk_flags": ["file_io_write"],
+          "mocks": [
+            "StanhopeClient"
+          ],
+          "risk_flags": [
+            "file_io_write"
+          ],
           "lines_of_code": 15
         },
         {
@@ -897,12 +1108,18 @@
           "name": "test_fetch_stanhope_hourly_month_raises_clean_error_on_429",
           "type": "unit",
           "description": "HTTP 429 raises StanhopeIngestionError, no cache files written",
-          "imports_modules": ["pea_met_network.stanhope_cache"],
-          "uses_fixtures": ["tmp_path"],
+          "imports_modules": [
+            "pea_met_network.stanhope_cache"
+          ],
+          "uses_fixtures": [
+            "tmp_path"
+          ],
           "uses_subprocess": false,
           "uses_file_io": false,
           "uses_network": false,
-          "mocks": ["StanhopeClient"],
+          "mocks": [
+            "StanhopeClient"
+          ],
           "risk_flags": [],
           "lines_of_code": 12
         },
@@ -911,7 +1128,9 @@
           "name": "test_iter_month_requests_spans_year_boundary",
           "type": "unit",
           "description": "Month iterator spans Nov 2023 to Feb 2024 correctly",
-          "imports_modules": ["pea_met_network.stanhope_cache"],
+          "imports_modules": [
+            "pea_met_network.stanhope_cache"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": false,
@@ -925,7 +1144,9 @@
           "name": "test_iter_month_requests_rejects_inverted_ranges",
           "type": "unit",
           "description": "End date before start date raises StanhopeIngestionError",
-          "imports_modules": ["pea_met_network.stanhope_cache"],
+          "imports_modules": [
+            "pea_met_network.stanhope_cache"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": false,
@@ -939,13 +1160,21 @@
           "name": "test_materialize_stanhope_hourly_range_fetches_each_month",
           "type": "unit",
           "description": "materialize_range fetches Mar+Apr 2024, writes 2 cache files",
-          "imports_modules": ["pea_met_network.stanhope_cache"],
-          "uses_fixtures": ["tmp_path"],
+          "imports_modules": [
+            "pea_met_network.stanhope_cache"
+          ],
+          "uses_fixtures": [
+            "tmp_path"
+          ],
           "uses_subprocess": false,
           "uses_file_io": true,
           "uses_network": false,
-          "mocks": ["StanhopeClient"],
-          "risk_flags": ["file_io_write"],
+          "mocks": [
+            "StanhopeClient"
+          ],
+          "risk_flags": [
+            "file_io_write"
+          ],
           "lines_of_code": 22
         },
         {
@@ -953,13 +1182,19 @@
           "name": "test_normalize_stanhope_hourly_maps_reference_columns",
           "type": "unit",
           "description": "Stanhope hourly CSV normalized to canonical schema with correct values",
-          "imports_modules": ["pea_met_network.stanhope_cache"],
-          "uses_fixtures": ["tmp_path"],
+          "imports_modules": [
+            "pea_met_network.stanhope_cache"
+          ],
+          "uses_fixtures": [
+            "tmp_path"
+          ],
           "uses_subprocess": false,
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["file_io_write"],
+          "risk_flags": [
+            "file_io_write"
+          ],
           "lines_of_code": 35
         }
       ]
@@ -967,7 +1202,9 @@
     {
       "path": "tests/test_resampling_policy.py",
       "line_count": 208,
-      "imports": ["pea_met_network.resampling"],
+      "imports": [
+        "pea_met_network.resampling"
+      ],
       "shared_fixtures_used": [],
       "tests": [
         {
@@ -975,7 +1212,9 @@
           "name": "test_validate_normalized_frame_requires_required_columns",
           "type": "unit",
           "description": "Validation raises ValueError without station column",
-          "imports_modules": ["pea_met_network.resampling"],
+          "imports_modules": [
+            "pea_met_network.resampling"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": false,
@@ -989,7 +1228,9 @@
           "name": "test_validate_normalized_frame_requires_utc_timezone",
           "type": "unit",
           "description": "Validation raises ValueError for non-UTC timezone",
-          "imports_modules": ["pea_met_network.resampling"],
+          "imports_modules": [
+            "pea_met_network.resampling"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": false,
@@ -1003,7 +1244,9 @@
           "name": "test_build_aggregation_map_uses_explicit_rules",
           "type": "unit",
           "description": "Aggregation map assigns mean/sum/first to temp/rain/wind",
-          "imports_modules": ["pea_met_network.resampling"],
+          "imports_modules": [
+            "pea_met_network.resampling"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": false,
@@ -1017,7 +1260,9 @@
           "name": "test_build_aggregation_map_skips_unknown_variable",
           "type": "unit",
           "description": "Unknown variable not in aggregation map",
-          "imports_modules": ["pea_met_network.resampling"],
+          "imports_modules": [
+            "pea_met_network.resampling"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": false,
@@ -1031,7 +1276,9 @@
           "name": "test_resample_hourly_aggregates_by_station_and_hour",
           "type": "unit",
           "description": "Hourly resample produces correct mean/sum/first per station-hour",
-          "imports_modules": ["pea_met_network.resampling"],
+          "imports_modules": [
+            "pea_met_network.resampling"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": false,
@@ -1045,7 +1292,9 @@
           "name": "test_resample_daily_aggregates_by_station_and_day",
           "type": "unit",
           "description": "Daily resample produces correct mean/sum/first per station-day",
-          "imports_modules": ["pea_met_network.resampling"],
+          "imports_modules": [
+            "pea_met_network.resampling"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": false,
@@ -1058,7 +1307,9 @@
           "name": "test_resample_normalized_frame_supports_daily_frequency",
           "type": "unit",
           "description": "resample_normalized_frame with frequency=daily matches resample_daily",
-          "imports_modules": ["pea_met_network.resampling"],
+          "imports_modules": [
+            "pea_met_network.resampling"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": false,
@@ -1072,7 +1323,9 @@
           "name": "test_resample_normalized_frame_rejects_unknown_frequency",
           "type": "unit",
           "description": "Unknown frequency raises ValueError",
-          "imports_modules": ["pea_met_network.resampling"],
+          "imports_modules": [
+            "pea_met_network.resampling"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": false,
@@ -1086,15 +1339,22 @@
     {
       "path": "tests/test_redundancy.py",
       "line_count": 238,
-      "imports": ["pea_met_network.redundancy", "sklearn.cluster"],
-      "shared_fixtures_used": ["tmp_path"],
+      "imports": [
+        "pea_met_network.redundancy",
+        "sklearn.cluster"
+      ],
+      "shared_fixtures_used": [
+        "tmp_path"
+      ],
       "tests": [
         {
           "class": null,
           "name": "test_build_station_matrix_pivots_hourly_values",
           "type": "unit",
           "description": "Station matrix pivots to stations-as-columns format",
-          "imports_modules": ["pea_met_network.redundancy"],
+          "imports_modules": [
+            "pea_met_network.redundancy"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": false,
@@ -1108,7 +1368,9 @@
           "name": "test_pairwise_station_correlation_reports_similarity",
           "type": "unit",
           "description": "Pairwise correlation > 0.99 for similar synthetic stations",
-          "imports_modules": ["pea_met_network.redundancy"],
+          "imports_modules": [
+            "pea_met_network.redundancy"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": false,
@@ -1122,7 +1384,9 @@
           "name": "test_pca_station_loadings_returns_station_weights",
           "type": "unit",
           "description": "PCA loadings have station/component/loading/variance columns",
-          "imports_modules": ["pea_met_network.redundancy"],
+          "imports_modules": [
+            "pea_met_network.redundancy"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": false,
@@ -1136,7 +1400,9 @@
           "name": "test_cluster_station_order_groups_similar_stations",
           "type": "unit",
           "description": "Intra-cluster distances < inter-cluster distances",
-          "imports_modules": ["pea_met_network.redundancy"],
+          "imports_modules": [
+            "pea_met_network.redundancy"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": false,
@@ -1150,7 +1416,9 @@
           "name": "test_benchmark_to_stanhope_summarizes_distance_and_overlap",
           "type": "unit",
           "description": "Benchmark has overlap_count, mean_abs_diff, correlation, observations",
-          "imports_modules": ["pea_met_network.redundancy"],
+          "imports_modules": [
+            "pea_met_network.redundancy"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": false,
@@ -1164,7 +1432,9 @@
           "name": "test_build_station_recommendations_references_uncertainty",
           "type": "unit",
           "description": "Recommendations have risk_probability, ci_lower, ci_upper columns",
-          "imports_modules": ["pea_met_network.redundancy"],
+          "imports_modules": [
+            "pea_met_network.redundancy"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": false,
@@ -1178,7 +1448,9 @@
           "name": "test_recommendations_synthesize_pca_clustering_and_benchmark",
           "type": "unit",
           "description": "Evidence string references PCA, clustering, benchmark, uncertainty",
-          "imports_modules": ["pea_met_network.redundancy"],
+          "imports_modules": [
+            "pea_met_network.redundancy"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": false,
@@ -1192,13 +1464,19 @@
           "name": "test_write_redundancy_summary_creates_interpretable_artifact",
           "type": "unit",
           "description": "Markdown summary has Correlation/PCA/Clustering/Benchmark/Recommendations sections",
-          "imports_modules": ["pea_met_network.redundancy"],
-          "uses_fixtures": ["tmp_path"],
+          "imports_modules": [
+            "pea_met_network.redundancy"
+          ],
+          "uses_fixtures": [
+            "tmp_path"
+          ],
           "uses_subprocess": false,
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["file_io_write"],
+          "risk_flags": [
+            "file_io_write"
+          ],
           "lines_of_code": 18
         }
       ]
@@ -1206,7 +1484,9 @@
     {
       "path": "tests/test_deliverables.py",
       "line_count": 93,
-      "imports": ["pea_met_network.cleaning"],
+      "imports": [
+        "pea_met_network.cleaning"
+      ],
       "shared_fixtures_used": [],
       "tests": [
         {
@@ -1214,7 +1494,9 @@
           "name": "test_cleaning_module_importable",
           "type": "smoke",
           "description": "pea_met_network.cleaning module can be imported",
-          "imports_modules": ["pea_met_network.cleaning"],
+          "imports_modules": [
+            "pea_met_network.cleaning"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": false,
@@ -1228,7 +1510,9 @@
           "name": "test_cleaning_main_exists",
           "type": "smoke",
           "description": "cleaning.main() is callable",
-          "imports_modules": ["pea_met_network.cleaning"],
+          "imports_modules": [
+            "pea_met_network.cleaning"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": false,
@@ -1368,7 +1652,10 @@
     {
       "path": "tests/test_data_refresh.py",
       "line_count": 259,
-      "imports": ["pea_met_network.manifest", "pea_met_network.normalized_loader"],
+      "imports": [
+        "pea_met_network.manifest",
+        "pea_met_network.normalized_loader"
+      ],
       "shared_fixtures_used": [],
       "tests": [
         {
@@ -1376,13 +1663,17 @@
           "name": "test_licor_csvs_discovered_by_manifest",
           "type": "integration",
           "description": "Manifest discovers Licor-sourced CSVs",
-          "imports_modules": ["pea_met_network.manifest"],
+          "imports_modules": [
+            "pea_met_network.manifest"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 9
         },
         {
@@ -1390,13 +1681,17 @@
           "name": "test_xlsx_converted_csvs_discovered",
           "type": "integration",
           "description": "Manifest discovers XLSX-converted North Rustico CSVs",
-          "imports_modules": ["pea_met_network.manifest"],
+          "imports_modules": [
+            "pea_met_network.manifest"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 10
         },
         {
@@ -1404,13 +1699,17 @@
           "name": "test_all_stations_have_records",
           "type": "integration",
           "description": "Manifest has records for all 6 expected stations",
-          "imports_modules": ["pea_met_network.manifest"],
+          "imports_modules": [
+            "pea_met_network.manifest"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 11
         },
         {
@@ -1418,13 +1717,18 @@
           "name": "test_north_rustico_dec2022_loads_without_error",
           "type": "integration",
           "description": "3-sensor North Rustico Dec 2022 CSV loads via normalized_loader",
-          "imports_modules": ["pea_met_network.normalized_loader"],
+          "imports_modules": [
+            "pea_met_network.normalized_loader"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data", "broken_import"],
+          "risk_flags": [
+            "external_data",
+            "broken_import"
+          ],
           "lines_of_code": 16
         },
         {
@@ -1438,7 +1742,10 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data", "broken_import"],
+          "risk_flags": [
+            "external_data",
+            "broken_import"
+          ],
           "lines_of_code": 19
         },
         {
@@ -1452,7 +1759,12 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["subprocess", "slow", "stateful", "order_dependent"],
+          "risk_flags": [
+            "subprocess",
+            "slow",
+            "stateful",
+            "order_dependent"
+          ],
           "lines_of_code": 10
         },
         {
@@ -1466,7 +1778,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 3
         },
         {
@@ -1480,7 +1794,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 3
         },
         {
@@ -1494,7 +1810,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 16
         },
         {
@@ -1508,7 +1826,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 4
         },
         {
@@ -1522,7 +1842,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 6
         },
         {
@@ -1536,7 +1858,12 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["subprocess", "notebook_execution", "slow", "no_timeout"],
+          "risk_flags": [
+            "subprocess",
+            "notebook_execution",
+            "slow",
+            "no_timeout"
+          ],
           "lines_of_code": 13
         },
         {
@@ -1592,7 +1919,12 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["subprocess", "slow", "no_timeout", "stateful"],
+          "risk_flags": [
+            "subprocess",
+            "slow",
+            "no_timeout",
+            "stateful"
+          ],
           "lines_of_code": 9
         }
       ]
@@ -1614,7 +1946,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 3
         },
         {
@@ -1628,7 +1962,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 4
         },
         {
@@ -1642,7 +1978,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 4
         },
         {
@@ -1656,7 +1994,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 4
         },
         {
@@ -1670,7 +2010,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 4
         },
         {
@@ -1684,7 +2026,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 5
         },
         {
@@ -1698,7 +2042,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 4
         },
         {
@@ -1712,7 +2058,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 3
         },
         {
@@ -1726,7 +2074,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 7
         },
         {
@@ -1740,7 +2090,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 5
         },
         {
@@ -1754,7 +2106,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 3
         },
         {
@@ -1768,7 +2122,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 3
         },
         {
@@ -1782,7 +2138,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 10
         },
         {
@@ -1796,7 +2154,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 10
         },
         {
@@ -1810,7 +2170,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 3
         },
         {
@@ -1824,7 +2186,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 6
         }
       ]
@@ -1832,7 +2196,10 @@
     {
       "path": "tests/test_analysis_notebook.py",
       "line_count": 330,
-      "imports": ["nbformat", "nbconvert.preprocessors"],
+      "imports": [
+        "nbformat",
+        "nbconvert.preprocessors"
+      ],
       "shared_fixtures_used": [],
       "tests": [
         {
@@ -1846,7 +2213,11 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["notebook_execution", "external_data", "slow"],
+          "risk_flags": [
+            "notebook_execution",
+            "external_data",
+            "slow"
+          ],
           "lines_of_code": 10
         },
         {
@@ -1860,7 +2231,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 13
         },
         {
@@ -1874,7 +2247,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 6
         },
         {
@@ -1888,7 +2263,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 5
         },
         {
@@ -1902,7 +2279,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 6
         },
         {
@@ -1916,7 +2295,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 5
         },
         {
@@ -1930,7 +2311,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 5
         },
         {
@@ -1944,7 +2327,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 4
         },
         {
@@ -1958,7 +2343,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 4
         },
         {
@@ -1972,7 +2359,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 5
         },
         {
@@ -1986,7 +2375,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 6
         },
         {
@@ -2000,7 +2391,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 4
         },
         {
@@ -2014,7 +2407,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 13
         },
         {
@@ -2028,7 +2423,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 8
         },
         {
@@ -2042,7 +2439,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 16
         }
       ]
@@ -2050,7 +2449,14 @@
     {
       "path": "tests/test_v2_pipeline.py",
       "line_count": 755,
-      "imports": ["pea_met_network.adapters", "pea_met_network.adapters.csv_adapter", "pea_met_network.adapters.xlsx_adapter", "pea_met_network.adapters.xle_adapter", "pea_met_network.adapters.json_adapter", "pea_met_network.adapters.base"],
+      "imports": [
+        "pea_met_network.adapters",
+        "pea_met_network.adapters.csv_adapter",
+        "pea_met_network.adapters.xlsx_adapter",
+        "pea_met_network.adapters.xle_adapter",
+        "pea_met_network.adapters.json_adapter",
+        "pea_met_network.adapters.base"
+      ],
       "shared_fixtures_used": [],
       "tests": [
         {
@@ -2072,7 +2478,9 @@
           "name": "test_adapter_registry_has_all_formats",
           "type": "unit",
           "description": "ADAPTER_REGISTRY has csv/xlsx/xle/json entries",
-          "imports_modules": ["pea_met_network.adapters"],
+          "imports_modules": [
+            "pea_met_network.adapters"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": false,
@@ -2086,7 +2494,9 @@
           "name": "test_unknown_format_is_hard_error",
           "type": "unit",
           "description": "route_by_extension raises ValueError for unknown formats",
-          "imports_modules": ["pea_met_network.adapters"],
+          "imports_modules": [
+            "pea_met_network.adapters"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": false,
@@ -2100,7 +2510,9 @@
           "name": "test_canonical_schema_constant_exists",
           "type": "unit",
           "description": "CANONICAL_SCHEMA is a list with station/timestamp_utc/air_temperature_c",
-          "imports_modules": ["pea_met_network.adapters"],
+          "imports_modules": [
+            "pea_met_network.adapters"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": false,
@@ -2114,7 +2526,9 @@
           "name": "test_base_adapter_abstract_class_exists",
           "type": "unit",
           "description": "BaseAdapter is abstract with load() method",
-          "imports_modules": ["pea_met_network.adapters.base"],
+          "imports_modules": [
+            "pea_met_network.adapters.base"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": false,
@@ -2134,7 +2548,10 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["subprocess", "slow"],
+          "risk_flags": [
+            "subprocess",
+            "slow"
+          ],
           "lines_of_code": 10
         },
         {
@@ -2148,7 +2565,10 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["subprocess", "slow"],
+          "risk_flags": [
+            "subprocess",
+            "slow"
+          ],
           "lines_of_code": 13
         },
         {
@@ -2162,7 +2582,11 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["subprocess", "slow", "file_io_write"],
+          "risk_flags": [
+            "subprocess",
+            "slow",
+            "file_io_write"
+          ],
           "lines_of_code": 17
         },
         {
@@ -2170,13 +2594,17 @@
           "name": "test_csv_adapter_loads_peinp_archives",
           "type": "integration",
           "description": "CSVAdapter loads PEINP CSV with canonical columns",
-          "imports_modules": ["pea_met_network.adapters.csv_adapter"],
+          "imports_modules": [
+            "pea_met_network.adapters.csv_adapter"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 14
         },
         {
@@ -2184,13 +2612,17 @@
           "name": "test_csv_adapter_loads_eccc_stanhope",
           "type": "integration",
           "description": "CSVAdapter loads Stanhope ECCC CSV with station=stanhope",
-          "imports_modules": ["pea_met_network.adapters.csv_adapter"],
+          "imports_modules": [
+            "pea_met_network.adapters.csv_adapter"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 14
         },
         {
@@ -2198,13 +2630,17 @@
           "name": "test_xlsx_adapter_loads_greenwich",
           "type": "integration",
           "description": "XLSXAdapter loads Greenwich Excel file",
-          "imports_modules": ["pea_met_network.adapters.xlsx_adapter"],
+          "imports_modules": [
+            "pea_met_network.adapters.xlsx_adapter"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 12
         },
         {
@@ -2212,13 +2648,17 @@
           "name": "test_xle_adapter_loads_stanley_bridge",
           "type": "integration",
           "description": "XLEAdapter loads Stanley Bridge Solinst .xle file",
-          "imports_modules": ["pea_met_network.adapters.xle_adapter"],
+          "imports_modules": [
+            "pea_met_network.adapters.xle_adapter"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 12
         },
         {
@@ -2226,13 +2666,17 @@
           "name": "test_json_adapter_loads_licor",
           "type": "integration",
           "description": "JSONAdapter loads Licor Cloud API JSON file",
-          "imports_modules": ["pea_met_network.adapters.json_adapter"],
+          "imports_modules": [
+            "pea_met_network.adapters.json_adapter"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 12
         },
         {
@@ -2240,13 +2684,17 @@
           "name": "test_all_adapters_output_canonical_schema",
           "type": "integration",
           "description": "All registered adapters produce station+timestamp_utc columns",
-          "imports_modules": ["pea_met_network.adapters"],
+          "imports_modules": [
+            "pea_met_network.adapters"
+          ],
           "uses_fixtures": [],
           "uses_subprocess": false,
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 12
         },
         {
@@ -2260,7 +2708,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 8
         },
         {
@@ -2274,7 +2724,10 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data", "soft_assertion"],
+          "risk_flags": [
+            "external_data",
+            "soft_assertion"
+          ],
           "lines_of_code": 12
         },
         {
@@ -2288,7 +2741,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 7
         },
         {
@@ -2302,7 +2757,11 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["subprocess", "slow", "stateful"],
+          "risk_flags": [
+            "subprocess",
+            "slow",
+            "stateful"
+          ],
           "lines_of_code": 8
         },
         {
@@ -2316,7 +2775,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 6
         },
         {
@@ -2330,7 +2791,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 6
         },
         {
@@ -2344,7 +2807,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 13
         },
         {
@@ -2358,7 +2823,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 13
         },
         {
@@ -2372,7 +2839,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 3
         },
         {
@@ -2386,7 +2855,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 7
         },
         {
@@ -2400,7 +2871,10 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data", "soft_assertion"],
+          "risk_flags": [
+            "external_data",
+            "soft_assertion"
+          ],
           "lines_of_code": 8
         },
         {
@@ -2414,7 +2888,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 7
         },
         {
@@ -2428,7 +2904,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 8
         },
         {
@@ -2442,7 +2920,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 3
         },
         {
@@ -2456,7 +2936,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 12
         },
         {
@@ -2470,7 +2952,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 9
         },
         {
@@ -2484,7 +2968,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 11
         },
         {
@@ -2498,7 +2984,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 3
         },
         {
@@ -2512,7 +3000,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 8
         },
         {
@@ -2526,7 +3016,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 8
         },
         {
@@ -2540,7 +3032,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 8
         },
         {
@@ -2554,7 +3048,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 8
         },
         {
@@ -2568,7 +3064,11 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["subprocess", "slow", "stateful"],
+          "risk_flags": [
+            "subprocess",
+            "slow",
+            "stateful"
+          ],
           "lines_of_code": 20
         },
         {
@@ -2582,7 +3082,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 8
         },
         {
@@ -2596,7 +3098,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 11
         },
         {
@@ -2610,7 +3114,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 5
         },
         {
@@ -2624,7 +3130,11 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["subprocess", "slow", "stateful"],
+          "risk_flags": [
+            "subprocess",
+            "slow",
+            "stateful"
+          ],
           "lines_of_code": 14
         },
         {
@@ -2652,7 +3162,12 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["subprocess", "slow", "stateful", "no_timeout"],
+          "risk_flags": [
+            "subprocess",
+            "slow",
+            "stateful",
+            "no_timeout"
+          ],
           "lines_of_code": 8
         },
         {
@@ -2666,7 +3181,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 8
         },
         {
@@ -2680,7 +3197,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 7
         },
         {
@@ -2694,7 +3213,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 9
         },
         {
@@ -2708,7 +3229,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 13
         },
         {
@@ -2722,7 +3245,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 13
         },
         {
@@ -2736,7 +3261,9 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["external_data"],
+          "risk_flags": [
+            "external_data"
+          ],
           "lines_of_code": 9
         },
         {
@@ -2750,8 +3277,173 @@
           "uses_file_io": true,
           "uses_network": false,
           "mocks": [],
-          "risk_flags": ["subprocess", "slow", "no_timeout", "stateful"],
+          "risk_flags": [
+            "subprocess",
+            "slow",
+            "no_timeout",
+            "stateful"
+          ],
           "lines_of_code": 9
+        }
+      ]
+    },
+    {
+      "path": "tests/test_phase11_dual_mode_fwi.py",
+      "line_count": 225,
+      "imports": [
+        "json",
+        "subprocess",
+        "sys",
+        "pandas",
+        "pytest",
+        "zoneinfo"
+      ],
+      "shared_fixtures_used": [
+        "tmp_path"
+      ],
+      "tests": [
+        {
+          "class": "TestAC11NoonObservationFilter",
+          "name": "test_filter_noon_observations_selects_adt_noon_row",
+          "type": "unit",
+          "description": "AC-11-01: summer local noon resolves to 15:00 UTC",
+          "imports_modules": [
+            "pea_met_network.cleaning"
+          ],
+          "uses_fixtures": [],
+          "uses_subprocess": false,
+          "uses_file_io": false,
+          "uses_network": false,
+          "mocks": [],
+          "risk_flags": [],
+          "lines_of_code": 14
+        },
+        {
+          "class": "TestAC11NoonObservationFilter",
+          "name": "test_filter_noon_observations_selects_ast_noon_row",
+          "type": "unit",
+          "description": "AC-11-02: winter local noon resolves to 16:00 UTC",
+          "imports_modules": [
+            "pea_met_network.cleaning"
+          ],
+          "uses_fixtures": [],
+          "uses_subprocess": false,
+          "uses_file_io": false,
+          "uses_network": false,
+          "mocks": [],
+          "risk_flags": [],
+          "lines_of_code": 14
+        },
+        {
+          "class": "TestAC11NoonObservationFilter",
+          "name": "test_filter_noon_observations_sums_previous_24h_rain",
+          "type": "unit",
+          "description": "AC-11-03: noon observation includes trailing 24h rain sum",
+          "imports_modules": [
+            "pea_met_network.cleaning"
+          ],
+          "uses_fixtures": [],
+          "uses_subprocess": false,
+          "uses_file_io": false,
+          "uses_network": false,
+          "mocks": [],
+          "risk_flags": [],
+          "lines_of_code": 16
+        },
+        {
+          "class": "TestAC11DailyFWI",
+          "name": "test_calculate_fwi_daily_uses_startup_values_and_reference_functions",
+          "type": "unit",
+          "description": "AC-11-04: daily loop uses Van Wagner defaults and reference functions",
+          "imports_modules": [
+            "pea_met_network.cleaning",
+            "pea_met_network.fwi"
+          ],
+          "uses_fixtures": [],
+          "uses_subprocess": false,
+          "uses_file_io": false,
+          "uses_network": false,
+          "mocks": [],
+          "risk_flags": [],
+          "lines_of_code": 33
+        },
+        {
+          "class": "TestAC11DailyFWI",
+          "name": "test_calculate_fwi_daily_carries_forward_on_missing_noon",
+          "type": "unit",
+          "description": "AC-11-05: missing noon carries forward prior codes",
+          "imports_modules": [
+            "pea_met_network.cleaning"
+          ],
+          "uses_fixtures": [],
+          "uses_subprocess": false,
+          "uses_file_io": false,
+          "uses_network": false,
+          "mocks": [],
+          "risk_flags": [],
+          "lines_of_code": 20
+        },
+        {
+          "class": "TestAC11DailyFWI",
+          "name": "test_calculate_fwi_daily_uses_default_latitude_and_override",
+          "type": "unit",
+          "description": "AC-11-06: latitude default and override affect daily code path",
+          "imports_modules": [
+            "pea_met_network.cleaning"
+          ],
+          "uses_fixtures": [],
+          "uses_subprocess": false,
+          "uses_file_io": false,
+          "uses_network": false,
+          "mocks": [],
+          "risk_flags": [],
+          "lines_of_code": 18
+        },
+        {
+          "class": "TestAC11CliAndConfig",
+          "name": "test_cleaning_config_declares_fwi_mode_default_extended",
+          "type": "integration",
+          "description": "AC-11-07: config default for fwi_mode is extended",
+          "imports_modules": [],
+          "uses_fixtures": [],
+          "uses_subprocess": false,
+          "uses_file_io": true,
+          "uses_network": false,
+          "mocks": [],
+          "risk_flags": [],
+          "lines_of_code": 7
+        },
+        {
+          "class": "TestAC11CliAndConfig",
+          "name": "test_cli_accepts_fwi_mode_compliant",
+          "type": "integration",
+          "description": "AC-11-08: CLI accepts --fwi-mode compliant in dry-run mode",
+          "imports_modules": [],
+          "uses_fixtures": [],
+          "uses_subprocess": true,
+          "uses_file_io": false,
+          "uses_network": false,
+          "mocks": [],
+          "risk_flags": [],
+          "lines_of_code": 17
+        },
+        {
+          "class": "TestAC11CliAndConfig",
+          "name": "test_compliant_mode_writes_daily_compliant_output",
+          "type": "e2e",
+          "description": "AC-11-09: compliant mode writes greenwich_daily_compliant.csv",
+          "imports_modules": [],
+          "uses_fixtures": [
+            "tmp_path"
+          ],
+          "uses_subprocess": true,
+          "uses_file_io": true,
+          "uses_network": false,
+          "mocks": [],
+          "risk_flags": [
+            "slow"
+          ],
+          "lines_of_code": 20
         }
       ]
     }

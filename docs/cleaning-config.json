@@ -87,6 +87,7 @@
     }
   },
   "fwi": {
+    "fwi_mode": "extended",
     "gap_threshold_hours": 24,
     "startup_defaults": {
       "ffmc": 85.0,

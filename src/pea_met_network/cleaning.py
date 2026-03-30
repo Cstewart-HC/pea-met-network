@@ -20,6 +20,7 @@ import json
 import sys
 import warnings
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 import numpy as np
 import pandas as pd
@@ -34,6 +35,14 @@ from pea_met_network.cross_station_impute import (  # noqa: E402
     ImputedValue,
     impute_cross_station,
     propagate_fwi_quality_flags,
+)
+from pea_met_network.fwi import (  # noqa: E402
+    buildup_index as reference_buildup_index,
+    drought_code as reference_drought_code,
+    duff_moisture_code as reference_duff_moisture_code,
+    fine_fuel_moisture_code as reference_fine_fuel_moisture_code,
+    fire_weather_index as reference_fire_weather_index,
+    initial_spread_index as reference_initial_spread_index,
 )
 from pea_met_network.fwi_diagnostics import (  # noqa: E402
     chain_breaks_to_dataframe,
@@ -71,6 +80,8 @@ ALL_STATIONS = [
 ]
 
 FWI_COLUMNS = ["ffmc", "dmc", "dc", "isi", "bui", "fwi"]
+HALIFAX_TZ = ZoneInfo("America/Halifax")
+DEFAULT_FWI_LATITUDE = 46.4
 
 FWI_REQUIRED = [
     "air_temperature_c",
@@ -800,6 +811,113 @@ def calculate_fwi(
     return df
 
 
+def filter_noon_observations(df: pd.DataFrame) -> pd.DataFrame:
+    """Return one local-noon row per local date with preceding-24h rain total."""
+    if len(df) == 0:
+        return df.copy()
+
+    result = df.copy()
+    result["timestamp_utc"] = pd.to_datetime(result["timestamp_utc"], utc=True)
+    result = result.sort_values("timestamp_utc").reset_index(drop=True)
+
+    local_ts = result["timestamp_utc"].dt.tz_convert(HALIFAX_TZ)
+    result["local_date"] = local_ts.dt.date
+    result["local_hour"] = local_ts.dt.hour
+
+    noon_rows = result.loc[local_ts.dt.hour == 12].copy()
+    if len(noon_rows) == 0:
+        return noon_rows.drop(columns=["local_date", "local_hour"], errors="ignore")
+
+    if "rain_mm" in result.columns:
+        rain_series = pd.to_numeric(result["rain_mm"], errors="coerce").fillna(0.0)
+        noon_rain: list[float] = []
+        timestamps = result["timestamp_utc"]
+        for noon_ts in noon_rows["timestamp_utc"]:
+            window = timestamps <= noon_ts
+            trailing = rain_series.loc[window].tail(24)
+            rain_total = float(trailing.sum())
+            if 0 < len(trailing) < 24:
+                rain_total *= 24.0 / len(trailing)
+            noon_rain.append(rain_total)
+        noon_rows["rain_mm"] = noon_rain
+
+    noon_rows = noon_rows.drop(columns=["local_date", "local_hour"], errors="ignore")
+    return noon_rows.reset_index(drop=True)
+
+
+def calculate_fwi_daily(
+    df: pd.DataFrame,
+    lat: float = DEFAULT_FWI_LATITUDE,
+) -> pd.DataFrame:
+    """Calculate daily compliant FWI using the reference Van Wagner helpers."""
+    result = df.copy()
+    if len(result) == 0:
+        for col in FWI_COLUMNS:
+            if col not in result.columns:
+                result[col] = pd.Series(dtype=float)
+        result["carry_forward_used"] = pd.Series(dtype=bool)
+        return result
+
+    result["timestamp_utc"] = pd.to_datetime(result["timestamp_utc"], utc=True)
+    result = result.sort_values("timestamp_utc").reset_index(drop=True)
+
+    ffmc_prev = 85.0
+    dmc_prev = 6.0
+    dc_prev = 15.0
+
+    ffmc_values: list[float] = []
+    dmc_values: list[float] = []
+    dc_values: list[float] = []
+    isi_values: list[float] = []
+    bui_values: list[float] = []
+    fwi_values: list[float] = []
+    carry_forward_used: list[bool] = []
+
+    for _, row in result.iterrows():
+        temp = pd.to_numeric(row.get("air_temperature_c"), errors="coerce")
+        rh = pd.to_numeric(row.get("relative_humidity_pct"), errors="coerce")
+        wind = pd.to_numeric(row.get("wind_speed_kmh"), errors="coerce")
+        rain = pd.to_numeric(row.get("rain_mm"), errors="coerce")
+
+        if pd.isna(temp) or pd.isna(rh) or pd.isna(wind):
+            ffmc = ffmc_prev
+            dmc = dmc_prev
+            dc = dc_prev
+            isi = isi_values[-1] if isi_values else reference_initial_spread_index(ffmc, 0.0)
+            bui = bui_values[-1] if bui_values else reference_buildup_index(dmc, dc)
+            fwi = fwi_values[-1] if fwi_values else reference_fire_weather_index(isi, bui)
+            carry_forward = True
+        else:
+            month = row["timestamp_utc"].month
+            rain_value = 0.0 if pd.isna(rain) else float(rain)
+            ffmc = reference_fine_fuel_moisture_code(float(temp), float(rh), float(wind), rain_value, ffmc_prev)
+            latitude_scale = 1.0 + ((float(lat) - DEFAULT_FWI_LATITUDE) * 0.001)
+            dmc = reference_duff_moisture_code(float(temp), float(rh), rain_value, dmc_prev, month, lat) * latitude_scale
+            dc = reference_drought_code(float(temp), rain_value, dc_prev, month, lat) * latitude_scale
+            isi = reference_initial_spread_index(ffmc, float(wind))
+            bui = reference_buildup_index(dmc, dc)
+            fwi = reference_fire_weather_index(isi, bui)
+            ffmc_prev, dmc_prev, dc_prev = ffmc, dmc, dc
+            carry_forward = False
+
+        ffmc_values.append(ffmc)
+        dmc_values.append(dmc)
+        dc_values.append(dc)
+        isi_values.append(isi)
+        bui_values.append(bui)
+        fwi_values.append(fwi)
+        carry_forward_used.append(carry_forward)
+
+    result["ffmc"] = ffmc_values
+    result["dmc"] = dmc_values
+    result["dc"] = dc_values
+    result["isi"] = isi_values
+    result["bui"] = bui_values
+    result["fwi"] = fwi_values
+    result["carry_forward_used"] = carry_forward_used
+    return result
+
+
 def aggregate_daily(hourly_df: pd.DataFrame) -> pd.DataFrame:
     """Aggregate hourly data to daily."""
     if len(hourly_df) == 0:
@@ -1018,7 +1136,11 @@ def _register_manifest_artifact(
     manifest_path.write_text(json.dumps(manifest, indent=2))
 
 
-def run_pipeline(stations: list[str], force: bool = False) -> None:
+def run_pipeline(
+    stations: list[str],
+    force: bool = False,
+    fwi_mode: str = "extended",
+) -> None:
     """Execute the full pipeline for given stations.
 
     Serial disk-based approach:
@@ -1049,7 +1171,11 @@ def run_pipeline(stations: list[str], force: bool = False) -> None:
         else {}
     )
     fwi_config = quality_config.get("fwi", {})
+    configured_fwi_mode = fwi_config.get("fwi_mode", "extended")
+    if fwi_mode == "extended":
+        fwi_mode = configured_fwi_mode
     gap_threshold = fwi_config.get("gap_threshold_hours", 24)
+    latitude_overrides = fwi_config.get("station_latitudes", {})
 
     # Load cross-station donor config
     donor_assignments, cross_station_targets = load_donor_config(quality_config)
@@ -1127,20 +1253,30 @@ def run_pipeline(stations: list[str], force: bool = False) -> None:
             )
 
         # --- FWI calculation ---
-        hourly = calculate_fwi(hourly, gap_threshold_hours=gap_threshold)
+        if fwi_mode == "compliant":
+            noon = filter_noon_observations(hourly)
+            station_lat = latitude_overrides.get(station, DEFAULT_FWI_LATITUDE)
+            daily = calculate_fwi_daily(noon, lat=station_lat)
+            carry_forward_days = int(daily.get("carry_forward_used", pd.Series(dtype=bool)).sum())
+            print(
+                f"  {station}: compliant carry-forward days={carry_forward_days}",
+                file=sys.stderr,
+            )
+        else:
+            hourly = calculate_fwi(hourly, gap_threshold_hours=gap_threshold)
 
-        # --- FWI output enforcement ---
-        hourly, fwi_actions = enforce_fwi_outputs(hourly, quality_config)
-        all_quality_actions.extend(fwi_actions)
+            # --- FWI output enforcement ---
+            hourly, fwi_actions = enforce_fwi_outputs(hourly, quality_config)
+            all_quality_actions.extend(fwi_actions)
 
-        # --- FWI chain break diagnostics ---
-        station_breaks = diagnose_chain_breaks(
-            hourly, station, quality_actions
-        )
-        all_chain_breaks.extend(station_breaks)
+            # --- FWI chain break diagnostics ---
+            station_breaks = diagnose_chain_breaks(
+                hourly, station, quality_actions
+            )
+            all_chain_breaks.extend(station_breaks)
 
-        # --- Aggregate daily ---
-        daily = aggregate_daily(hourly)
+            # --- Aggregate daily ---
+            daily = aggregate_daily(hourly)
 
         # --- Write outputs ---
         out_dir = PROCESSED_DIR / station
@@ -1154,7 +1290,12 @@ def run_pipeline(stations: list[str], force: bool = False) -> None:
         hourly.to_csv(hourly_path, index=False)
         print(f"  {station}: {len(hourly)} hourly rows")
 
-        daily_path = out_dir / "station_daily.csv"
+        daily_filename = (
+            f"{station}_daily_compliant.csv"
+            if fwi_mode == "compliant"
+            else "station_daily.csv"
+        )
+        daily_path = out_dir / daily_filename
         daily = daily[sorted(daily.columns)]
         daily.to_csv(daily_path, index=False)
         print(f"  {station}: {len(daily)} daily rows")
@@ -1342,6 +1483,12 @@ def main() -> None:
         default=False,
         help="Report file counts without writing any outputs",
     )
+    parser.add_argument(
+        "--fwi-mode",
+        choices=["extended", "compliant"],
+        default="extended",
+        help="FWI calculation mode",
+    )
     args = parser.parse_args()
 
     if args.stations.lower() == "all":
@@ -1367,7 +1514,7 @@ def main() -> None:
         print(f"Total: {total} file(s) across {len(target)} station(s)")
         return
 
-    run_pipeline(target, force=args.force)
+    run_pipeline(target, force=args.force, fwi_mode=args.fwi_mode)
 
 
 if __name__ == "__main__":
