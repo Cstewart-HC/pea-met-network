@@ -12,28 +12,130 @@
   },
   "current_phase": 15,
   "decisions": [],
-  "iteration": 0,
+  "iteration": 1,
   "max_per_day": 20,
   "phase": "15",
   "phases": [
-    {"id": 1, "name": "Adapter Architecture", "status": "done", "notes": "Router, registry, canonical schema constant, base adapter class, dry-run flag", "exit_gate": "pytest tests/test_v2_pipeline.py::TestAC_PIPE_1_AdapterArchitecture -v"},
-    {"id": 2, "name": "Format Adapters — All Formats (CSV/XLSX/XLE/JSON)", "status": "done", "notes": "All adapters built together: csv_adapter (PEINP + ECCC), xlsx_adapter, xle_adapter, json_adapter (Licor)", "exit_gate": "pytest tests/test_v2_pipeline.py::TestAC_PIPE_2_AllFormatAdapters -v"},
-    {"id": 3, "name": "Pipeline Integration", "status": "done", "notes": "Wire adapters into cleaning.py: concat → dedup → resample → impute → FWI. Single SSOT output.", "exit_gate": "pytest tests/test_v2_pipeline.py::TestAC_PIPE_3_PipelineIntegration -v"},
-    {"id": 4, "name": "Stanhope Validation", "status": "done", "notes": "Compare ECCC reference (Stanhope) to local stations. Analysis phase.", "exit_gate": "pytest tests/test_v2_pipeline.py::TestAC_PIPE_4_StanhopeValidation -v"},
-    {"id": 5, "name": "QA/QC Reporting", "status": "done", "notes": "Wire qa_qc.py into pipeline, generate report artifact", "exit_gate": "pytest tests/test_v2_pipeline.py::TestAC_PIPE_5_QAQCReporting -v"},
-    {"id": 6, "name": "Determinism", "status": "done", "notes": "Reproducibility, --force flag, checksums", "exit_gate": "pytest tests/test_v2_pipeline.py::TestAC_PIPE_6_Determinism -v"},
-    {"id": 7, "name": "E2E Validation", "status": "done", "notes": "Full run, all tests pass, coverage report, zero unprocessed files", "exit_gate": "pytest tests/test_v2_pipeline.py::TestAC_PIPE_7_E2EValidation -v"},
-    {"id": 8, "name": "Data Quality Enforcement", "status": "done", "notes": "Post-FWI quality bounds, flagging, diagnostics", "exit_gate": "pytest tests/ -m 'not e2e' -v"},
-    {"id": 9, "name": "FWI Missingness & Chain Recovery", "status": "done", "notes": "Chain break detection, recovery, diagnostics", "exit_gate": "pytest tests/ -m 'not e2e' -v"},
-    {"id": 10, "name": "Cross-Station Variable Imputation (RH, Wind, Temp)", "status": "done", "notes": "MSC GeoMet API donor data, vapor pressure continuity, dew-point fallback, wind height correction, spatial temp proxy, quality flag audit trail.", "exit_gate": "pytest tests/ -m 'not e2e' -v", "started_at": "2026-03-28T02:42:00.000000+00:00", "completed_at": "2026-03-28T05:04:02.000000+00:00", "tdd_start": "martin"},
-    {"id": 11, "name": "Dual-Mode FWI Pipeline (Compliant + Extended)", "status": "done", "notes": "Van Wagner compliant noon-only FWI mode alongside existing hourly extended mode. zoneinfo for DST. Default lat 46.4N.", "exit_gate": "pytest tests/ -m 'not e2e' -v", "tdd_start": "martin"},
-    {"id": 12, "name": "Wagner Hourly: Fix Extended Mode (Van Wagner 1977)", "status": "done", "notes": "Replace broken hourly FFMC (daily eqs ×24) with canonical Van Wagner 1977 hourly FFMC from cffdrs. DMC/DC go daily-only. Spec: docs/specs/012-wagner-hourly.md", "exit_gate": "pytest tests/test_phase12_wagner_hourly.py -v", "tdd_start": "martin"},
-    {"id": 13, "name": "QA/QC Report Expansion — Dual-Mode Diagnostics", "status": "done", "notes": "Pre/post imputation missingness, FWI mode in reports, compliant mode diagnostics, FWI value stats, mode-specific filenames, per-stage row counts", "exit_gate": "pytest tests/test_phase13_qa_qc_expansion.py -v", "tdd_start": "martin", "started_at": null, "completed_at": "2026-03-30T14:45:37.287426+00:00", "iteration": 1},
-    {"id": 14, "name": "Chain Break Root Cause Attribution", "status": "done", "notes": "Classify chain breaks as startup vs cascade. Scan backwards to find original missing input. Zero unknowns.", "exit_gate": "pytest tests/test_phase14_chain_break_root_cause.py -v", "tdd_start": "martin"},
-    {"id": 15, "name": "Analysis Notebook Delivery", "status": "active", "notes": "Delete stale notebooks. Rewrite analysis.ipynb with FWI mode awareness, chain break visualization, QA/QC report ingestion, mode comparison. Fix QA/QC hourly bug. Conclusion left blank for user.", "exit_gate": "pytest tests/test_phase15_analysis_notebook.py -v", "tdd_start": "martin"}
+    {
+      "id": 1,
+      "name": "Adapter Architecture",
+      "status": "done",
+      "notes": "Router, registry, canonical schema constant, base adapter class, dry-run flag",
+      "exit_gate": "pytest tests/test_v2_pipeline.py::TestAC_PIPE_1_AdapterArchitecture -v"
+    },
+    {
+      "id": 2,
+      "name": "Format Adapters \u2014 All Formats (CSV/XLSX/XLE/JSON)",
+      "status": "done",
+      "notes": "All adapters built together: csv_adapter (PEINP + ECCC), xlsx_adapter, xle_adapter, json_adapter (Licor)",
+      "exit_gate": "pytest tests/test_v2_pipeline.py::TestAC_PIPE_2_AllFormatAdapters -v"
+    },
+    {
+      "id": 3,
+      "name": "Pipeline Integration",
+      "status": "done",
+      "notes": "Wire adapters into cleaning.py: concat \u2192 dedup \u2192 resample \u2192 impute \u2192 FWI. Single SSOT output.",
+      "exit_gate": "pytest tests/test_v2_pipeline.py::TestAC_PIPE_3_PipelineIntegration -v"
+    },
+    {
+      "id": 4,
+      "name": "Stanhope Validation",
+      "status": "done",
+      "notes": "Compare ECCC reference (Stanhope) to local stations. Analysis phase.",
+      "exit_gate": "pytest tests/test_v2_pipeline.py::TestAC_PIPE_4_StanhopeValidation -v"
+    },
+    {
+      "id": 5,
+      "name": "QA/QC Reporting",
+      "status": "done",
+      "notes": "Wire qa_qc.py into pipeline, generate report artifact",
+      "exit_gate": "pytest tests/test_v2_pipeline.py::TestAC_PIPE_5_QAQCReporting -v"
+    },
+    {
+      "id": 6,
+      "name": "Determinism",
+      "status": "done",
+      "notes": "Reproducibility, --force flag, checksums",
+      "exit_gate": "pytest tests/test_v2_pipeline.py::TestAC_PIPE_6_Determinism -v"
+    },
+    {
+      "id": 7,
+      "name": "E2E Validation",
+      "status": "done",
+      "notes": "Full run, all tests pass, coverage report, zero unprocessed files",
+      "exit_gate": "pytest tests/test_v2_pipeline.py::TestAC_PIPE_7_E2EValidation -v"
+    },
+    {
+      "id": 8,
+      "name": "Data Quality Enforcement",
+      "status": "done",
+      "notes": "Post-FWI quality bounds, flagging, diagnostics",
+      "exit_gate": "pytest tests/ -m 'not e2e' -v"
+    },
+    {
+      "id": 9,
+      "name": "FWI Missingness & Chain Recovery",
+      "status": "done",
+      "notes": "Chain break detection, recovery, diagnostics",
+      "exit_gate": "pytest tests/ -m 'not e2e' -v"
+    },
+    {
+      "id": 10,
+      "name": "Cross-Station Variable Imputation (RH, Wind, Temp)",
+      "status": "done",
+      "notes": "MSC GeoMet API donor data, vapor pressure continuity, dew-point fallback, wind height correction, spatial temp proxy, quality flag audit trail.",
+      "exit_gate": "pytest tests/ -m 'not e2e' -v",
+      "started_at": "2026-03-28T02:42:00.000000+00:00",
+      "completed_at": "2026-03-28T05:04:02.000000+00:00",
+      "tdd_start": "martin"
+    },
+    {
+      "id": 11,
+      "name": "Dual-Mode FWI Pipeline (Compliant + Extended)",
+      "status": "done",
+      "notes": "Van Wagner compliant noon-only FWI mode alongside existing hourly extended mode. zoneinfo for DST. Default lat 46.4N.",
+      "exit_gate": "pytest tests/ -m 'not e2e' -v",
+      "tdd_start": "martin"
+    },
+    {
+      "id": 12,
+      "name": "Wagner Hourly: Fix Extended Mode (Van Wagner 1977)",
+      "status": "done",
+      "notes": "Replace broken hourly FFMC (daily eqs \u00d724) with canonical Van Wagner 1977 hourly FFMC from cffdrs. DMC/DC go daily-only. Spec: docs/specs/012-wagner-hourly.md",
+      "exit_gate": "pytest tests/test_phase12_wagner_hourly.py -v",
+      "tdd_start": "martin"
+    },
+    {
+      "id": 13,
+      "name": "QA/QC Report Expansion \u2014 Dual-Mode Diagnostics",
+      "status": "done",
+      "notes": "Pre/post imputation missingness, FWI mode in reports, compliant mode diagnostics, FWI value stats, mode-specific filenames, per-stage row counts",
+      "exit_gate": "pytest tests/test_phase13_qa_qc_expansion.py -v",
+      "tdd_start": "martin",
+      "started_at": null,
+      "completed_at": "2026-03-30T14:45:37.287426+00:00",
+      "iteration": 1
+    },
+    {
+      "id": 14,
+      "name": "Chain Break Root Cause Attribution",
+      "status": "done",
+      "notes": "Classify chain breaks as startup vs cascade. Scan backwards to find original missing input. Zero unknowns.",
+      "exit_gate": "pytest tests/test_phase14_chain_break_root_cause.py -v",
+      "tdd_start": "martin"
+    },
+    {
+      "id": 15,
+      "name": "Analysis Notebook Delivery",
+      "status": "done",
+      "notes": "Delete stale notebooks. Rewrite analysis.ipynb with FWI mode awareness, chain break visualization, QA/QC report ingestion, mode comparison. Fix QA/QC hourly bug. Conclusion left blank for user.",
+      "exit_gate": "pytest tests/test_phase15_analysis_notebook.py -v",
+      "tdd_start": "martin",
+      "completed_at": "2026-03-30T18:33:59.048608+00:00"
+    }
   ],
   "project": "pea-met-network",
   "status": "active",
-  "updated_at": "2026-03-30T19:05:44.000000+00:00",
+  "updated_at": "2026-03-30T18:33:59.048626+00:00",
   "version": "2.0.0"
 }
