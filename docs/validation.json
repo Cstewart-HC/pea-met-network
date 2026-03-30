@@ -1,7 +1,7 @@
 {
-  "last_reviewed_commit": "0131bec",
-  "verdict": "PASS",
-  "reviewed_at": "2026-03-29T23:54:31.433706+00:00",
+  "last_reviewed_commit": "753d81c",
+  "verdict": "REJECT",
+  "reviewed_at": "2026-03-30T01:32:24.252338+00:00",
   "artifact_validation": {
     "status": "SKIP",
     "errors": []
@@ -18,42 +18,111 @@
   },
   "criteria": [
     {
-      "id": "11.1",
+      "id": "12.1",
+      "name": "New Function: _hffmc_calc",
+      "status": "FAIL",
+      "evidence": "src/pea_met_network/cleaning.py at HEAD does not define `_hffmc_calc`; rg for `_hffmc_calc` only found the Phase 12 spec, so the canonical hourly FFMC function is absent."
+    },
+    {
+      "id": "12.2",
+      "name": "New Function: _daily_dmc_dc_calc",
+      "status": "FAIL",
+      "evidence": "src/pea_met_network/cleaning.py at HEAD does not define `_daily_dmc_dc_calc`; the daily-only DMC/DC helper required by Phase 12 is missing."
+    },
+    {
+      "id": "12.3",
+      "name": "New Function: calculate_fwi_hourly",
+      "status": "FAIL",
+      "evidence": "src/pea_met_network/cleaning.py at HEAD does not define `calculate_fwi_hourly`; the new hourly entry point required by Phase 12 is absent."
+    },
+    {
+      "id": "12.4",
+      "name": "Rename Current Function",
+      "status": "FAIL",
+      "evidence": "src/pea_met_network/cleaning.py does not define `_calculate_fwi_legacy`; the legacy hourly calculation was not renamed and preserved for comparison testing."
+    },
+    {
+      "id": "12.5",
+      "name": "Pipeline Routing Update",
+      "status": "FAIL",
+      "evidence": "Because `calculate_fwi_hourly` is absent from src/pea_met_network/cleaning.py, the pipeline cannot route `hourly`/`extended` mode through the Phase 12 implementation."
+    },
+    {
+      "id": "12.6",
       "name": "CLI & Config",
-      "status": "PASS",
-      "evidence": "Gate context exists in docs/gate-inject.md, and there is no longer a review-context blocker preventing Lisa from evaluating the current Phase 11 implementation."
+      "status": "FAIL",
+      "evidence": "docs/cleaning-config.json at HEAD still lacks the required Phase 12 `hourly` default/configuration change."
     },
     {
-      "id": "11.2",
-      "name": "Noon Observation Filter",
-      "status": "PASS",
-      "evidence": "Phase 11 targeted tests are present and the full-suite run passed with tests/test_phase11_dual_mode_fwi.py included, covering DST-aware noon filtering and 24-hour rain aggregation behavior."
-    },
-    {
-      "id": "11.3",
-      "name": "Daily FWI Calculation",
-      "status": "PASS",
-      "evidence": "The full suite passed after the compliant-mode implementation and associated Phase 11 tests were added, providing acceptance evidence for the daily Van Wagner-style FWI path and carry-forward behavior."
-    },
-    {
-      "id": "11.4",
-      "name": "Pipeline Routing",
-      "status": "PASS",
-      "evidence": "The required Lisa command .venv/bin/pytest tests/ -q completed successfully, which validates the integrated routing state for the current repository head under the full suite."
-    },
-    {
-      "id": "11.5",
+      "id": "12.7",
       "name": "Diagnostics",
-      "status": "PASS",
-      "evidence": "Artifact validation and pre-flight both reported SKIP with no errors for Phase 11, and no diagnostics-specific failing node remained after the full-suite pass."
+      "status": "FAIL",
+      "evidence": "src/pea_met_network/cleaning.py at HEAD contains no `dmc_dc_source_date` support and no Phase 12 daily-source diagnostic evidence."
     },
     {
-      "id": "11.6",
+      "id": "12.8",
       "name": "Tests",
-      "status": "PASS",
-      "evidence": "Executed .venv/bin/pytest tests/ -q successfully: 297 tests passed with warnings only, satisfying the Lisa prompt requirement to run the full suite this tick."
+      "status": "FAIL",
+      "evidence": "Phase 12 test coverage is missing or not green: tests/test_phase12_wagner_hourly.py exists=False and `.venv/bin/pytest tests/ -q` exited 1. First failure excerpt: ['tests/test_v2_pipeline.py::TestAC_PIPE_6_Determinism::test_outputs_sorted_by_timestamp', '  /mnt/fast_data/workspaces/pea-met-network/tests/test_v2_pipeline.py:575: DtypeWarning: Columns (0: air_temperature_c_method, 1: air_temperature_c_src) have mixed types. Specify dtype option on import or set low_memory=False.', '    df = pd.read_csv(hourly_path)', '', 'tests/test_v2_pipeline.py::TestAC_PIPE_6_Determinism::test_column_order_is_deterministic', '  /mnt/fast_data/workspaces/pea-met-network/tests/test_v2_pipeline.py:589: DtypeWarning: Columns (0: air_temperature_c_method, 1: air_temperature_c_src) have mixed types. Specify dtype option on import or set low_memory=False.', '    df = pd.read_csv(hourly_path)', '', 'tests/test_v2_pipeline.py::TestAC_PIPE_7_E2EValidation::test_no_large_gaps', '  /mnt/fast_data/workspaces/pea-met-network/tests/test_v2_pipeline.py:704: DtypeWarning: Columns (0: air_temperature_c_method, 1: air_temperature_c_src) have mixed types. Specify dtype option on import or set low_memory=False.', '    df = pd.read_csv(hourly_path)', '', 'tests/test_v2_pipeline.py::TestAC_PIPE_7_E2EValidation::test_continuous_coverage', '  /mnt/fast_data/workspaces/pea-met-network/tests/test_v2_pipeline.py:722: DtypeWarning: Columns (0: air_temperature_c_method, 1: air_temperature_c_src) have mixed types. Specify dtype option on import or set low_memory=False.', '    df = pd.read_csv(hourly_path)', '', '-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html', '=========================== short test summary info ============================', 'FAILED tests/test_repo_shape.py::test_repo_root_shape_is_whitelisted - Assert...', '']"
+    },
+    {
+      "id": "12.9",
+      "name": "Output Files",
+      "status": "FAIL",
+      "evidence": "The required hourly output audit column `dmc_dc_source_date` is not present in src/pea_met_network/cleaning.py, so Phase 12 output-file requirements are not met."
     }
   ],
-  "failing_nodes": [],
-  "summary": "Lisa review PASS: gate injection context was available, artifact validation and pre-flight were both non-blocking for Phase 11, Martin lint had no critical/high blockers after Martin's latest commit, and the mandated full-suite pytest run passed (297 passed). No failing nodes remain for this tick."
+  "failing_nodes": [
+    {
+      "file": "src/pea_met_network/cleaning.py",
+      "line": 1,
+      "message": "Phase 12 criterion 12.1 failed: missing `_hffmc_calc` hourly FFMC implementation."
+    },
+    {
+      "file": "src/pea_met_network/cleaning.py",
+      "line": 1,
+      "message": "Phase 12 criterion 12.2 failed: missing `_daily_dmc_dc_calc` daily DMC/DC helper."
+    },
+    {
+      "file": "src/pea_met_network/cleaning.py",
+      "line": 1,
+      "message": "Phase 12 criterion 12.3 failed: missing `calculate_fwi_hourly` entry point."
+    },
+    {
+      "file": "src/pea_met_network/cleaning.py",
+      "line": 1,
+      "message": "Phase 12 criterion 12.4 failed: legacy FWI implementation was not preserved as `_calculate_fwi_legacy`."
+    },
+    {
+      "file": "src/pea_met_network/cleaning.py",
+      "line": 1,
+      "message": "Phase 12 criterion 12.5 failed: pipeline routing cannot target the missing hourly implementation."
+    },
+    {
+      "file": "docs/cleaning-config.json",
+      "line": 1,
+      "message": "Phase 12 criterion 12.6 failed: config was not updated to make `hourly` the default FWI mode."
+    },
+    {
+      "file": "src/pea_met_network/cleaning.py",
+      "line": 1,
+      "message": "Phase 12 criterion 12.7 failed: missing `dmc_dc_source_date` / daily-source diagnostics support."
+    },
+    {
+      "file": "tests",
+      "line": 1,
+      "message": "Phase 12 criterion 12.8 failed: required `tests/test_phase12_wagner_hourly.py` is missing from HEAD."
+    },
+    {
+      "file": "tests/test_repo_shape.py",
+      "line": 49,
+      "message": "Full suite failed during Lisa review; current HEAD is not green."
+    },
+    {
+      "file": "src/pea_met_network/cleaning.py",
+      "line": 1,
+      "message": "Phase 12 criterion 12.9 failed: hourly outputs lack required `dmc_dc_source_date` audit column support."
+    }
+  ],
+  "summary": "Lisa review REJECT for Phase 12: the current HEAD still lacks the core Phase 12 implementation in src/pea_met_network/cleaning.py (`_hffmc_calc`, `_daily_dmc_dc_calc`, `calculate_fwi_hourly`, `_calculate_fwi_legacy`), the required Phase 12 test file is absent, the required output audit column is missing, and the mandated full-suite pytest run is not green. Artifact validation and pre-flight are both SKIP from the previous phase, and Martin lint reports only medium/low issues, so the rejection is based on unmet Phase 12 acceptance criteria rather than test-lint blockers."
 }
