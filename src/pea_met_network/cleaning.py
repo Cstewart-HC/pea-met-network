@@ -1275,6 +1275,9 @@ def _collect_qa_qc_data(
             continue
         h_path = PROCESSED_DIR / station / "station_hourly.csv"
         d_path = PROCESSED_DIR / station / "station_daily.csv"
+        d_path_compliant = PROCESSED_DIR / station / f"{station}_daily_compliant.csv"
+        if not d_path.exists() and d_path_compliant.exists():
+            d_path = d_path_compliant
         if h_path.exists() and d_path.exists():
             try:
                 oh = pd.read_csv(h_path)
@@ -1362,7 +1365,12 @@ def run_pipeline(
     fwi_config = quality_config.get("fwi", {})
     configured_fwi_mode = fwi_config.get("fwi_mode", "hourly")
     if fwi_mode == "extended":
-        fwi_mode = "hourly" if configured_fwi_mode == "extended" else configured_fwi_mode
+        warnings.warn(
+            "--fwi-mode 'extended' is deprecated; use 'hourly' instead.",
+            DeprecationWarning,
+            stacklevel=3,
+        )
+        fwi_mode = "hourly"
     gap_threshold = fwi_config.get("gap_threshold_hours", 24)
     latitude_overrides = fwi_config.get("station_latitudes", {})
 
@@ -1698,9 +1706,9 @@ def main() -> None:
     )
     parser.add_argument(
         "--fwi-mode",
-        choices=["extended", "compliant"],
-        default="extended",
-        help="FWI calculation mode",
+        choices=["hourly", "compliant", "extended"],
+        default="hourly",
+        help="FWI calculation mode (default: hourly, use 'compliant' for noon-only Van Wagner daily)",
     )
     args = parser.parse_args()
 
