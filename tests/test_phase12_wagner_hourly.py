@@ -38,7 +38,13 @@ def _cffdrs_hffmc_ref(
 
     Used as the reference to validate our implementation against.
     """
-    mo_prev = 147.2 * (101.0 - ffmc_prev) / (59.5 + ffmc_prev)
+    # Hourly FFMC uses higher-precision coefficient than daily.
+    # cffdrs docs: "Because of the shortened time step... we have increased
+    # the precision of one of the constants in the simple formula that converts
+    # litter moisture content to the Code value."
+    # Daily: 147.2  |  Hourly: 250 * 59.5 / 101 = 147.2772277228...
+    FFMC_COEFF = 250.0 * 59.5 / 101.0  # 147.27722772277228
+    mo_prev = FFMC_COEFF * (101.0 - ffmc_prev) / (59.5 + ffmc_prev)
     ffmc_out: list[float] = []
 
     for i in range(len(temp)):
@@ -93,7 +99,7 @@ def _cffdrs_hffmc_ref(
             mo = mo_prev
 
         mo = max(0.0, mo)
-        ffmc = 59.5 * (250.0 - mo) / (147.2 + mo)
+        ffmc = 59.5 * (250.0 - mo) / (FFMC_COEFF + mo)
         ffmc = max(0.0, ffmc)  # No upper cap in hourly
         ffmc_out.append(ffmc)
         mo_prev = mo
@@ -149,8 +155,8 @@ class TestHFFMCAgainstCFFDRS:
 
         np.testing.assert_allclose(actual, expected, atol=1e-4)
         # Final value must match to 4 decimal places
-        assert abs(actual[-1] - 88.202643) < 1e-3, (
-            f"Final FFMC {actual[-1]:.6f} != 88.202643 — "
+        assert abs(actual[-1] - 88.159928) < 1e-3, (
+            f"Final FFMC {actual[-1]:.6f} != 88.159928 — "
             "hourly temp scale factor may be wrong (0.581 vs 0.0579)"
         )
 
@@ -197,13 +203,13 @@ class TestHFFMCAgainstCFFDRS:
         assert actual[12] < actual[11], (
             f"FFMC did not drop at rain hour: h11={actual[11]:.4f}, h12={actual[12]:.4f}"
         )
-        assert abs(actual[-1] - 82.684502) < 1e-3
+        assert abs(actual[-1] - 82.646028) < 1e-3
 
     def test_wetting_conditions_low_ffmc(self):
         """High RH (90%) should drive FFMC down.
 
         t=15, rh=90, w=5, r=0, ffmc_prev=70
-        Reference final value: 74.357438
+        Reference final value: 74.319081
         """
         from pea_met_network.cleaning import _hffmc_calc
 
@@ -216,7 +222,7 @@ class TestHFFMCAgainstCFFDRS:
         actual = _hffmc_calc(temps, rhs, winds, rains, ffmc_prev=70.0)
 
         np.testing.assert_allclose(actual, expected, atol=1e-3)
-        assert abs(actual[-1] - 74.357438) < 1e-3
+        assert abs(actual[-1] - 74.319081) < 1e-3
 
     def test_sub_threshold_rain_applied(self):
         """0.2mm rain MUST be applied (hourly has no 0.5mm threshold).
@@ -252,23 +258,146 @@ class TestHFFMCAgainstCFFDRS:
         np.testing.assert_allclose(result_without, expected_without, atol=1e-3)
 
     def test_no_upper_cap_on_ffmc(self):
-        """Hourly FFMC has no upper cap of 101 (unlike daily).
+        """Hourly FFMC has no explicit upper cap of 101 (unlike daily).
 
-        With extreme drying conditions, FFMC should be allowed to exceed 101.
+        The daily FFMC formula (Van Wagner 1987) uses 147.2 as the coefficient,
+        giving a natural asymptote slightly above 101, plus an explicit cap at
+        101. The hourly FFMC (Van Wagner 1977) uses 250*59.5/101 = 147.277...
+        as the coefficient, giving a natural asymptote at exactly 101.0 with no
+        explicit cap — values approach but don't exceed ~101.
+
+        This test verifies: no explicit min(101) cap exists, and the asymptotic
+        ceiling with correct hourly constants is ~101 (not higher or lower).
         """
         from pea_met_network.cleaning import _hffmc_calc
 
-        # Very hot, very dry, very windy — should push FFMC above 101
+        # Very hot, very dry, very windy — push FFMC toward ceiling
         temps = np.array([40.0] * 48)
         rhs = np.array([5.0] * 48)
         winds = np.array([50.0] * 48)
         rains = np.array([0.0] * 48)
 
-        result = _hffmc_calc(temps, rhs, winds, rains, ffmc_prev=95.0)
+        expected = _cffdrs_hffmc_ref(temps, rhs, winds, rains, ffmc_prev=95.0)
+        actual = _hffmc_calc(temps, rhs, winds, rains, ffmc_prev=95.0)
 
-        assert result[-1] > 101.0, (
-            f"FFMC capped at {result[-1]:.2f} — hourly mode should have no upper cap"
+        # Must match reference to tolerance
+        np.testing.assert_allclose(actual, expected, atol=1e-3)
+
+        # FFMC should approach ~101 but not exceed it (asymptotic ceiling)
+        assert actual[-1] > 100.0, (
+            f"FFMC too low at {actual[-1]:.2f} — not approaching ceiling"
         )
+        assert actual[-1] <= 101.0, (
+            f"FFMC exceeds 101 at {actual[-1]:.2f} — coefficient may be wrong"
+        )
+
+    def test_hourly_uses_correct_ffmc_coefficient(self):
+        """Hourly FFMC must use 250*59.5/101 = 147.277... not daily 147.2.
+
+        The cffdrs R package explicitly documents this difference:
+        "Because of the shortened time step... we have increased the
+        precision of one of the constants."
+
+        Using 147.2 instead of 147.277... shifts every FFMC value.
+        """
+        from pea_met_network.cleaning import _hffmc_calc
+
+        temps = np.array([20.0] * 24)
+        rhs = np.array([45.0] * 24)
+        winds = np.array([15.0] * 24)
+        rains = np.array([0.0] * 24)
+
+        expected = _cffdrs_hffmc_ref(temps, rhs, winds, rains, ffmc_prev=85.0)
+        actual = _hffmc_calc(temps, rhs, winds, rains, ffmc_prev=85.0)
+
+        # Must match reference — which uses 147.277...
+        # If code uses 147.2, the per-hour difference accumulates
+        np.testing.assert_allclose(actual, expected, atol=1e-4)
+
+        # Also verify: the daily-coefficient reference would give different results
+        # Build a "wrong" reference using 147.2
+        wrong_ffmc = []
+        mo_prev = 147.2 * (101.0 - 85.0) / (59.5 + 85.0)
+        for i in range(24):
+            t, h, w = 20.0, 45.0, 15.0
+            ed = (0.942 * h**0.679 + 11.0 * math.exp((h - 100.0) / 10.0)
+                   + 0.18 * (21.1 - t) * (1.0 - 1.0 / math.exp(0.115 * h)))
+            if mo_prev > ed:
+                k0d = 0.424 * (1.0 - (h / 100.0)**1.7) + (
+                    0.0694 * math.sqrt(w)) * (1.0 - (h / 100.0)**8)
+                kd = k0d * 0.0579 * math.exp(0.0365 * t)
+                mo = ed + (mo_prev - ed) / (10.0 ** kd)
+            else:
+                mo = mo_prev
+            mo = max(0.0, mo)
+            ffmc_wrong = 59.5 * (250.0 - mo) / (147.2 + mo)
+            wrong_ffmc.append(ffmc_wrong)
+            mo_prev = mo
+
+        # The 147.2 version should differ from the correct version
+        max_diff = max(abs(actual[i] - wrong_ffmc[i]) for i in range(24))
+        assert max_diff > 0.001, (
+            f"147.2 and 147.277 coefficients produce identical results — "
+            f"check test logic"
+        )
+
+        # The actual implementation must NOT match the wrong coefficient
+        for i in range(24):
+            assert abs(actual[i] - wrong_ffmc[i]) > 1e-5 or abs(actual[i] - expected[i]) < 1e-5, (
+                f"Hour {i}: actual matches wrong (147.2) coefficient: "
+                f"actual={actual[i]:.6f}, wrong={wrong_ffmc[i]:.6f}, "
+                f"expected={expected[i]:.6f}"
+            )
+
+        # Final value must specifically match the correct reference
+        assert abs(actual[-1] - expected[-1]) < 1e-4, (
+            f"Final FFMC {actual[-1]:.6f} != reference {expected[-1]:.6f} — "
+            f"may be using daily coefficient 147.2 instead of hourly 147.277..."
+        )
+
+        # Verify against the known cffdrs final value (computed with 147.277...)
+        assert abs(actual[-1] - 88.159928) < 1e-3, (
+            f"Final FFMC {actual[-1]:.6f} != 88.159928 — "
+            f"coefficient precision issue"
+        )
+
+    def test_no_explicit_ffmc_cap(self):
+        """Hourly FFMC must not have an explicit min(x, 101) cap.
+
+        The daily FFMC clamps at 101. The hourly should not. With the correct
+        coefficient (147.277...), the natural asymptote is ~101.0, so values
+        won't exceed it — but the code must not have an explicit cap either.
+        """
+        from pea_met_network.cleaning import _hffmc_calc
+
+        # Start from very low FFMC (saturated) and dry aggressively
+        # This tests that there's no explicit clamp preventing approach to 101
+        temps = np.array([35.0] * 96)
+        rhs = np.array([10.0] * 96)
+        winds = np.array([30.0] * 96)
+        rains = np.array([0.0] * 96)
+
+        result = _hffmc_calc(temps, rhs, winds, rains, ffmc_prev=50.0)
+        expected = _cffdrs_hffmc_ref(temps, rhs, winds, rains, ffmc_prev=50.0)
+
+        np.testing.assert_allclose(result, expected, atol=1e-3)
+
+        # After 96 hours of extreme drying, should be very close to 101
+        assert result[-1] > 100.5, (
+            f"FFMC not approaching ceiling after 96h: {result[-1]:.4f}"
+        )
+        # Must match reference exactly — no extra clamping
+        assert abs(result[-1] - expected[-1]) < 1e-3
+
+        # The reference should approach but not exceed 101
+        assert expected[-1] <= 101.0, (
+            f"Reference exceeds 101: {expected[-1]:.6f} — check reference impl"
+        )
+
+        # Monotonic increase (always drying, no rain)
+        valid = result[~np.isnan(result)]
+        diffs = np.diff(valid)
+        assert all(diffs >= -1e-6), "FFMC decreased during continuous drying"
 
     def test_gap_recovery_after_24h(self):
         """Chain restarts after 24h gap using startup defaults."""
