@@ -1,7 +1,7 @@
 {
-  "last_reviewed_commit": "ce4aed7",
+  "last_reviewed_commit": "bca50af",
   "verdict": "REJECT",
-  "reviewed_at": "2026-03-30T11:57:37.292434+00:00",
+  "reviewed_at": "2026-03-30T12:11:06.159213+00:00",
   "artifact_validation": {
     "status": "SKIP",
     "errors": []
@@ -21,25 +21,25 @@
       "id": "12.1",
       "name": "New Function: _hffmc_calc",
       "status": "FAIL",
-      "evidence": "The mandatory Lisa review suite `.venv/bin/pytest tests/ -q` failed during this tick, so Phase 12 cannot be accepted. The run errored in `tests/test_analysis_notebook.py` while executing the analysis notebook and also reported additional failing tests later in the suite."
+      "evidence": "Mandatory Lisa review suite `.venv/bin/pytest tests/ -q` failed at reviewed HEAD `bca50af` during notebook execution in `tests/test_analysis_notebook.py`, so Phase 12 cannot be accepted this tick."
     },
     {
       "id": "12.2",
       "name": "New Function: _daily_dmc_dc_calc",
       "status": "FAIL",
-      "evidence": "Because the required full review suite failed this tick, acceptance for the daily DMC/DC behavior cannot be confirmed for the active reviewed HEAD."
+      "evidence": "The required deterministic review run `.venv/bin/pytest tests/ -q` did not pass at reviewed HEAD `bca50af`; acceptance of daily DMC/DC behavior remains blocked until the suite is green."
     },
     {
       "id": "12.3",
       "name": "New Function: calculate_fwi_hourly",
       "status": "FAIL",
-      "evidence": "The required deterministic review run `.venv/bin/pytest tests/ -q` did not pass. Until the suite is green, the integrated hourly FWI path cannot be approved for the active reviewed HEAD."
+      "evidence": "The full Lisa review suite errored before phase acceptance could be established; notebook execution raised `ValueError: Number of rows must be a positive integer, not 0` in `tests/test_analysis_notebook.py`."
     },
     {
       "id": "12.4",
       "name": "Rename Current Function",
       "status": "FAIL",
-      "evidence": "The phase remains unapproved because the mandatory full test run is failing at reviewed HEAD, so the legacy/hourly routing change cannot be accepted this tick."
+      "evidence": "Phase 12 remains unapproved because the mandatory full review suite `.venv/bin/pytest tests/ -q` failed on the reviewed commit; no PASS verdict is possible while the deterministic review gate is red."
     }
   ],
   "failing_nodes": [
@@ -49,5 +49,5 @@
       "message": "Mandatory Lisa suite failed while executing the notebook fixture; notebook cell raised ValueError: Number of rows must be a positive integer, not 0 when plot_stations was empty before plt.subplots(len(plot_stations), 1, ...)."
     }
   ],
-  "summary": "Lisa review REJECT for Phase 12. Gate inputs remain non-blocking (`artifact_validation`: SKIP, `pre_flight`: SKIP), and Martin lint reported only medium/low findings, but the required deterministic review run `.venv/bin/pytest tests/ -q` failed during notebook execution in `tests/test_analysis_notebook.py` with `ValueError: Number of rows must be a positive integer, not 0`, followed by additional downstream failures in the same suite run. Phase 12 cannot be accepted until the mandatory review suite passes again."
+  "summary": "Lisa review REJECT for Phase 12 on reviewed HEAD `bca50af`. Gate artifacts remain non-blocking (`artifact_validation`: SKIP, `pre_flight`: SKIP), Martin lint reported only medium/low findings, and there were no new `src/` or `tests/` commits since the last review pointer. However, the mandatory deterministic review run `.venv/bin/pytest tests/ -q` errored in `tests/test_analysis_notebook.py` with `ValueError: Number of rows must be a positive integer, not 0` while the notebook tried to plot an empty station set, so Phase 12 cannot be accepted this tick."
 }
