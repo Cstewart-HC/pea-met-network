@@ -35,3 +35,9 @@ Thumbs.db
 # Environment
 .env
 *.log
+-e 
+# Pipeline output (generated, do not track)
+data/processed/
+-e 
+# Notebook output
+notebooks/figures/
