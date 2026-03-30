@@ -415,7 +415,14 @@ def _phase_sort_key(key: str) -> tuple[int, str]:
     return (999, key)
 
 
-def advance_phase_if_done(state: dict, validation: dict | None, verdict: str, exit_passes: bool, exit_cmd: str) -> bool:
+def advance_phase_if_done(state: dict, validation: dict | None, verdict: str, exit_passes: bool, exit_cmd: str) -> str:
+    """Advance to next phase if current phase passes.
+
+    Returns:
+        "none" — no advancement possible
+        "phase_advanced" — moved to a new phase
+        "project_complete" — all phases done, project is complete
+    """
     phases = state.get("phases", {})
     current = str(state.get("phase", "?"))
     phase_info = phases.get(current, {})
@@ -424,12 +431,12 @@ def advance_phase_if_done(state: dict, validation: dict | None, verdict: str, ex
         if verdict == "PASS":
             print("ANOMALY: FP state — exit fails but validation PASS", file=sys.stderr)
             print(f"  Phase exit: {exit_cmd}", file=sys.stderr)
-        return False
+        return "none"
 
     if verdict == "REJECT":
         if phase_info.get("status") == "done":
             phase_info["status"] = "active"
-        return False
+        return "none"
 
     # CORE BUG FIX: Only advance on explicit PASS, not NONE
     if verdict == "PASS":
@@ -449,10 +456,14 @@ def advance_phase_if_done(state: dict, validation: dict | None, verdict: str, ex
                 validation["criteria"] = []
                 validation["summary"] = f"Phase {next_phase} activated; awaiting Lisa review."
                 validation["reviewed_at"] = datetime.now(timezone.utc).astimezone().isoformat()
-            return True
-        return True
+            return "phase_advanced"
 
-    return False
+        # No more phases — project is complete
+        state["status"] = "completed"
+        print("PROJECT_COMPLETE=true", file=sys.stderr)
+        return "project_complete"
+
+    return "none"
 
 
 def report_working_tree() -> list[str]:
@@ -698,6 +709,9 @@ def print_sync_report(state: dict, head_sha: str, phase_advanced: bool, validati
     if blocker:
         print(f"BLOCKER={blocker}")
 
+    if state.get("status") == "completed":
+        print("PROJECT_COMPLETE=true")
+
 
 def append_loop_log(state: dict, head_sha: str, phase_advanced: bool, auto_committed: bool, verdict: str) -> None:
     phases = state.get("phases", {})
@@ -796,6 +810,7 @@ def handle_management_command(argv: list[str]) -> bool:
             "phase_name": state.get("phases", {}).get(str(state.get("phase", "?")), {}).get("name", "unknown"),
             "iteration": state.get("iteration", 0),
             "status": state.get("status", "unknown"),
+            "project_complete": state.get("status") == "completed",
             "verdict": get_validation_verdict(validation) if validation else "NONE",
             "head_sha": get_head_sha(),
             "circuit_breaker": state.get("circuit_breaker", {}),
@@ -968,10 +983,30 @@ def main() -> None:
     head_sha = get_head_sha()
 
     if write_only:
-        phase_advanced = advance_phase_if_done(state, validation, verdict, exit_passes, exit_cmd)
+        # Completed-state recovery for write-only path
+        if state.get("status") == "completed":
+            phases = state.get("phases", {})
+            recovered = False
+            for p_num in sorted(phases.keys(), key=_phase_sort_key):
+                if phases[p_num].get("status") in ("not_started", "pending"):
+                    state["phase"] = p_num
+                    phases[p_num]["status"] = "active"
+                    state["status"] = "running"
+                    state["iteration"] = 0
+                    if validation is not None:
+                        validation["verdict"] = "PENDING"
+                        validation["criteria"] = []
+                        validation["summary"] = f"Phase {p_num} activated after project-complete recovery."
+                        validation["reviewed_at"] = datetime.now(timezone.utc).astimezone().isoformat()
+                    recovered = True
+                    break
+            if not recovered:
+                state_mgr.save_state(state)
+                return
+        advance_result = advance_phase_if_done(state, validation, verdict, exit_passes, exit_cmd)
         state_mgr.save_state(state)
         # CAVEAT 2: Only save validation if phase advanced and validation exists
-        if phase_advanced and validation is not None:
+        if advance_result == "phase_advanced" and validation is not None:
             validation["last_reviewed_commit"] = head_sha
             state_mgr.save_validation(validation)
         return
@@ -1073,12 +1108,43 @@ def main() -> None:
     if reverted:
         print("PHASE_REVERTED=true (validation REJECT)", file=sys.stderr)
 
-    phase_advanced = advance_phase_if_done(state, validation, verdict, exit_passes, exit_cmd)
+    # Completed-state recovery: if new phases were added after project completion,
+    # reactivate the loop by finding and activating the first pending phase.
+    if state.get("status") == "completed":
+        phases = state.get("phases", {})
+        recovered = False
+        for p_num in sorted(phases.keys(), key=_phase_sort_key):
+            if phases[p_num].get("status") in ("not_started", "pending"):
+                state["phase"] = p_num
+                phases[p_num]["status"] = "active"
+                state["status"] = "running"
+                state["iteration"] = 0
+                if validation is not None:
+                    validation["verdict"] = "PENDING"
+                    validation["criteria"] = []
+                    validation["summary"] = f"Phase {p_num} activated after project-complete recovery."
+                    validation["reviewed_at"] = datetime.now(timezone.utc).astimezone().isoformat()
+                print(f"PROJECT_COMPLETE_RECOVERY=true phase={p_num}", file=sys.stderr)
+                recovered = True
+                break
+        if not recovered:
+            # Still completed — skip pipeline, report, and exit
+            print("PROJECT_COMPLETE=true")
+            print("STATUS=completed")
+            state_mgr.save_state(state)
+            return
+
+    advance_result = advance_phase_if_done(state, validation, verdict, exit_passes, exit_cmd)
+    phase_advanced = advance_result == "phase_advanced"
+    project_just_completed = advance_result == "project_complete"
+
     if phase_advanced:
         verdict = validation.get("verdict", verdict)
 
     state["iteration"] = state.get("iteration", 0) + 1
-    state["status"] = "running"
+    # Preserve "completed" status — do not overwrite it with "running"
+    if state.get("status") != "completed":
+        state["status"] = "running"
 
     # 3. Single IO write point — all mutations complete
     state_mgr.save_state(state)

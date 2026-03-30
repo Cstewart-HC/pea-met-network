@@ -37,6 +37,8 @@ Apply these rules IN ORDER:
 1. **Circuit breaker tripped** → STOP. Send an escalation via `send_message` to the DM channel with the trip reason. Print the trip reason and exit.
    Do not run Ralph or Lisa. Human intervention required.
 
+   **Project complete** → STOP. If `status == "completed"` in `ralph-state.json`, the project has no remaining phases. Print a completion summary and exit immediately. Do not run Ralph, Lisa, or Martin. To resume work, add new phases to `ralph-state.json` with `status: "pending"` — the next sync will detect them and reactivate automatically.
+
 2. **New commits since last Lisa review** → Check if any touch `src/` or `tests/`:
    ```bash
    git log --oneline ${LAST_REVIEWED}..HEAD -- src/ tests/
@@ -49,6 +51,8 @@ Apply these rules IN ORDER:
 
 4. **No new commits + verdict is PASS** → SYNC AND CHECK.
    Run `python3 scripts/sync_state.py --auto-commit` and read its output.
+   - If output contains `PROJECT_COMPLETE=true` → all phases are done. Print a
+     completion summary and exit immediately. Do not read any prompt files.
    - If output contains `VALIDATION_STATE=PP` → phase advance is legitimate.
      Print a one-line status summary (including whether a phase advanced)
      and exit immediately. Do not read any prompt files.

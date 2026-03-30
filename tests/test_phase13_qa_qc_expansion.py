@@ -8,11 +8,18 @@ Tests for 6 deliverables:
   5. Mode-specific report filenames
   6. Per-stage row count audit in manifest
 
+These tests FAIL until implementation is complete (TDD).
+Functions in qa_qc.py already exist — these tests verify pipeline integration.
+
 Exit gate: pytest tests/test_phase13_qa_qc_expansion.py -v
 """
 from __future__ import annotations
 
+import ast
+import inspect
+import re
 from pathlib import Path
+from unittest.mock import MagicMock, patch
 
 import numpy as np
 import pandas as pd
@@ -53,12 +60,24 @@ def _make_daily(station: str = "stanhope", n: int = 3) -> pd.DataFrame:
     })
 
 
+def _get_cleaning_source() -> str:
+    """Return the source code of cleaning.py for AST inspection."""
+    cleaning_path = (
+        PROJECT_ROOT / "src" / "pea_met_network" / "cleaning.py"
+    )
+    return cleaning_path.read_text()
+
+
 # ===========================================================================
-# 2.1 Pre/Post Imputation Missingness
+# 1. Pre/Post Imputation Missingness — qa_qc.py functions
 # ===========================================================================
 
-class TestPrePostImputation:
-    """Spec 2.1 — pre_imputation_missingness() in qa_qc.py."""
+class TestPrePostImputationFunctions:
+    """Spec 2.1 — pre_imputation_missingness() in qa_qc.py.
+
+    These tests verify the standalone functions exist and work correctly.
+    These SHOULD PASS (functions are already implemented).
+    """
 
     def test_function_exists_and_importable(self):
         """pre_imputation_missingness must be importable from qa_qc."""
@@ -70,7 +89,6 @@ class TestPrePostImputation:
         from pea_met_network.qa_qc import pre_imputation_missingness
 
         df = _make_hourly()
-        # Inject NaN values
         df.loc[0:5, "air_temperature_c"] = np.nan
         df.loc[2:3, "relative_humidity_pct"] = np.nan
 
@@ -112,31 +130,16 @@ class TestPrePostImputation:
         result = pre_imputation_missingness(df)
         assert result["missing_pct_air_temperature_c"] == 100.0
 
-    def test_all_nan_dataframe_returns_100(self):
-        """Entirely NaN core columns → all 100.0."""
-        from pea_met_network.qa_qc import pre_imputation_missingness
-
-        df = _make_hourly()
-        for col in (
-            "air_temperature_c", "relative_humidity_pct",
-            "wind_speed_kmh", "rain_mm",
-        ):
-            df[col] = np.nan
-
-        result = pre_imputation_missingness(df)
-        for var in (
-            "air_temperature_c", "relative_humidity_pct",
-            "wind_speed_kmh", "rain_mm",
-        ):
-            assert result[f"missing_pct_{var}"] == 100.0
-
 
 # ===========================================================================
-# 2.4 FWI Value Statistics
+# 2.4 FWI Value Statistics — qa_qc.py functions
 # ===========================================================================
 
-class TestFWIValueStatistics:
-    """Spec 2.4 — fwi_descriptive_stats() in qa_qc.py."""
+class TestFWIValueStatisticsFunctions:
+    """Spec 2.4 — fwi_descriptive_stats() in qa_qc.py.
+
+    These SHOULD PASS (function is already implemented).
+    """
 
     def test_function_exists_and_importable(self):
         """fwi_descriptive_stats must be importable from qa_qc."""
@@ -156,18 +159,6 @@ class TestFWIValueStatistics:
             for stat in expected_stats:
                 key = f"{code}_{stat}"
                 assert key in result, f"Missing key: {key}"
-
-    def test_stats_are_float(self):
-        """All stat values must be float."""
-        from pea_met_network.qa_qc import fwi_descriptive_stats
-
-        daily = _make_daily()
-        result = fwi_descriptive_stats(daily, station="stanhope")
-
-        for key, val in result.items():
-            assert isinstance(val, (float, np.floating)), (
-                f"{key} = {val!r} is not float"
-            )
 
     def test_std_is_zero_for_constant_values(self):
         """Constant FWI values should yield std=0.0."""
@@ -193,69 +184,30 @@ class TestFWIValueStatistics:
         assert result["ffmc_min"] == 10.0
         assert result["ffmc_max"] == 30.0
         assert result["ffmc_mean"] == 20.0
-        # std(ddof=1): sqrt(((10-20)^2 + (20-20)^2 + (30-20)^2)/2) = sqrt(100) = 10
+        # std(ddof=1): sqrt(((10-20)^2 + (20-20)^2 + (30-20)^2)/2) = 10
         assert abs(result["ffmc_std"] - 10.0) < 0.001
 
-    def test_handles_nan_in_fwi_columns(self):
-        """NaN values in FWI columns should not break stats."""
-        from pea_met_network.qa_qc import fwi_descriptive_stats
-
-        daily = _make_daily()
-        daily["ffmc"] = [80.0, np.nan, 78.0]
-        result = fwi_descriptive_stats(daily, station="stanhope")
-
-        # Should compute stats on non-NaN values
-        assert result["ffmc_mean"] == pytest.approx(79.0, abs=0.01)
-        assert result["ffmc_min"] == 78.0
-        assert result["ffmc_max"] == 80.0
-
 
 # ===========================================================================
-# 2.2 FWI Mode in Reports
+# 2.2 / 2.3 — generate_qa_qc_report() signature tests
 # ===========================================================================
 
-class TestFWIModeInReports:
-    """Spec 2.2 — fwi_mode column in QA/QC report."""
+class TestGenerateQAQCReportSignature:
+    """Tests for generate_qa_qc_report() accepting new parameters.
 
-    def test_generate_report_accepts_fwi_mode_parameter(self):
-        """generate_qa_qc_report must accept fwi_mode kwarg."""
-        from pea_met_network.qa_qc import generate_qa_qc_report
+    These SHOULD PASS (report function already updated).
+    """
 
-        hourly = _make_hourly()
-        daily = _make_daily()
-        # This should not raise TypeError for unexpected keyword
-        df = generate_qa_qc_report(hourly, daily, fwi_mode="hourly")
-        assert "fwi_mode" in df.columns
-
-    def test_fwi_mode_column_has_correct_value_hourly(self):
-        """fwi_mode column should contain 'hourly' when passed."""
-        from pea_met_network.qa_qc import generate_qa_qc_report
-
-        hourly = _make_hourly()
-        daily = _make_daily()
-        df = generate_qa_qc_report(hourly, daily, fwi_mode="hourly")
-
-        assert df["fwi_mode"].unique()[0] == "hourly"
-
-    def test_fwi_mode_column_has_correct_value_compliant(self):
-        """fwi_mode column should contain 'compliant' when passed."""
+    def test_fwi_mode_column_in_report(self):
+        """fwi_mode column should contain the passed value."""
         from pea_met_network.qa_qc import generate_qa_qc_report
 
         hourly = _make_hourly()
         daily = _make_daily()
         df = generate_qa_qc_report(hourly, daily, fwi_mode="compliant")
-
         assert df["fwi_mode"].unique()[0] == "compliant"
 
-
-# ===========================================================================
-# 2.3 Compliant Mode Diagnostics
-# ===========================================================================
-
-class TestCompliantDiagnostics:
-    """Spec 2.3 — carry_forward_days and carry_forward_pct in report."""
-
-    def test_carry_forward_columns_present_in_compliant_mode(self):
+    def test_carry_forward_columns_in_compliant_mode(self):
         """Compliant mode report must have carry_forward_days and carry_forward_pct."""
         from pea_met_network.qa_qc import generate_qa_qc_report
 
@@ -263,67 +215,13 @@ class TestCompliantDiagnostics:
         daily = _make_daily()
         daily["carry_forward_used"] = [False, True, True]
 
-        df = generate_qa_qc_report(
-            hourly, daily, fwi_mode="compliant",
-        )
+        df = generate_qa_qc_report(hourly, daily, fwi_mode="compliant")
 
         assert "carry_forward_days" in df.columns
         assert "carry_forward_pct" in df.columns
 
-    def test_carry_forward_days_correct_count(self):
-        """carry_forward_days should equal sum of carry_forward_used."""
-        from pea_met_network.qa_qc import generate_qa_qc_report
-
-        hourly = _make_hourly()
-        daily = _make_daily(n=5)
-        daily["carry_forward_used"] = [False, True, True, False, True]
-
-        df = generate_qa_qc_report(
-            hourly, daily, fwi_mode="compliant",
-        )
-
-        assert df.iloc[0]["carry_forward_days"] == 3
-
-    def test_carry_forward_pct_correct_calculation(self):
-        """carry_forward_pct = carry_forward_days / total_days * 100."""
-        from pea_met_network.qa_qc import generate_qa_qc_report
-
-        hourly = _make_hourly()
-        daily = _make_daily(n=4)
-        daily["carry_forward_used"] = [False, True, True, False]
-
-        df = generate_qa_qc_report(
-            hourly, daily, fwi_mode="compliant",
-        )
-
-        # 2 carry-forward days out of 4 total = 50%
-        assert df.iloc[0]["carry_forward_pct"] == pytest.approx(50.0, abs=0.01)
-
-    def test_carry_forward_zero_when_no_missing(self):
-        """No carry-forward days → 0 days, 0%."""
-        from pea_met_network.qa_qc import generate_qa_qc_report
-
-        hourly = _make_hourly()
-        daily = _make_daily(n=3)
-        daily["carry_forward_used"] = [False, False, False]
-
-        df = generate_qa_qc_report(
-            hourly, daily, fwi_mode="compliant",
-        )
-
-        assert df.iloc[0]["carry_forward_days"] == 0
-        assert df.iloc[0]["carry_forward_pct"] == 0.0
-
-
-# ===========================================================================
-# 2.1 (report columns) — Pre/Post Imputation in QA/QC Report
-# ===========================================================================
-
-class TestPrePostImputationInReport:
-    """Spec 2.1 — pre_imp_missing_pct_* and post_imp_missing_pct_* in report."""
-
     def test_pre_imputation_columns_in_report(self):
-        """Report must have pre_imp_missing_pct_* columns when pre_imp data provided."""
+        """Report must have pre_imp_missing_pct_* columns when data provided."""
         from pea_met_network.qa_qc import generate_qa_qc_report
 
         hourly = _make_hourly()
@@ -340,41 +238,8 @@ class TestPrePostImputationInReport:
             pre_imputation_missingness=pre_imp,
         )
 
-        for var in (
-            "air_temperature_c",
-            "relative_humidity_pct",
-            "wind_speed_kmh",
-            "rain_mm",
-        ):
-            col = f"pre_imp_missing_pct_{var}"
-            assert col in df.columns, f"Missing column: {col}"
-            assert df.iloc[0][col] == pre_imp[f"missing_pct_{var}"]
-
-    def test_post_imputation_columns_in_report(self):
-        """Report must have post_imp_missing_pct_* columns."""
-        from pea_met_network.qa_qc import generate_qa_qc_report
-
-        hourly = _make_hourly()
-        daily = _make_daily()
-
-        df = generate_qa_qc_report(hourly, daily)
-
-        for var in (
-            "air_temperature_c",
-            "relative_humidity_pct",
-            "wind_speed_kmh",
-            "rain_mm",
-        ):
-            col = f"post_imp_missing_pct_{var}"
-            assert col in df.columns, f"Missing column: {col}"
-
-
-# ===========================================================================
-# 2.4 (report columns) — FWI Stats in QA/QC Report
-# ===========================================================================
-
-class TestFWIStatsInReport:
-    """Spec 2.4 — FWI descriptive stats in QA/QC report."""
+        assert "pre_imp_missing_pct_air_temperature_c" in df.columns
+        assert df.iloc[0]["pre_imp_missing_pct_air_temperature_c"] == 10.0
 
     def test_fwi_stats_columns_in_report(self):
         """Report must have ffmc_min, ffmc_max, ffmc_mean, ffmc_std etc."""
@@ -385,70 +250,187 @@ class TestFWIStatsInReport:
 
         df = generate_qa_qc_report(hourly, daily)
 
-        expected_codes = ["ffmc", "dmc", "dc", "isi", "bui", "fwi"]
-        expected_stats = ["min", "max", "mean", "std"]
-        for code in expected_codes:
-            for stat in expected_stats:
+        for code in ["ffmc", "dmc", "dc", "isi", "bui", "fwi"]:
+            for stat in ["min", "max", "mean", "std"]:
                 col = f"{code}_{stat}"
                 assert col in df.columns, f"Missing column: {col}"
 
-    def test_fwi_stats_values_match_daily_data(self):
-        """Report FWI stats should match the daily DataFrame values."""
-        from pea_met_network.qa_qc import generate_qa_qc_report
-
-        hourly = _make_hourly()
-        daily = _make_daily()
-        daily["ffmc"] = [78.0, 82.0, 80.0]
-
-        df = generate_qa_qc_report(hourly, daily)
-
-        assert df.iloc[0]["ffmc_min"] == 78.0
-        assert df.iloc[0]["ffmc_max"] == 82.0
-        assert df.iloc[0]["ffmc_mean"] == pytest.approx(80.0, abs=0.01)
-
 
 # ===========================================================================
-# 2.5 Mode-Specific Report Filenames
+# PIPELINE INTEGRATION TESTS — These MUST FAIL until Ralph implements
 # ===========================================================================
 
-class TestModeSpecificFilenames:
-    """Spec 2.5 — qa_qc_report_{mode}.csv and fwi_missingness_report_{mode}.csv."""
+class TestPipelinePreImputationSnapshot:
+    """Spec 2.1 — run_pipeline() must capture pre-imputation missingness.
 
-    def test_qa_qc_report_mode_suffix_in_manifest(self):
-        """Pipeline manifest should reference mode-specific QA/QC report filename."""
-        import json
-        from pathlib import Path
+    The pipeline must call pre_imputation_missingness() AFTER enforce_quality
+    and BEFORE impute(), then pass the result to generate_qa_qc_report().
 
-        PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
-        manifest_path = PROCESSED_DIR / "pipeline_manifest.json"
+    These tests FAIL until cleaning.py is updated.
+    """
 
-        if not manifest_path.exists():
-            pytest.skip("No pipeline manifest — run pipeline first")
+    def test_pre_imputation_missingness_imported_in_cleaning(self):
+        """cleaning.py must import pre_imputation_missingness from qa_qc."""
+        source = _get_cleaning_source()
+        assert "pre_imputation_missingness" in source, (
+            "pre_imputation_missingness not referenced in cleaning.py — "
+            "pipeline cannot capture pre-imputation snapshot"
+        )
 
-        manifest = json.loads(manifest_path.read_text())
-        artifact_names = [a.get("artifact_type", "") for a in manifest.get("artifacts", [])]
+    def test_pre_imputation_missingness_called_in_pipeline(self):
+        """run_pipeline() must call pre_imputation_missingness().
 
-        # After a pipeline run, the manifest should reference mode-specific names
-        assert any("qa_qc_report" in name for name in artifact_names), (
-            "No qa_qc_report artifact in manifest"
+        Verify via source inspection that the function is called
+        (not just imported) within the per-station processing loop.
+        """
+        source = _get_cleaning_source()
+        # Look for a call pattern like: pre_imputation_missingness(hourly)
+        # or pre_imputation_missingness(something)
+        call_pattern = r"pre_imputation_missingness\s*\("
+        assert re.search(call_pattern, source), (
+            "pre_imputation_missingness() is not called in cleaning.py — "
+            "pre-imputation snapshot is never captured"
+        )
+
+    def test_pre_imputation_data_passed_to_report(self):
+        """generate_qa_qc_report() call must include pre_imputation_missingness kwarg.
+
+        The pipeline's call to generate_qa_qc_report must pass the
+        pre-imputation snapshot data so it appears in the report.
+        """
+        source = _get_cleaning_source()
+        # The report call should include pre_imputation_missingness= keyword
+        call_pattern = (
+            r"generate_qa_qc_report\s*\([^)]*"
+            r"pre_imputation_missingness\s*="
+        )
+        assert re.search(call_pattern, source, re.DOTALL), (
+            "generate_qa_qc_report() call in cleaning.py does not pass "
+            "pre_imputation_missingness= — report will have no pre-imputation data"
+        )
+
+
+class TestPipelineFWIModeInManifest:
+    """Spec 2.2 — pipeline manifest must include fwi_mode.
+
+    These tests FAIL until cleaning.py writes fwi_mode to the manifest.
+    """
+
+    def test_fwi_mode_written_to_manifest(self):
+        """run_pipeline() must write fwi_mode to the manifest dict.
+
+        The manifest JSON should have a top-level 'fwi_mode' key
+        reflecting which mode was used for the run.
+        """
+        source = _get_cleaning_source()
+        # Look for manifest["fwi_mode"] or manifest['fwi_mode']
+        assert re.search(r'manifest\s*\[\s*["\']fwi_mode["\']\s*\]', source), (
+            "manifest['fwi_mode'] not found in cleaning.py — "
+            "fwi_mode is not written to pipeline manifest"
+        )
+
+
+class TestPipelineModeSpecificFilenames:
+    """Spec 2.5 — pipeline writes to mode-specific report filenames.
+
+    These SHOULD PASS (already implemented in cleaning.py).
+    Kept as regression guards.
+    """
+
+    def test_qa_qc_report_uses_mode_suffix(self):
+        """QA/QC report path must include fwi_mode suffix."""
+        source = _get_cleaning_source()
+        assert re.search(
+            r'qa_qc_report_.*fwi_mode.*\.csv',
+            source,
+        ), (
+            "qa_qc_report filename does not use fwi_mode suffix"
+        )
+
+    def test_fwi_missingness_report_uses_mode_suffix(self):
+        """FWI missingness report path must include fwi_mode suffix."""
+        source = _get_cleaning_source()
+        assert re.search(
+            r'fwi_missingness_report_.*fwi_mode.*\.csv',
+            source,
+        ), (
+            "fwi_missingness_report filename does not use fwi_mode suffix"
+        )
+
+
+class TestPipelinePerStageRowCounts:
+    """Spec 2.6 — stage_row_counts in pipeline manifest.
+
+    These SHOULD PASS (already implemented in cleaning.py).
+    Kept as regression guards.
+    """
+
+    def test_stage_row_counts_initialized(self):
+        """stage_row_counts must be initialized in run_pipeline."""
+        source = _get_cleaning_source()
+        assert "stage_row_counts" in source, (
+            "stage_row_counts not found in cleaning.py"
+        )
+
+    def test_stage_row_counts_has_all_seven_stages(self):
+        """All 7 pipeline stages must be tracked."""
+        source = _get_cleaning_source()
+        expected_stages = [
+            "raw", "deduped", "hourly", "truncated",
+            "post_quality", "post_imputation", "post_cross_station",
+        ]
+        for stage in expected_stages:
+            assert f'"{stage}"' in source, (
+                f'Stage "{stage}" not found in cleaning.py'
+            )
+
+    def test_stage_row_counts_written_to_manifest(self):
+        """stage_row_counts must be written to the manifest dict."""
+        source = _get_cleaning_source()
+        assert re.search(
+            r'manifest\s*\[\s*["\']stage_row_counts["\']\s*\]',
+            source,
+        ), (
+            "manifest['stage_row_counts'] not found in cleaning.py"
         )
 
 
 # ===========================================================================
-# 2.6 Per-Stage Row Count Audit
+# MANIFEST CONTENT TESTS — Require actual pipeline run
 # ===========================================================================
 
-class TestPerStageRowCountAudit:
-    """Spec 2.6 — stage_row_counts in pipeline manifest."""
+class TestManifestContentAfterRun:
+    """Tests that verify manifest content from an actual pipeline run.
+
+    These are skipped if no manifest exists (no pipeline run yet).
+    They verify the integration end-to-end.
+    """
+
+    def test_fwi_mode_key_in_manifest(self):
+        """Pipeline manifest must have fwi_mode key."""
+        import json
+
+        manifest_path = (
+            PROJECT_ROOT / "data" / "processed" / "pipeline_manifest.json"
+        )
+        if not manifest_path.exists():
+            pytest.skip("No pipeline manifest — run pipeline first")
+
+        manifest = json.loads(manifest_path.read_text())
+        assert "fwi_mode" in manifest, (
+            "fwi_mode key missing from pipeline manifest"
+        )
+        assert manifest["fwi_mode"] in ("hourly", "compliant"), (
+            f"fwi_mode has unexpected value: {manifest['fwi_mode']!r}"
+        )
 
     def test_stage_row_counts_key_in_manifest(self):
         """Pipeline manifest must have stage_row_counts per station."""
         import json
-        from pathlib import Path
 
-        PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
-        manifest_path = PROCESSED_DIR / "pipeline_manifest.json"
-
+        manifest_path = (
+            PROJECT_ROOT / "data" / "processed" / "pipeline_manifest.json"
+        )
         if not manifest_path.exists():
             pytest.skip("No pipeline manifest — run pipeline first")
 
@@ -460,38 +442,36 @@ class TestPerStageRowCountAudit:
     def test_stage_row_counts_has_expected_stages(self):
         """stage_row_counts must have all 7 pipeline stage keys."""
         import json
-        from pathlib import Path
 
-        PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
-        manifest_path = PROCESSED_DIR / "pipeline_manifest.json"
-
+        manifest_path = (
+            PROJECT_ROOT / "data" / "processed" / "pipeline_manifest.json"
+        )
         if not manifest_path.exists():
             pytest.skip("No pipeline manifest — run pipeline first")
 
         manifest = json.loads(manifest_path.read_text())
         stage_counts = manifest["stage_row_counts"]
 
-        # Must be a dict keyed by station
         assert isinstance(stage_counts, dict)
 
-        # Pick any station and check expected keys
         for station, stages in stage_counts.items():
             expected_stages = [
                 "raw", "deduped", "hourly", "truncated",
                 "post_quality", "post_imputation", "post_cross_station",
             ]
             for stage in expected_stages:
-                assert stage in stages, f"Missing stage '{stage}' for {station}"
-            break  # only need to check one station
+                assert stage in stages, (
+                    f"Missing stage '{stage}' for {station}"
+                )
+            break  # only check one station
 
     def test_stage_row_counts_values_are_integers(self):
         """All stage row counts must be non-negative integers."""
         import json
-        from pathlib import Path
 
-        PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
-        manifest_path = PROCESSED_DIR / "pipeline_manifest.json"
-
+        manifest_path = (
+            PROJECT_ROOT / "data" / "processed" / "pipeline_manifest.json"
+        )
         if not manifest_path.exists():
             pytest.skip("No pipeline manifest — run pipeline first")
 

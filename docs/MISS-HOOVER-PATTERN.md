@@ -248,6 +248,11 @@ Lisa exists to be adversarial, not polite. Her job is to prove the implementatio
 }
 ```
 
+**Valid `status` values:**
+- `"running"` — Normal loop operation
+- `"circuit_breaked"` — Circuit breaker tripped, human intervention required
+- `"completed"` — All phases done, no remaining work
+
 ### `validation.json`
 ```json
 {
@@ -263,10 +268,21 @@ Lisa exists to be adversarial, not polite. Her job is to prove the implementatio
 
 | Phase Exit | Validation | Meaning | Action |
 |---|---|---|---|
-| PASS | PASS | True pass | Advance to next phase |
+| PASS | PASS | True pass | Advance to next phase (or mark project complete if no phases remain) |
 | PASS | REJECT | False green | Block — tests pass but review caught issues |
 | FAIL | REJECT | Normal work-in-progress | Continue — Ralph needs to keep working |
 | FAIL | PASS | Anomaly | Log and hold — unexpected state |
+
+### Project completion
+
+When the last phase passes and no phases with status `pending` or `not_started` remain:
+1. `sync_state.py` sets `status = "completed"` and outputs `PROJECT_COMPLETE=true`
+2. The orchestrator detects this in Rule 1 (status check) or Rule 4 (sync output) and STOPs
+3. The loop continues to fire but does nothing — it exits immediately on each tick
+4. To add more work: add new phases to `ralph-state.json` with `status: "pending"`
+5. On the next sync, `sync_state.py` detects pending phases, reactivates the loop, and sets `status = "running"`
+
+This is the terminal state. No cron job changes needed — the loop self-gates.
 
 ### Circuit breaker
 
@@ -289,11 +305,14 @@ Reset conditions:
 
 The orchestrator follows exactly 7 rules, evaluated in order:
 
-### Rule 1: Circuit breaker
+### Rule 1: Circuit breaker / Project complete
 ```
 IF circuit_breaker.tripped == true:
     send escalation to DMs
     STOP
+
+IF status == "completed":
+    STOP (all phases done)
 ```
 
 ### Rule 2: New code commits since last review
@@ -323,6 +342,8 @@ IF verdict == "REJECT" AND no new code commits:
 ```
 IF verdict == "PASS" AND no new code commits:
     Run sync_state.py
+    IF PROJECT_COMPLETE=true:
+        STOP (all phases done)
     IF state changed:
         Commit updated state
     STOP

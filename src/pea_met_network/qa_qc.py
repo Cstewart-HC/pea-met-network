@@ -6,6 +6,7 @@ missingness, duplicate timestamps, out-of-range values, and coverage.
 
 from __future__ import annotations
 
+import numpy as np
 import pandas as pd
 
 # Default valid ranges for meteorological variables.
@@ -144,11 +145,78 @@ def calculate_completeness(df: pd.DataFrame) -> float:
     return non_missing / total if total > 0 else 1.0
 
 
+CORE_MET_VARIABLES = (
+    "air_temperature_c",
+    "relative_humidity_pct",
+    "wind_speed_kmh",
+    "rain_mm",
+)
+
+
+FWI_CODES = ("ffmc", "dmc", "dc", "isi", "bui", "fwi")
+
+
+def pre_imputation_missingness(df: pd.DataFrame) -> dict[str, float]:
+    """Return missing percentage for the 4 core meteorological variables.
+
+    Parameters
+    ----------
+    df : DataFrame (typically hourly, pre-imputation).
+
+    Returns
+    -------
+    dict with keys ``missing_pct_{variable}`` for each core met variable.
+    Values are float between 0.0 and 100.0.
+    """
+    n = len(df)
+    result: dict[str, float] = {}
+    for var in CORE_MET_VARIABLES:
+        if var in df.columns:
+            n_miss = int(df[var].isna().sum())
+            result[f"missing_pct_{var}"] = (
+                round(n_miss / n * 100, 2) if n > 0 else 0.0
+            )
+        else:
+            result[f"missing_pct_{var}"] = 100.0
+    return result
+
+
+def fwi_descriptive_stats(
+    daily: pd.DataFrame, station: str
+) -> dict[str, float]:
+    """Return descriptive statistics for FWI codes in a daily DataFrame.
+
+    Parameters
+    ----------
+    daily : DataFrame with FWI columns and a 'station' column.
+    station : Station name to filter on.
+
+    Returns
+    -------
+    dict with keys ``{code}_{stat}`` for each FWI code × (min, max, mean, std).
+    """
+    station_daily = daily[daily["station"] == station] if "station" in daily.columns else daily
+    result: dict[str, float] = {}
+    for code in FWI_CODES:
+        if code not in station_daily.columns:
+            for stat in ("min", "max", "mean", "std"):
+                result[f"{code}_{stat}"] = float("nan")
+            continue
+        series = station_daily[code].dropna()
+        result[f"{code}_min"] = float(series.min()) if len(series) > 0 else float("nan")
+        result[f"{code}_max"] = float(series.max()) if len(series) > 0 else float("nan")
+        result[f"{code}_mean"] = float(series.mean()) if len(series) > 0 else float("nan")
+        result[f"{code}_std"] = float(series.std(ddof=1)) if len(series) > 1 else 0.0
+    return result
+
+
 def generate_qa_qc_report(
     hourly: pd.DataFrame,
     daily: pd.DataFrame,
     quality_actions: list[dict] | None = None,
     chain_breaks: list | None = None,
+    fwi_mode: str = "hourly",
+    pre_imputation_missingness: dict[str, float] | None = None,
 ) -> pd.DataFrame:
     """Generate QA/QC report for all stations.
 
@@ -159,17 +227,16 @@ def generate_qa_qc_report(
     quality_actions : Optional list of quality enforcement action
         records (from ``enforce_quality`` and ``enforce_fwi_outputs``).
         Each record must contain at least 'station' and 'action' keys.
+    chain_breaks : Optional list of chain break records.
+    fwi_mode : FWI calculation mode ("hourly" or "compliant").
+    pre_imputation_missingness_data : Optional dict of pre-imputation
+        missing percentages from ``pre_imputation_missingness()``.
 
     Returns
     -------
-    DataFrame with one row per station containing:
-    station, hourly_rows, daily_rows, date_range_start, date_range_end,
-    completeness, missing_pct_air_temperature_c,
-    missing_pct_relative_humidity_pct, missing_pct_rain_mm,
-    duplicate_count, out_of_range_temp_count,
-    out_of_range_rh_count, out_of_range_wind_count,
-    quality_enforced_count, quality_flagged_count,
-    out_of_range_pre_enforcement, out_of_range_post_enforcement.
+    DataFrame with one row per station containing all QA/QC metrics
+    plus Phase 13 additions: fwi_mode, carry_forward_days/pct,
+    pre/post imputation columns, and FWI value statistics.
     """
     report_rows: list[dict] = []
 
@@ -177,12 +244,21 @@ def generate_qa_qc_report(
         station_hourly = hourly[hourly["station"] == station].copy()
         station_daily = daily[daily["station"] == station]
 
-        # Missingness
+        # Missingness (post-imputation)
         miss = missingness_summary(station_hourly)
         miss_dict: dict[str, float] = {}
         for _, row in miss.iterrows():
-            key = f"missing_pct_{row['variable']}"
+            key = f"post_imp_missing_pct_{row['variable']}"
             miss_dict[key] = row["missing_pct"]
+
+        # Pre-imputation missingness
+        pre_imp_dict: dict[str, float] = {}
+        if pre_imputation_missingness is not None:
+            for var in CORE_MET_VARIABLES:
+                key = f"pre_imp_missing_pct_{var}"
+                pre_imp_dict[key] = pre_imputation_missingness.get(
+                    f"missing_pct_{var}", 0.0
+                )
 
         # Duplicates
         dups = duplicate_timestamps(station_hourly)
@@ -250,6 +326,22 @@ def generate_qa_qc_report(
             date_start = pd.NaT
             date_end = pd.NaT
 
+        # FWI value statistics
+        fwi_stats = fwi_descriptive_stats(daily, station)
+
+        # Compliant mode diagnostics
+        carry_forward_days = 0
+        carry_forward_pct = 0.0
+        if fwi_mode == "compliant" and len(station_daily) > 0:
+            if "carry_forward_used" in station_daily.columns:
+                carry_forward_days = int(station_daily["carry_forward_used"].sum())
+                total_days = len(station_daily)
+                carry_forward_pct = (
+                    round(carry_forward_days / total_days * 100, 2)
+                    if total_days > 0
+                    else 0.0
+                )
+
         report_rows.append({
             "station": station,
             "hourly_rows": len(station_hourly),
@@ -257,6 +349,8 @@ def generate_qa_qc_report(
             "date_range_start": date_start,
             "date_range_end": date_end,
             "completeness": round(calculate_completeness(station_hourly), 4),
+            "fwi_mode": fwi_mode,
+            **pre_imp_dict,
             **miss_dict,
             "duplicate_count": dup_count,
             "out_of_range_temp_count": oor_temp,
@@ -270,6 +364,9 @@ def generate_qa_qc_report(
                 1 for b in (chain_breaks or [])
                 if b.station == station
             ),
+            "carry_forward_days": carry_forward_days,
+            "carry_forward_pct": carry_forward_pct,
+            **fwi_stats,
         })
 
     return pd.DataFrame(report_rows)
