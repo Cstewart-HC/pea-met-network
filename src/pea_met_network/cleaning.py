@@ -491,7 +491,7 @@ def impute(
 # ---------------------------------------------------------------------------
 
 
-def _ffmc_calc(
+def _hffmc_calc(
     temp: np.ndarray,
     rh: np.ndarray,
     wind: np.ndarray,
@@ -726,7 +726,7 @@ def _dc_calc(
     return dc
 
 
-def calculate_fwi(
+def _calculate_fwi_legacy(
     df: pd.DataFrame,
     gap_threshold_hours: int = 24,
 ) -> pd.DataFrame:
@@ -760,7 +760,7 @@ def calculate_fwi(
     )
     month = df["timestamp_utc"].dt.month.to_numpy(dtype=float)
 
-    ffmc = _ffmc_calc(
+    ffmc = _hffmc_calc(
         temp, rh, wind, rain, gap_threshold_hours=gap_threshold_hours,
     )
     dmc = _dmc_calc(
@@ -810,6 +810,117 @@ def calculate_fwi(
 
     return df
 
+
+
+def _daily_dmc_dc_calc(
+    hourly_df: pd.DataFrame,
+    dmc_prev: float = 6.0,
+    dc_prev: float = 15.0,
+    lat: float = DEFAULT_FWI_LATITUDE,
+    halifax_tz: ZoneInfo = HALIFAX_TZ,
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Calculate daily DMC/DC from hourly observations and expand to hourly rows."""
+    if len(hourly_df) == 0:
+        empty = np.array([], dtype=float)
+        return empty, empty, np.array([], dtype=object)
+
+    hourly = hourly_df.copy()
+    hourly["timestamp_utc"] = pd.to_datetime(hourly["timestamp_utc"], utc=True)
+    hourly = hourly.sort_values("timestamp_utc").reset_index(drop=True)
+
+    local_ts = hourly["timestamp_utc"].dt.tz_convert(halifax_tz)
+    hourly["local_date"] = local_ts.dt.date
+    hourly["local_hour"] = local_ts.dt.hour
+
+    dmc_values = np.full(len(hourly), np.nan)
+    dc_values = np.full(len(hourly), np.nan)
+    source_dates = np.empty(len(hourly), dtype=object)
+
+    dmc_prev_val = dmc_prev
+    dc_prev_val = dc_prev
+
+    for local_date, group in hourly.groupby("local_date", sort=True):
+        idx = group.index
+        valid_temp = group["air_temperature_c"].notna()
+        valid_rh = group["relative_humidity_pct"].notna()
+        valid_obs = group.loc[valid_temp & valid_rh]
+
+        if len(valid_obs) == 0:
+            dmc_day = np.nan
+            dc_day = np.nan
+        else:
+            hour_distance = (valid_obs["local_hour"] - 14).abs()
+            nearest = valid_obs.loc[hour_distance.idxmin()]
+            temp = float(nearest["air_temperature_c"])
+            rh = float(nearest["relative_humidity_pct"])
+            rain = float(pd.to_numeric(group.get("rain_mm", 0.0), errors="coerce").fillna(0.0).sum())
+            month = pd.Timestamp(local_date).month
+            dmc_day = reference_duff_moisture_code(temp, rh, rain, dmc_prev_val, month, lat)
+            dc_day = reference_drought_code(temp, rain, dc_prev_val, month, lat)
+            dmc_prev_val = dmc_day
+            dc_prev_val = dc_day
+
+        dmc_values[idx] = dmc_day
+        dc_values[idx] = dc_day
+        source_dates[idx] = str(local_date)
+
+    return dmc_values, dc_values, source_dates
+
+
+def calculate_fwi_hourly(
+    df: pd.DataFrame,
+    lat: float = DEFAULT_FWI_LATITUDE,
+    gap_threshold_hours: int = 24,
+) -> pd.DataFrame:
+    """Calculate hourly FWI using canonical hourly FFMC + daily DMC/DC."""
+    result = df.copy()
+
+    missing = [c for c in FWI_REQUIRED if c not in result.columns]
+    if missing:
+        print(f"  FWI: skipping — missing: {missing}", file=sys.stderr)
+        for col in FWI_COLUMNS:
+            result[col] = np.nan
+        result["dmc_dc_source_date"] = pd.Series(dtype=object)
+        return result
+
+    result["timestamp_utc"] = pd.to_datetime(result["timestamp_utc"], utc=True)
+    temp = result["air_temperature_c"].to_numpy(dtype=float)
+    rh = result["relative_humidity_pct"].to_numpy(dtype=float)
+    wind = result["wind_speed_kmh"].to_numpy(dtype=float)
+    rain = result["rain_mm"].to_numpy(dtype=float)
+
+    ffmc = _hffmc_calc(temp, rh, wind, rain, gap_threshold_hours=gap_threshold_hours)
+    dmc, dc, source_dates = _daily_dmc_dc_calc(result, lat=lat)
+
+    isi = np.full(len(result), np.nan)
+    bui = np.full(len(result), np.nan)
+    fwi = np.full(len(result), np.nan)
+
+    for i in range(len(result)):
+        if np.isnan(ffmc[i]) or np.isnan(dmc[i]) or np.isnan(dc[i]):
+            continue
+        wind_i = 0.0 if np.isnan(wind[i]) else float(wind[i])
+        isi[i] = reference_initial_spread_index(float(ffmc[i]), wind_i)
+        bui[i] = reference_buildup_index(float(dmc[i]), float(dc[i]))
+        fwi[i] = reference_fire_weather_index(float(isi[i]), float(bui[i]))
+
+    result["ffmc"] = ffmc
+    result["dmc"] = dmc
+    result["dc"] = dc
+    result["isi"] = isi
+    result["bui"] = bui
+    result["fwi"] = fwi
+    result["dmc_dc_source_date"] = source_dates
+    return result
+
+
+def calculate_fwi(
+    df: pd.DataFrame,
+    lat: float = DEFAULT_FWI_LATITUDE,
+    gap_threshold_hours: int = 24,
+) -> pd.DataFrame:
+    """Backward-compatible wrapper for Phase 12 hourly FWI implementation."""
+    return calculate_fwi_hourly(df, lat=lat, gap_threshold_hours=gap_threshold_hours)
 
 def filter_noon_observations(df: pd.DataFrame) -> pd.DataFrame:
     """Return one local-noon row per local date with preceding-24h rain total."""
@@ -1138,7 +1249,7 @@ def _register_manifest_artifact(
 def run_pipeline(
     stations: list[str],
     force: bool = False,
-    fwi_mode: str = "extended",
+    fwi_mode: str = "hourly",
 ) -> None:
     """Execute the full pipeline for given stations.
 
@@ -1170,9 +1281,9 @@ def run_pipeline(
         else {}
     )
     fwi_config = quality_config.get("fwi", {})
-    configured_fwi_mode = fwi_config.get("fwi_mode", "extended")
+    configured_fwi_mode = fwi_config.get("fwi_mode", "hourly")
     if fwi_mode == "extended":
-        fwi_mode = configured_fwi_mode
+        fwi_mode = "hourly" if configured_fwi_mode == "extended" else configured_fwi_mode
     gap_threshold = fwi_config.get("gap_threshold_hours", 24)
     latitude_overrides = fwi_config.get("station_latitudes", {})
 
@@ -1262,7 +1373,8 @@ def run_pipeline(
                 file=sys.stderr,
             )
         else:
-            hourly = calculate_fwi(hourly, gap_threshold_hours=gap_threshold)
+            station_lat = latitude_overrides.get(station, DEFAULT_FWI_LATITUDE)
+            hourly = calculate_fwi_hourly(hourly, lat=station_lat, gap_threshold_hours=gap_threshold)
 
             # --- FWI output enforcement ---
             hourly, fwi_actions = enforce_fwi_outputs(hourly, quality_config)
