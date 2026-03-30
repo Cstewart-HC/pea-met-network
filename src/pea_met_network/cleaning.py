@@ -1264,15 +1264,13 @@ def _collect_qa_qc_data(
 ) -> tuple[list[pd.DataFrame], list[pd.DataFrame]]:
     """Collect hourly/daily data for QA/QC from current run + disk.
 
-    Includes stations from the current run plus any other stations
-    that have existing processed output, so a single-station re-run
-    doesn't clobber the multi-station report.
+    Always loads from disk for every station that has processed output.
+    This ensures QA/QC reports are complete even when the pipeline
+    runs with empty in-memory accumulations (disk-based serial mode).
     """
-    all_hourly = list(current_hourly)
-    all_daily = list(current_daily)
+    all_hourly: list[pd.DataFrame] = []
+    all_daily: list[pd.DataFrame] = []
     for station in ALL_STATIONS:
-        if station in current_stations:
-            continue
         h_path = PROCESSED_DIR / station / "station_hourly.csv"
         d_path = PROCESSED_DIR / station / "station_daily.csv"
         d_path_compliant = PROCESSED_DIR / station / f"{station}_daily_compliant.csv"
