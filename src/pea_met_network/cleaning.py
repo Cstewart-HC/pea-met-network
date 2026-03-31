@@ -1349,15 +1349,12 @@ def run_pipeline(
 ) -> None:
     """Execute the full pipeline for given stations.
 
-    Serial disk-based approach:
-      1. Topologically sort stations so internal donors are processed first.
-      2. For each station (one at a time):
-         a. Load → dedup → resample hourly → truncate → quality → impute.
-         b. Save donor-relevant columns to staging parquet.
-         c. If cross-station target: load donors from staging disk, impute.
-         d. Calculate FWI → enforce FWI outputs → chain break diagnostics.
-         e. Write hourly/daily CSVs → free memory.
-      3. Write aggregate reports (manifest, QA/QC, etc.) reading from disk.
+    Two-pass in-memory approach (all stations):
+      Pass 1 — Load all stations through to impute(), store in dict (~150 MB).
+      Pass 2 — Cross-station imputation (donors in-memory), FWI, write CSVs.
+
+    Fallback disk-based approach (partial runs):
+      Topologically ordered serial processing with parquet staging.
     """
     print(f"Pipeline: {len(stations)} stations")
 
@@ -1393,6 +1390,11 @@ def run_pipeline(
     # Load cross-station donor config
     donor_assignments, cross_station_targets = load_donor_config(quality_config)
 
+    # Decide: in-memory or disk-based?
+    use_in_memory = set(stations) == set(ALL_STATIONS)
+    mode_label = "in-memory" if use_in_memory else "disk-staging"
+    print(f"  Mode: {mode_label}", file=sys.stderr)
+
     # Compute serial processing order (donors before targets)
     ordered_stations = _topological_station_order(stations, donor_assignments)
     print(
@@ -1400,170 +1402,316 @@ def run_pipeline(
         file=sys.stderr,
     )
 
-    # Selective donor staging cleanup: only remove staging for stations
-    # we are about to process. Pre-existing staging for stations NOT in
-    # this run is preserved so single-station runs can still use donors
-    # processed in a previous full run.
-    DONOR_STAGING_DIR.mkdir(parents=True, exist_ok=True)
-    for _s in ordered_stations:
-        _staging_path = DONOR_STAGING_DIR / f"{_s}.parquet"
-        if _staging_path.exists():
-            _staging_path.unlink()
+    if use_in_memory:
+        # =====================================================================
+        # PASS 1: Load all stations through to impute(), store in dict
+        # =====================================================================
+        hourly_frames: dict[str, pd.DataFrame] = {}
 
-    # =========================================================================
-    # SERIAL PASS: process one station at a time
-    # =========================================================================
-    for station in ordered_stations:
-        # --- Skip stale check ---
-        if not should_process(station, force=force):
-            print(f"  {station}: skipping (output up to date)")
-            continue
+        for station in ordered_stations:
+            if not should_process(station, force=force):
+                print(f"  {station}: skipping (output up to date)")
+                continue
 
-        # --- Load and clean through standard pipeline stages ---
-        df = load_station_files(station_files, station)
-        if df is None:
-            print(f"  WARNING: no data for {station}", file=sys.stderr)
-            continue
-        print(f"  {station}: {len(df)} raw rows", file=sys.stderr)
-        raw_rows = len(df)
+            df = load_station_files(station_files, station)
+            if df is None:
+                print(f"  WARNING: no data for {station}", file=sys.stderr)
+                continue
+            print(f"  {station}: {len(df)} raw rows", file=sys.stderr)
+            raw_rows = len(df)
 
-        df = dedup(df)
-        deduped_rows = len(df)
-        hourly = resample_hourly(df)
-        hourly_rows = len(hourly)
-        del df
-        gc.collect()
-        print(f"  {station}: {deduped_rows} raw → {len(hourly)} hourly rows", file=sys.stderr)
-
-        hourly = truncate_date_range(hourly, quality_config)
-        truncated_rows = len(hourly)
-
-        hourly, quality_actions = enforce_quality(hourly, quality_config)
-        post_quality_rows = len(hourly)
-        all_quality_actions.extend(quality_actions)
-
-        pre_imp_snapshot = pre_imputation_missingness(hourly)
-        pre_imputation_snapshots[station] = pre_imp_snapshot
-        hourly, report = impute(hourly, station)
-        post_imputation_rows = len(hourly)
-        all_reports.extend(report)
-
-        # --- Save donor staging parquet for downstream stations ---
-        _save_donor_parquet(station, hourly)
-        gc.collect()
-
-        # --- Cross-station imputation (if this station is a target) ---
-        is_cross_target = station in cross_station_targets
-        if is_cross_target and donor_assignments:
-            hourly, records = impute_cross_station(
-                hourly,
-                station,
-                donor_assignments=donor_assignments,
-                internal_hourly=None,  # donors loaded from disk
-                eccc_cache_dir=ECCC_CACHE_DIR,
-                disk_donor_dir=DONOR_STAGING_DIR,
-            )
-            all_cross_records.extend(records)
-
-            # Restore timestamp_utc as column for downstream processing
-            if isinstance(hourly.index, pd.DatetimeIndex):
-                hourly = hourly.reset_index()
-
-            # Propagate quality flags to FWI columns
-            hourly = propagate_fwi_quality_flags(hourly)
-            n_records = len(records)
-            del records
+            df = dedup(df)
+            deduped_rows = len(df)
+            hourly = resample_hourly(df)
+            hourly_rows = len(hourly)
+            del df
             gc.collect()
-            if n_records:
+            print(f"  {station}: {deduped_rows} raw → {len(hourly)} hourly rows", file=sys.stderr)
+
+            hourly = truncate_date_range(hourly, quality_config)
+            truncated_rows = len(hourly)
+
+            hourly, quality_actions = enforce_quality(hourly, quality_config)
+            post_quality_rows = len(hourly)
+            all_quality_actions.extend(quality_actions)
+
+            pre_imp_snapshot = pre_imputation_missingness(hourly)
+            pre_imputation_snapshots[station] = pre_imp_snapshot
+            hourly, report = impute(hourly, station)
+            post_imputation_rows = len(hourly)
+            all_reports.extend(report)
+
+            hourly_frames[station] = hourly
+
+            stage_row_counts[station] = {
+                "raw": raw_rows,
+                "deduped": deduped_rows,
+                "hourly": hourly_rows,
+                "truncated": truncated_rows,
+                "post_quality": post_quality_rows,
+                "post_imputation": post_imputation_rows,
+            }
+            gc.collect()
+
+        print(
+            f"  Pass 1 complete: {len(hourly_frames)} stations in memory",
+            file=sys.stderr,
+        )
+
+        # =====================================================================
+        # PASS 2: Cross-station imputation, FWI, write outputs
+        # =====================================================================
+        for station in ordered_stations:
+            if station not in hourly_frames:
+                continue
+
+            hourly = hourly_frames[station]
+            post_cross_station_rows = len(hourly)
+
+            # --- Cross-station imputation (in-memory donors) ---
+            is_cross_target = station in cross_station_targets
+            if is_cross_target and donor_assignments:
+                hourly, records = impute_cross_station(
+                    hourly,
+                    station,
+                    donor_assignments=donor_assignments,
+                    internal_hourly=hourly_frames,  # all donors in memory
+                    eccc_cache_dir=ECCC_CACHE_DIR,
+                    disk_donor_dir=None,  # no disk needed
+                )
+                all_cross_records.extend(records)
+
+                if isinstance(hourly.index, pd.DatetimeIndex):
+                    hourly = hourly.reset_index()
+
+                hourly = propagate_fwi_quality_flags(hourly)
+                n_records = len(records)
+                del records
+                gc.collect()
+                post_cross_station_rows = len(hourly)
+                if n_records:
+                    print(
+                        f"  {station}: cross-station imputed ({n_records} values)",
+                        file=sys.stderr,
+                    )
+                else:
+                    print(
+                        f"  {station}: cross-station imputation attempted, 0 values filled",
+                        file=sys.stderr,
+                    )
+
+            stage_row_counts[station]["post_cross_station"] = post_cross_station_rows
+
+            # --- FWI calculation ---
+            if fwi_mode == "compliant":
+                noon = filter_noon_observations(hourly)
+                station_lat = latitude_overrides.get(station, DEFAULT_FWI_LATITUDE)
+                daily = calculate_fwi_daily(noon, lat=station_lat)
+                carry_forward_days = int(daily.get("carry_forward_used", pd.Series(dtype=bool)).sum())
                 print(
-                    f"  {station}: cross-station imputed ({n_records} values)",
+                    f"  {station}: compliant carry-forward days={carry_forward_days}",
                     file=sys.stderr,
                 )
             else:
-                print(
-                    f"  {station}: cross-station imputation attempted, 0 values filled"
-                    f" (no donor staging available)",
-                    file=sys.stderr,
+                station_lat = latitude_overrides.get(station, DEFAULT_FWI_LATITUDE)
+                hourly = calculate_fwi_hourly(hourly, lat=station_lat, gap_threshold_hours=gap_threshold)
+
+                hourly, fwi_actions = enforce_fwi_outputs(hourly, quality_config)
+                all_quality_actions.extend(fwi_actions)
+
+                station_breaks = diagnose_chain_breaks(
+                    hourly, station, []
                 )
+                all_chain_breaks.extend(station_breaks)
 
-        post_cross_station_rows = len(hourly)
+                daily = aggregate_daily(hourly)
 
-        # --- Record per-stage row counts for manifest ---
-        stage_row_counts[station] = {
-            "raw": raw_rows,
-            "deduped": deduped_rows,
-            "hourly": hourly_rows,
-            "truncated": truncated_rows,
-            "post_quality": post_quality_rows,
-            "post_imputation": post_imputation_rows,
-            "post_cross_station": post_cross_station_rows,
-        }
-        # --- FWI calculation ---
-        if fwi_mode == "compliant":
-            noon = filter_noon_observations(hourly)
-            station_lat = latitude_overrides.get(station, DEFAULT_FWI_LATITUDE)
-            daily = calculate_fwi_daily(noon, lat=station_lat)
-            carry_forward_days = int(daily.get("carry_forward_used", pd.Series(dtype=bool)).sum())
-            print(
-                f"  {station}: compliant carry-forward days={carry_forward_days}",
-                file=sys.stderr,
+            # --- Write outputs ---
+            out_dir = PROCESSED_DIR / station
+            out_dir.mkdir(parents=True, exist_ok=True)
+
+            hourly["station"] = station
+            daily["station"] = station
+
+            drop_cols = OUTPUT_DROP_COLUMNS.intersection(hourly.columns)
+            if drop_cols:
+                hourly = hourly.drop(columns=drop_cols)
+            drop_cols_daily = OUTPUT_DROP_COLUMNS.intersection(daily.columns)
+            if drop_cols_daily:
+                daily = daily.drop(columns=drop_cols_daily)
+
+            hourly_path = out_dir / "station_hourly.csv"
+            hourly = hourly[sorted(hourly.columns)]
+            hourly.to_csv(hourly_path, index=False)
+            print(f"  {station}: {len(hourly)} hourly rows")
+
+            daily_filename = (
+                f"{station}_daily_compliant.csv"
+                if fwi_mode == "compliant"
+                else "station_daily.csv"
             )
-        else:
-            station_lat = latitude_overrides.get(station, DEFAULT_FWI_LATITUDE)
-            hourly = calculate_fwi_hourly(hourly, lat=station_lat, gap_threshold_hours=gap_threshold)
+            daily_path = out_dir / daily_filename
+            daily = daily[sorted(daily.columns)]
+            daily.to_csv(daily_path, index=False)
+            print(f"  {station}: {len(daily)} daily rows")
 
-            # --- FWI output enforcement ---
-            hourly, fwi_actions = enforce_fwi_outputs(hourly, quality_config)
-            all_quality_actions.extend(fwi_actions)
+            processed_stations.append(station)
 
-            # --- FWI chain break diagnostics ---
-            station_breaks = diagnose_chain_breaks(
-                hourly, station, quality_actions
-            )
-            all_chain_breaks.extend(station_breaks)
+            # Update in-memory dict (for downstream donors)
+            hourly_frames[station] = hourly
+            del hourly, daily
+            gc.collect()
 
-            # --- Aggregate daily ---
-            daily = aggregate_daily(hourly)
-
-        # --- Write outputs ---
-        out_dir = PROCESSED_DIR / station
-        out_dir.mkdir(parents=True, exist_ok=True)
-
-        hourly["station"] = station
-        daily["station"] = station
-
-        # Drop non-meteorological / provenance columns from output
-        drop_cols = OUTPUT_DROP_COLUMNS.intersection(hourly.columns)
-        if drop_cols:
-            hourly = hourly.drop(columns=drop_cols)
-        drop_cols_daily = OUTPUT_DROP_COLUMNS.intersection(daily.columns)
-        if drop_cols_daily:
-            daily = daily.drop(columns=drop_cols_daily)
-
-        hourly_path = out_dir / "station_hourly.csv"
-        hourly = hourly[sorted(hourly.columns)]
-        hourly.to_csv(hourly_path, index=False)
-        print(f"  {station}: {len(hourly)} hourly rows")
-
-        daily_filename = (
-            f"{station}_daily_compliant.csv"
-            if fwi_mode == "compliant"
-            else "station_daily.csv"
-        )
-        daily_path = out_dir / daily_filename
-        daily = daily[sorted(daily.columns)]
-        daily.to_csv(daily_path, index=False)
-        print(f"  {station}: {len(daily)} daily rows")
-
-        processed_stations.append(station)
-
-        # --- Free all per-station memory ---
-        del hourly, daily
+        # Free all in-memory frames
+        del hourly_frames
         gc.collect()
 
-    # Donor staging is intentionally left on disk after pipeline completion.
-    # Subsequent single-station runs rely on pre-existing donor parquets.
-    # Selective cleanup at pipeline start removes only stations being re-processed.
+    else:
+        # =====================================================================
+        # DISK-BASED FALLBACK: for partial / single-station runs
+        # =====================================================================
+        DONOR_STAGING_DIR.mkdir(parents=True, exist_ok=True)
+        for _s in ordered_stations:
+            _staging_path = DONOR_STAGING_DIR / f"{_s}.parquet"
+            if _staging_path.exists():
+                _staging_path.unlink()
+
+        for station in ordered_stations:
+            if not should_process(station, force=force):
+                print(f"  {station}: skipping (output up to date)")
+                continue
+
+            df = load_station_files(station_files, station)
+            if df is None:
+                print(f"  WARNING: no data for {station}", file=sys.stderr)
+                continue
+            print(f"  {station}: {len(df)} raw rows", file=sys.stderr)
+            raw_rows = len(df)
+
+            df = dedup(df)
+            deduped_rows = len(df)
+            hourly = resample_hourly(df)
+            hourly_rows = len(hourly)
+            del df
+            gc.collect()
+            print(f"  {station}: {deduped_rows} raw → {len(hourly)} hourly rows", file=sys.stderr)
+
+            hourly = truncate_date_range(hourly, quality_config)
+            truncated_rows = len(hourly)
+
+            hourly, quality_actions = enforce_quality(hourly, quality_config)
+            post_quality_rows = len(hourly)
+            all_quality_actions.extend(quality_actions)
+
+            pre_imp_snapshot = pre_imputation_missingness(hourly)
+            pre_imputation_snapshots[station] = pre_imp_snapshot
+            hourly, report = impute(hourly, station)
+            post_imputation_rows = len(hourly)
+            all_reports.extend(report)
+
+            _save_donor_parquet(station, hourly)
+            gc.collect()
+
+            is_cross_target = station in cross_station_targets
+            if is_cross_target and donor_assignments:
+                hourly, records = impute_cross_station(
+                    hourly,
+                    station,
+                    donor_assignments=donor_assignments,
+                    internal_hourly=None,
+                    eccc_cache_dir=ECCC_CACHE_DIR,
+                    disk_donor_dir=DONOR_STAGING_DIR,
+                )
+                all_cross_records.extend(records)
+
+                if isinstance(hourly.index, pd.DatetimeIndex):
+                    hourly = hourly.reset_index()
+
+                hourly = propagate_fwi_quality_flags(hourly)
+                n_records = len(records)
+                del records
+                gc.collect()
+                if n_records:
+                    print(
+                        f"  {station}: cross-station imputed ({n_records} values)",
+                        file=sys.stderr,
+                    )
+                else:
+                    print(
+                        f"  {station}: cross-station imputation attempted, 0 values filled"
+                        f" (no donor staging available)",
+                        file=sys.stderr,
+                    )
+
+            post_cross_station_rows = len(hourly)
+
+            stage_row_counts[station] = {
+                "raw": raw_rows,
+                "deduped": deduped_rows,
+                "hourly": hourly_rows,
+                "truncated": truncated_rows,
+                "post_quality": post_quality_rows,
+                "post_imputation": post_imputation_rows,
+                "post_cross_station": post_cross_station_rows,
+            }
+
+            if fwi_mode == "compliant":
+                noon = filter_noon_observations(hourly)
+                station_lat = latitude_overrides.get(station, DEFAULT_FWI_LATITUDE)
+                daily = calculate_fwi_daily(noon, lat=station_lat)
+                carry_forward_days = int(daily.get("carry_forward_used", pd.Series(dtype=bool)).sum())
+                print(
+                    f"  {station}: compliant carry-forward days={carry_forward_days}",
+                    file=sys.stderr,
+                )
+            else:
+                station_lat = latitude_overrides.get(station, DEFAULT_FWI_LATITUDE)
+                hourly = calculate_fwi_hourly(hourly, lat=station_lat, gap_threshold_hours=gap_threshold)
+
+                hourly, fwi_actions = enforce_fwi_outputs(hourly, quality_config)
+                all_quality_actions.extend(fwi_actions)
+
+                station_breaks = diagnose_chain_breaks(
+                    hourly, station, quality_actions
+                )
+                all_chain_breaks.extend(station_breaks)
+
+                daily = aggregate_daily(hourly)
+
+            out_dir = PROCESSED_DIR / station
+            out_dir.mkdir(parents=True, exist_ok=True)
+
+            hourly["station"] = station
+            daily["station"] = station
+
+            drop_cols = OUTPUT_DROP_COLUMNS.intersection(hourly.columns)
+            if drop_cols:
+                hourly = hourly.drop(columns=drop_cols)
+            drop_cols_daily = OUTPUT_DROP_COLUMNS.intersection(daily.columns)
+            if drop_cols_daily:
+                daily = daily.drop(columns=drop_cols_daily)
+
+            hourly_path = out_dir / "station_hourly.csv"
+            hourly = hourly[sorted(hourly.columns)]
+            hourly.to_csv(hourly_path, index=False)
+            print(f"  {station}: {len(hourly)} hourly rows")
+
+            daily_filename = (
+                f"{station}_daily_compliant.csv"
+                if fwi_mode == "compliant"
+                else "station_daily.csv"
+            )
+            daily_path = out_dir / daily_filename
+            daily = daily[sorted(daily.columns)]
+            daily.to_csv(daily_path, index=False)
+            print(f"  {station}: {len(daily)} daily rows")
+
+            processed_stations.append(station)
+
+            del hourly, daily
+            gc.collect()
+
+        # Donor staging left on disk for subsequent single-station runs.
 
     # =========================================================================
     # AGGREGATE REPORTS (reading station data from disk as needed)
@@ -1656,12 +1804,11 @@ def run_pipeline(
     report_df.to_csv(report_path, index=False)
     print(f"  Imputation report: {len(report_df)} entries")
 
-    # Register imputation report in pipeline manifest
     _register_manifest_artifact(
         "imputation_report", report_path, len(report_df)
     )
 
-    # QA/QC report — read all station data from disk (no in-memory accumulation)
+    # QA/QC report
     all_qa_hourly, all_qa_daily = _collect_qa_qc_data(
         [], [], processed_stations
     )
@@ -1679,7 +1826,6 @@ def run_pipeline(
         qa_qc_df.to_csv(qa_qc_path, index=False)
         print(f"  QA/QC report: {len(qa_qc_df)} stations")
 
-        # Register QA/QC report in pipeline manifest
         _register_manifest_artifact(
             "qa_qc_report", qa_qc_path, len(qa_qc_df)
         )
@@ -1708,7 +1854,6 @@ def run_pipeline(
         quality_report_df.to_csv(quality_report_path, index=False)
         print(f"  Quality enforcement report: {len(quality_report_df)} actions")
 
-        # Register quality enforcement report in manifest
         _register_manifest_artifact(
             "quality_enforcement_report",
             quality_report_path,
