@@ -94,6 +94,24 @@ FWI_REQUIRED = [
     "rain_mm",
 ]
 
+# Columns to strip from final CSV output — not meteorological data,
+# not used in FWI, not needed by downstream consumers.
+OUTPUT_DROP_COLUMNS: set[str] = {
+    "battery_v",
+    "water_level_m",
+    "water_pressure_kpa",
+    "water_temperature_c",
+    "source_file",
+    "schema_family",
+    # Unmapped raw columns that slip through adapters
+    "Hmdx",
+    "Visibility (km)",
+    "Wind Chill",
+    "LEVEL",
+    "TEMPERATURE",
+    "ms",
+}
+
 # ---------------------------------------------------------------------------
 # Cross-station donor config — loaded from cleaning-config.json
 # ---------------------------------------------------------------------------
@@ -1382,9 +1400,15 @@ def run_pipeline(
         file=sys.stderr,
     )
 
-    # Ensure clean donor staging directory
-    _cleanup_donor_staging()
+    # Selective donor staging cleanup: only remove staging for stations
+    # we are about to process. Pre-existing staging for stations NOT in
+    # this run is preserved so single-station runs can still use donors
+    # processed in a previous full run.
     DONOR_STAGING_DIR.mkdir(parents=True, exist_ok=True)
+    for _s in ordered_stations:
+        _staging_path = DONOR_STAGING_DIR / f"{_s}.parquet"
+        if _staging_path.exists():
+            _staging_path.unlink()
 
     # =========================================================================
     # SERIAL PASS: process one station at a time
@@ -1447,12 +1471,20 @@ def run_pipeline(
 
             # Propagate quality flags to FWI columns
             hourly = propagate_fwi_quality_flags(hourly)
+            n_records = len(records)
             del records
             gc.collect()
-            print(
-                f"  {station}: cross-station imputed",
-                file=sys.stderr,
-            )
+            if n_records:
+                print(
+                    f"  {station}: cross-station imputed ({n_records} values)",
+                    file=sys.stderr,
+                )
+            else:
+                print(
+                    f"  {station}: cross-station imputation attempted, 0 values filled"
+                    f" (no donor staging available)",
+                    file=sys.stderr,
+                )
 
         post_cross_station_rows = len(hourly)
 
@@ -1500,6 +1532,14 @@ def run_pipeline(
         hourly["station"] = station
         daily["station"] = station
 
+        # Drop non-meteorological / provenance columns from output
+        drop_cols = OUTPUT_DROP_COLUMNS.intersection(hourly.columns)
+        if drop_cols:
+            hourly = hourly.drop(columns=drop_cols)
+        drop_cols_daily = OUTPUT_DROP_COLUMNS.intersection(daily.columns)
+        if drop_cols_daily:
+            daily = daily.drop(columns=drop_cols_daily)
+
         hourly_path = out_dir / "station_hourly.csv"
         hourly = hourly[sorted(hourly.columns)]
         hourly.to_csv(hourly_path, index=False)
@@ -1521,8 +1561,9 @@ def run_pipeline(
         del hourly, daily
         gc.collect()
 
-    # Clean up donor staging
-    _cleanup_donor_staging()
+    # Donor staging is intentionally left on disk after pipeline completion.
+    # Subsequent single-station runs rely on pre-existing donor parquets.
+    # Selective cleanup at pipeline start removes only stations being re-processed.
 
     # =========================================================================
     # AGGREGATE REPORTS (reading station data from disk as needed)

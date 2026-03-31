@@ -20,7 +20,6 @@ COLUMN_MAPS: dict[str, str] = {
     "RH": "relative_humidity_pct",
     # Rain
     "Rain - mm": "rain_mm",
-    "Precip (mm)": "rain_mm",
     # Wind speed (km/h)
     "Wind Speed - km/h": "wind_speed_kmh",
     "Average Wind Speed": "wind_speed_kmh",
@@ -33,7 +32,6 @@ COLUMN_MAPS: dict[str, str] = {
     # Wind gust
     "Wind gust  speed": "wind_gust_speed_kmh",
     "Wind gust speed": "wind_gust_speed_kmh",
-    "Gust (km/h)": "wind_gust_speed_kmh",
     # Wind direction
     "S-WCF-M: Wind Direction - °": "wind_direction_deg",
     "Wind Direction - °": "wind_direction_deg",
@@ -42,11 +40,11 @@ COLUMN_MAPS: dict[str, str] = {
     # Solar radiation
     "Solar Rad - W/m²": "solar_radiation_w_m2",
     "Solar Radiation": "solar_radiation_w_m2",
+    "Solar_Radiation_Wm2": "solar_radiation_w_m2",
     # Dew point
     "Dew Point (°C)": "dew_point_c",
     "Dew Point": "dew_point_c",
     # Pressure
-    "Pressure (hPa)": "pressure_hpa",
     "Barometric Pressure": "barometric_pressure_kpa",
     "Stn Press (kPa)": "barometric_pressure_kpa",
     # Water level (coastal stations)
@@ -63,6 +61,9 @@ COLUMN_MAPS: dict[str, str] = {
     "Wind Speed": "wind_speed_kmh",
     "Gust Speed": "wind_gust_speed_kmh",
     "Wind Gust Speed": "wind_gust_speed_kmh",
+    # CamelCase variants (old North Rustico Licor CSVs)
+    "Temperature_C": "air_temperature_c",
+    "Barometric_Pressure_kPa": "barometric_pressure_kpa",
     # Battery
     "Battery - V": "battery_v",
     "Battery": "battery_v",
@@ -93,6 +94,7 @@ SKIP_COLUMNS: set[str] = {
 SKIP_PREFIXES: set[str] = {
     "Accumulated Rain",
     "Diff Pressure",
+    "Water Flow",
 }
 
 
