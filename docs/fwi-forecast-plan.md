@@ -158,11 +158,15 @@ GDPS WMS GetFeatureInfo (1 bounding box, 4 workers)  → 0–240h 3-hourly
 
 ## Remaining Steps
 
-### Step 10: OLS nowcast wiring
-- Wire real Stanhope ECCC hourly observations into the pipeline
-- Apply OLS coefficients to predict park station weather 0–3h ahead
-- Merge with OWM at the 3h boundary
-- Coefficients already fitted; needs live ECCC data ingestion
+### Step 10: OLS nowcast wiring ✅
+- `src/pea_met_network/ols_nowcast.py` — fetches Stanhope hourly from bulk CSV
+- Applies OLS coefficients to predict park station weather 0–3h ahead
+- Previous month fallback for ECCC data lag at month boundaries
+- Rain not translated (R² < 0.1); uses Stanhope observed rain as proxy
+- Integrated into pipeline as step 1, nowcast replaces OWM in overlap zone
+- Note: ECCC bulk CSV has ~1-2 day lag; nowcast will be empty at month start
+  and during data outages — pipeline gracefully falls back to OWM-only
+- Commit `c2affdc`
 
 ### Step 11: Operational scheduling
 - Cron job every 3–6 hours to run the pipeline
