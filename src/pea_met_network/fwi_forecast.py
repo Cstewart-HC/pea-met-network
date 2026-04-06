@@ -3,7 +3,13 @@
 Fetches OWM One Call 3.0 for each station independently (6 API calls),
 then computes hourly FWI from the raw grid-interpolated weather data.
 
-No OLS translation needed — OWM resolves distinct values at each coordinate.
+Startup indices (FFMC, DMC, DC) persist between runs via JSON so the daily
+DMC/DC chain carries forward.  Falls back to defaults on first run or if
+the state file is stale (>72h old).
+
+Also fetches CWFIS SCRIBE forecast FWI for comparison when the national
+fire weather network is active (skips gracefully during off-season when
+CWFIS reports sentinel value -101).
 
 Usage:
     python -m pea_met_network.fwi_forecast
@@ -15,13 +21,14 @@ import json
 import logging
 import os
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
 import pandas as pd
 import urllib.request
 import urllib.error
+import urllib.parse
 
 from pea_met_network import fwi as fwi_calc
 
@@ -49,8 +56,81 @@ PARK_STATIONS = [
 
 ALL_STATIONS = [STANHOPE] + PARK_STATIONS
 
-# Default paths
+# Default startup indices (spring defaults)
+DEFAULT_FFMC0 = 85.0
+DEFAULT_DMC0 = 6.0
+DEFAULT_DC0 = 15.0
+
+# CWFIS sentinel value meaning "not computed / off-season"
+CWFIS_SENTINEL = -101.0
+
+# Paths
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+FORECASTS_DIR = PROJECT_ROOT / "data" / "forecasts"
+STATE_FILE = FORECASTS_DIR / "startup_state.json"
+
+# ---------------------------------------------------------------------------
+# Startup index persistence
+# ---------------------------------------------------------------------------
+
+def load_startup_state(path: Path = STATE_FILE) -> dict[str, dict[str, float]]:
+    """Load persisted startup indices from previous run.
+
+    Returns dict like: {"stanhope": {"ffmc": 85.0, "dmc": 6.0, "dc": 15.0, "timestamp": "..."}}
+    Returns empty dict if file missing or stale (>72h).
+    """
+    if not path.exists():
+        return {}
+
+    try:
+        data = json.loads(path.read_text())
+    except (json.JSONDecodeError, OSError):
+        return {}
+
+    # Check staleness — reject if older than 72 hours
+    ts_str = data.get("_timestamp", "")
+    if ts_str:
+        try:
+            ts = datetime.fromisoformat(ts_str)
+            if datetime.now(timezone.utc) - ts > timedelta(hours=72):
+                logger.warning("Startup state stale (%s), using defaults", ts_str)
+                return {}
+        except ValueError:
+            return {}
+
+    # Strip metadata key
+    return {k: v for k, v in data.items() if k != "_timestamp"}
+
+
+def save_startup_state(
+    results: dict[str, pd.DataFrame],
+    path: Path = STATE_FILE,
+) -> None:
+    """Persist the final FWI indices from each station for next run."""
+    state = {"_timestamp": datetime.now(timezone.utc).isoformat()}
+
+    for station_name, df in results.items():
+        last = df.iloc[-1]
+        state[station_name] = {
+            "ffmc": round(float(last["FFMC"]), 2),
+            "dmc": round(float(last["DMC"]), 2),
+            "dc": round(float(last["DC"]), 2),
+        }
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(state, indent=2) + "\n")
+    logger.info("Saved startup state → %s", path)
+
+
+def get_startup_indices(
+    station_name: str,
+    state: dict[str, dict[str, float]],
+) -> tuple[float, float, float]:
+    """Get (ffmc0, dmc0, dc0) for a station from state, falling back to defaults."""
+    if station_name in state:
+        s = state[station_name]
+        return s["ffmc"], s["dmc"], s["dc"]
+    return DEFAULT_FFMC0, DEFAULT_DMC0, DEFAULT_DC0
 
 # ---------------------------------------------------------------------------
 # OWM One Call 3.0 fetch
@@ -84,11 +164,7 @@ def fetch_forecast(station: Station) -> dict[str, Any]:
 
 
 def fetch_all_stations(stations: list[Station] | None = None) -> dict[str, pd.DataFrame]:
-    """Fetch OWM for multiple stations and return parsed weather DataFrames.
-
-    Returns:
-        Dict mapping station name → DataFrame with FWI input columns.
-    """
+    """Fetch OWM for multiple stations and return parsed weather DataFrames."""
     if stations is None:
         stations = ALL_STATIONS
 
@@ -99,16 +175,8 @@ def fetch_all_stations(stations: list[Station] | None = None) -> dict[str, pd.Da
     return weather
 
 
-# ---------------------------------------------------------------------------
-# OWM response → weather DataFrame
-# ---------------------------------------------------------------------------
-
 def parse_hourly_weather(data: dict[str, Any]) -> pd.DataFrame:
-    """Convert OWM hourly response into a clean DataFrame.
-
-    Columns: air_temperature_c, relative_humidity_pct, wind_speed_kmh, rain_mm
-    Index: timestamp_utc
-    """
+    """Convert OWM hourly response into a clean DataFrame."""
     rows = []
     for h in data["hourly"]:
         ts = datetime.fromtimestamp(h["dt"], tz=timezone.utc)
@@ -119,7 +187,7 @@ def parse_hourly_weather(data: dict[str, Any]) -> pd.DataFrame:
             "timestamp_utc": ts,
             "air_temperature_c": h["temp"],
             "relative_humidity_pct": h["humidity"],
-            "wind_speed_kmh": h["wind_speed"] * 3.6,  # m/s → km/h
+            "wind_speed_kmh": h["wind_speed"] * 3.6,
             "rain_mm": rain_mm,
         })
 
@@ -127,6 +195,96 @@ def parse_hourly_weather(data: dict[str, Any]) -> pd.DataFrame:
     df = df.set_index("timestamp_utc").sort_index()
     return df
 
+# ---------------------------------------------------------------------------
+# CWFIS SCRIBE forecast comparison
+# ---------------------------------------------------------------------------
+
+CWFIS_WFS = "https://cwfis.cfs.nrcan.gc.ca/geoserver/wfs"
+
+# CWFIS station IDs for PEI area (nearest to our stations)
+# Stanhope → HAR (Harrington, 46.35, -63.17)
+# No exact park station matches, but these are the closest CWFIS fire weather stations
+CWFIS_PE_STATIONS = {
+    "HAR": "Harrington",
+    "YYG": "Charlottetown",
+    "YSU": "Summerside",
+    "KEN": "Kensington",
+}
+
+
+def fetch_cwfis_forecast() -> dict[str, list[dict[str, Any]]]:
+    """Fetch CWFIS SCRIBE 48h FWI forecast for PEI stations.
+
+    Returns dict mapping CWFIS station ID → list of forecast dicts.
+    Returns empty dict if off-season (all FWI = sentinel -101) or on error.
+    """
+    try:
+        url = (
+            f"{CWFIS_WFS}?service=WFS&version=1.0.0&request=GetFeature"
+            f"&typeName=public:firewx_scribe_fcst&outputFormat=JSON"
+            f"&maxFeatures=2440"
+        )
+        resp = urllib.request.urlopen(url, timeout=20)
+        data = json.loads(resp.read())
+    except Exception as e:
+        logger.warning("CWFIS fetch failed: %s", e)
+        return {}
+
+    pe_ids = set(CWFIS_PE_STATIONS.keys())
+    results: dict[str, list[dict[str, Any]]] = {}
+
+    for f in data.get("features", []):
+        p = f.get("properties", {})
+        sid = p.get("id", "")
+        if sid not in pe_ids:
+            continue
+
+        # Skip sentinel values
+        if p.get("ffmc") is not None and p["ffmc"] < CWFIS_SENTINEL + 1:
+            continue
+
+        if sid not in results:
+            results[sid] = []
+        results[sid].append({
+            "rep_date": p["rep_date"],
+            "temp": p.get("temp"),
+            "rh": p.get("rh"),
+            "ws": p.get("ws"),
+            "precip": p.get("precip"),
+            "ffmc": p.get("ffmc"),
+            "dmc": p.get("dmc"),
+            "dc": p.get("dc"),
+            "isi": p.get("isi"),
+            "bui": p.get("bui"),
+            "fwi": p.get("fwi"),
+        })
+
+    if not results:
+        logger.info("CWFIS: off-season, no FWI data available for PEI")
+    else:
+        for sid, rows in results.items():
+            logger.info("CWFIS %s (%s): %d forecast entries", sid, CWFIS_PE_STATIONS[sid], len(rows))
+
+    return results
+
+
+def format_cwfis_comparison(cwfis: dict[str, list[dict]]) -> str:
+    """Format CWFIS comparison data for the summary."""
+    if not cwfis:
+        return ["\n  CWFIS comparison: off-season (no FWI data available)"]
+
+    lines = ["\n  CWFIS SCRIBE Forecast Comparison:"]
+    for sid in sorted(cwfis.keys()):
+        name = CWFIS_PE_STATIONS[sid]
+        lines.append(f"\n    {sid} ({name}):")
+        for r in sorted(cwfis[sid], key=lambda x: x["rep_date"]):
+            lines.append(
+                f"      {r['rep_date'][:10]}  T={r['temp']:.1f}  "
+                f"RH={r['rh']:.0f}  WS={r['ws']:.1f}  "
+                f"FFMC={r['ffmc']:.1f}  DMC={r['dmc']:.1f}  "
+                f"DC={r['dc']:.1f}  FWI={r['fwi']:.1f}"
+            )
+    return lines
 
 # ---------------------------------------------------------------------------
 # FWI computation over hourly series
@@ -135,28 +293,19 @@ def parse_hourly_weather(data: dict[str, Any]) -> pd.DataFrame:
 def compute_fwi_series(
     weather: pd.DataFrame,
     station: Station,
-    ffmc0: float = 85.0,
-    dmc0: float = 6.0,
-    dc0: float = 15.0,
+    ffmc0: float = DEFAULT_FFMC0,
+    dmc0: float = DEFAULT_DMC0,
+    dc0: float = DEFAULT_DC0,
 ) -> pd.DataFrame:
     """Compute FWI components for each hour in the weather DataFrame.
 
     Uses hourly FFMC (Van Wagner hourly equation) and daily aggregates
     for DMC/DC.  Daily aggregation uses the warmest hour's temp/RH and
     accumulated total rain per local calendar day.
-
-    Args:
-        weather: DataFrame with temp, RH, wind, rain columns, UTC timestamp index.
-        station: Station with lat for DMC/DC calculations.
-        ffmc0, dmc0, dc0: Startup indices (use yesterday's values or defaults).
-
-    Returns:
-        DataFrame with FFMC, DMC, DC, ISI, BUI, FWI columns.
     """
     weather = weather.copy()
     weather["month"] = weather.index.month
 
-    # --- Pre-compute local date for each row ---
     def _local_date(ts: pd.Timestamp, month: int) -> "datetime.date":
         offset = 3 if month in (4, 5, 6, 7, 8, 9, 10) else 4
         return (ts.tz_convert(None) - pd.Timedelta(hours=offset)).date()
@@ -166,7 +315,7 @@ def compute_fwi_series(
     ]
     weather["local_date"] = local_dates
 
-    # --- Aggregate daily values: max temp at that temp's RH, total rain ---
+    # --- Aggregate daily values ---
     daily_agg: dict["datetime.date", dict] = {}
     for _, row in weather.iterrows():
         ld = row["local_date"]
@@ -196,7 +345,7 @@ def compute_fwi_series(
             )
         daily_codes[ld] = (cur_dmc, cur_dc)
 
-    # --- Pass 2: compute hourly FWI ---
+    # --- Compute hourly FWI ---
     ffmc = ffmc0
     results = []
 
@@ -208,7 +357,6 @@ def compute_fwi_series(
         ld = row["local_date"]
         dmc, dc = daily_codes[ld]
 
-        # Hourly FFMC
         ffmc = fwi_calc.hourly_fine_fuel_moisture_code(
             temp=temp, rh=rh, wind=wind, rain=rain, ffmc0=ffmc
         )
@@ -233,26 +381,29 @@ def compute_fwi_series(
 
     return pd.DataFrame(results).set_index("timestamp_utc")
 
-
 # ---------------------------------------------------------------------------
 # End-to-end pipeline
 # ---------------------------------------------------------------------------
 
 def run_forecast(
     stations: list[Station] | None = None,
-    ffmc0: float = 85.0,
-    dmc0: float = 6.0,
-    dc0: float = 15.0,
+    startup_state: dict[str, dict[str, float]] | None = None,
 ) -> dict[str, pd.DataFrame]:
     """Run the full FWI forecast pipeline.
 
     Fetches OWM directly for each station → computes FWI per station.
+    Persists startup indices for next run.
 
     Returns:
         Dict mapping station name → DataFrame with FWI components per hour.
     """
     if stations is None:
         stations = ALL_STATIONS
+    if startup_state is None:
+        startup_state = load_startup_state()
+
+    if startup_state:
+        logger.info("Loaded startup state for %d stations", len(startup_state))
 
     # 1. Fetch all stations
     weather_data = fetch_all_stations(stations)
@@ -260,6 +411,9 @@ def run_forecast(
     # 2. Compute FWI per station
     results = {}
     for stn in stations:
+        ffmc0, dmc0, dc0 = get_startup_indices(stn.name, startup_state)
+        logger.info("%s startup: FFMC=%.1f DMC=%.1f DC=%.1f", stn.name, ffmc0, dmc0, dc0)
+
         fwi_df = compute_fwi_series(weather_data[stn.name], stn, ffmc0=ffmc0, dmc0=dmc0, dc0=dc0)
         results[stn.name] = fwi_df
         logger.info(
@@ -269,10 +423,16 @@ def run_forecast(
             fwi_df["ISI"].max(), fwi_df["FFMC"].max(),
         )
 
+    # 3. Persist final indices for next run
+    save_startup_state(results)
+
     return results
 
 
-def format_summary(results: dict[str, pd.DataFrame]) -> str:
+def format_summary(
+    results: dict[str, pd.DataFrame],
+    cwfis: dict[str, list[dict]] | None = None,
+) -> str:
     """Format a human-readable summary of forecast results."""
     lines = ["FWI Forecast Summary (direct OWM)", "=" * 50]
 
@@ -297,8 +457,11 @@ def format_summary(results: dict[str, pd.DataFrame]) -> str:
         else:
             lines.append(f"  Class: EXTREME")
 
-    return "\n".join(lines)
+    # CWFIS comparison
+    if cwfis is not None:
+        lines.extend(format_cwfis_comparison(cwfis))
 
+    return "\n".join(lines)
 
 # ---------------------------------------------------------------------------
 # CLI
@@ -311,13 +474,19 @@ def main() -> None:
     )
 
     print("Running FWI forecast pipeline (direct OWM, 6 stations)...")
-    results = run_forecast()
-    print(format_summary(results))
 
-    out_dir = PROJECT_ROOT / "data" / "forecasts"
-    out_dir.mkdir(parents=True, exist_ok=True)
+    # Fetch CWFIS comparison data
+    cwfis = fetch_cwfis_forecast()
+
+    # Run forecast
+    results = run_forecast()
+
+    print(format_summary(results, cwfis))
+
+    # Save CSVs
+    FORECASTS_DIR.mkdir(parents=True, exist_ok=True)
     for station, df in results.items():
-        path = out_dir / f"{station}_fwi_forecast.csv"
+        path = FORECASTS_DIR / f"{station}_fwi_forecast.csv"
         df.to_csv(path)
         print(f"Saved {path}")
 
