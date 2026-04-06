@@ -1,7 +1,9 @@
-"""FWI Forecast Pipeline — direct OWM fetch per station, compute FWI.
+"""FWI Forecast Pipeline — OLS nowcast + OWM + GDPS, compute FWI.
 
-Fetches OWM One Call 3.0 for each station independently (6 API calls),
-then computes hourly FWI from the raw grid-interpolated weather data.
+Three data sources merged per station:
+  1. OLS nowcast (0–3h): Stanhope ECCC obs translated to park stations
+  2. OWM One Call 3.0 (3–48h): hourly model forecast per station
+  3. GDPS (48–240h): EC 3-hourly model forecast
 
 Startup indices (FFMC, DMC, DC) persist between runs via JSON so the daily
 DMC/DC chain carries forward.  Falls back to defaults on first run or if
@@ -392,9 +394,12 @@ def run_forecast(
 ) -> dict[str, pd.DataFrame]:
     """Run the full FWI forecast pipeline.
 
-    Fetches OWM directly for each station (0–48h) and optionally extends
-    with GDPS data (0–240h). Computes FWI per station.
-    Persists startup indices for next run.
+    Three data sources merged per station:
+      1. OLS nowcast (0–3h): Stanhope ECCC obs → park station weather
+      2. OWM (3–48h): hourly model forecast
+      3. GDPS (48–240h): 3-hourly EC model forecast
+
+    Computes FWI per station. Persists startup indices for next run.
 
     Args:
         stations: Stations to forecast for.
@@ -412,10 +417,37 @@ def run_forecast(
     if startup_state:
         logger.info("Loaded startup state for %d stations", len(startup_state))
 
-    # 1. Fetch OWM for all stations (0–48h, hourly)
+    # 1. OLS nowcast for park stations (0–3h from Stanhope ECCC obs)
+    nowcast_data: dict[str, pd.DataFrame] = {}
+    try:
+        from pea_met_network.ols_nowcast import fetch_stanhope_recent, apply_ols_nowcast
+        stanhope_obs = fetch_stanhope_recent(hours=6)
+        if not stanhope_obs.empty:
+            nowcast_data = apply_ols_nowcast(stanhope_obs, hours=3)
+            if nowcast_data:
+                # Also use Stanhope obs directly for the Stanhope station nowcast
+                nowcast_data["stanhope"] = stanhope_obs.tail(3)
+                logger.info("OLS nowcast: %d stations with recent ECCC obs", len(nowcast_data))
+    except Exception as e:
+        logger.warning("OLS nowcast failed, using OWM for all hours: %s", e)
+
+    # 2. Fetch OWM for all stations (0–48h, hourly)
     weather_data = fetch_all_stations(stations)
 
-    # 2. Optionally extend with GDPS (0–240h, 3-hourly)
+    # 3. Merge OLS nowcast into OWM (nowcast preferred in overlap zone)
+    if nowcast_data:
+        for stn_name, nowcast_df in nowcast_data.items():
+            if stn_name not in weather_data:
+                continue
+            owm_df = weather_data[stn_name]
+            # Nowcast covers recent hours; replace overlapping OWM entries
+            # with ECCC-derived values (real obs > model forecast).
+            # combine_first: nowcast values win where both exist, OWM fills the rest.
+            weather_data[stn_name] = nowcast_df.combine_first(owm_df).sort_index()
+            nowcast_hours = len(nowcast_df.index.intersection(owm_df.index))
+            logger.info("  %s: %d OWM hours replaced with OLS nowcast", stn_name, nowcast_hours)
+
+    # 4. Optionally extend with GDPS (0–240h, 3-hourly)
     gdps_data: dict[str, pd.DataFrame] | None = None
     if include_gdps:
         try:
@@ -430,7 +462,7 @@ def run_forecast(
         except Exception as e:
             logger.warning("GDPS fetch failed, using OWM only: %s", e)
 
-    # 3. Merge OWM and GDPS per station
+    # 5. Merge OWM and GDPS per station
     if gdps_data:
         for stn in stations:
             if stn.name not in gdps_data:
@@ -451,7 +483,7 @@ def run_forecast(
                     len(weather_data[stn.name]),
                 )
 
-    # 4. Compute FWI per station
+    # 6. Compute FWI per station
     results = {}
     for stn in stations:
         ffmc0, dmc0, dc0 = get_startup_indices(stn.name, startup_state)
@@ -467,7 +499,7 @@ def run_forecast(
             len(fwi_df),
         )
 
-    # 5. Persist final indices for next run
+    # 7. Persist final indices for next run
     save_startup_state(results)
 
     return results
@@ -478,7 +510,7 @@ def format_summary(
     cwfis: dict[str, list[dict]] | None = None,
 ) -> str:
     """Format a human-readable summary of forecast results."""
-    lines = ["FWI Forecast Summary (OWM + GDPS)", "=" * 50]
+    lines = ["FWI Forecast Summary (OLS nowcast + OWM + GDPS)", "=" * 50]
 
     for station, df in results.items():
         max_fwi = df["FWI"].max()
