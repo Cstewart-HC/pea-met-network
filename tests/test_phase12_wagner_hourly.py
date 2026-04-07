@@ -459,23 +459,50 @@ class TestDailyDMCDC:
     """Validate daily DMC/DC computation from hourly inputs."""
 
     def test_single_day_14lstm(self):
-        """DMC/DC computed from 14:00 LST observation for a single day."""
+        """DMC/DC assigned per Van Wagner fire day (14:00 LST boundary).
+
+        Fire day spans 14:00 LST on D−1 to 13:59 LST on D.  With ADT (UTC-3)
+        in July, the 24-hour window 00:00–23:00 UTC straddles two fire days:
+          - Hours 0–16  (21:00 ADT Jun 30 → 13:00 ADT Jul 1) → fire day Jul 1
+          - Hours 17–23 (14:00 ADT Jul 1  → 20:00 ADT Jul 1) → fire day Jul 2
+
+        The 14:00 ADT observation (hour 17 UTC) is the noon obs for fire
+        day Jul 2, so hours 17+ get higher DMC from the warm/dry inputs.
+        Hours 0–16 get the previous fire day's codes (no noon obs in their
+        window, so defaults with 8mm rain → lower DMC).
+        """
         from pea_met_network.cleaning import _daily_dmc_dc_calc
 
         hourly = _make_hourly_frame("2024-07-01T00:00:00Z", periods=24)
         # July 1 = ADT (UTC-3), so 14:00 ADT = 17:00 UTC = hour 17
         hourly.loc[17, "air_temperature_c"] = 25.0
         hourly.loc[17, "relative_humidity_pct"] = 40.0
-        hourly.loc[3:10, "rain_mm"] = [1.0] * 8  # 8mm total daily rain
+        hourly.loc[3:10, "rain_mm"] = [1.0] * 8  # 8mm rain in fire day Jul 1
 
         dmc, dc, source_dates = _daily_dmc_dc_calc(hourly)
 
-        # All 24 hours should have same DMC/DC (same day)
-        assert np.allclose(dmc[~np.isnan(dmc)], dmc[~np.isnan(dmc)][0])
-        assert np.allclose(dc[~np.isnan(dc)], dc[~np.isnan(dc)][0])
-        # Should have finite values
+        # Hours 0–16 (fire day Jul 1): should have same DMC/DC within group
+        pre_noon_dmc = dmc[0:17]
+        assert np.allclose(pre_noon_dmc[~np.isnan(pre_noon_dmc)],
+                            pre_noon_dmc[~np.isnan(pre_noon_dmc)][0])
+
+        # Hours 17–23 (fire day Jul 2): should have same DMC/DC within group
+        post_noon_dmc = dmc[17:24]
+        assert np.allclose(post_noon_dmc[~np.isnan(post_noon_dmc)],
+                            post_noon_dmc[~np.isnan(post_noon_dmc)][0])
+
+        # Post-noon DMC should be higher (25°C/40% RH vs default 20°C/45%
+        # and no rain in fire day Jul 2's window)
+        assert post_noon_dmc[0] > pre_noon_dmc[~np.isnan(pre_noon_dmc)][0], (
+            f"Post-noon DMC ({post_noon_dmc[0]:.2f}) should exceed pre-noon "
+            f"({pre_noon_dmc[~np.isnan(pre_noon_dmc)][0]:.2f}) — fire-day split wrong"
+        )
+
+        # Both groups should have finite values
         assert np.isfinite(dmc[17])
         assert np.isfinite(dc[17])
+        assert np.isfinite(dmc[5])
+        assert np.isfinite(dc[5])
 
     def test_rain_accumulates_over_full_day(self):
         """Daily rain must be the sum of all hourly rain, not just 14:00."""

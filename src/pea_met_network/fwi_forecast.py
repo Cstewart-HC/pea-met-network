@@ -6,8 +6,8 @@ Three data sources merged per station:
   3. GDPS (48–240h): EC 3-hourly model forecast
 
 Park stations without RH sensors (Tracadie, Stanley Bridge) get RH
-via cross-station vapor pressure continuity from donors with RH (Cavendish,
-North Rustico) — same method as the static ETL.
+via cross-station direct RH donation from donors with RH (Cavendish,
+North Rustico).
 
 Startup indices (FFMC, DMC, DC) persist between runs via JSON so the daily
 DMC/DC chain carries forward.  Falls back to defaults on first run or if
@@ -306,40 +306,73 @@ def compute_fwi_series(
     """Compute FWI components for each hour in the weather DataFrame.
 
     Uses hourly FFMC (Van Wagner hourly equation) and daily aggregates
-    for DMC/DC.  Daily aggregation uses the warmest hour's temp/RH and
-    accumulated total rain per local calendar day.
+    for DMC/DC.  Daily aggregation follows the Van Wagner fire-day
+    convention: each fire day spans 14:00 LST through 13:59 LST the
+    following day.  The observation closest to 14:00 LST provides
+    temp/RH; rain accumulates across the full fire-day window.
+
+    DMC/DC are assigned per fire day — hours 00:00–13:59 LST carry
+    yesterday's codes, hours 14:00+ get today's (Van Wagner update at
+    local noon).  This matches the Canadian Fire Weather Index System
+    standard (FCFDG 1992).
     """
+    from zoneinfo import ZoneInfo
+
+    HALIFAX_TZ = ZoneInfo("America/Halifax")
+
     weather = weather.copy()
     weather["month"] = weather.index.month
 
-    def _local_date(ts: pd.Timestamp, month: int) -> "datetime.date":
-        offset = 3 if month in (4, 5, 6, 7, 8, 9, 10) else 4
-        return (ts.tz_convert(None) - pd.Timedelta(hours=offset)).date()
+    def _fire_day(ts: pd.Timestamp) -> "datetime.date":
+        """Return the Van Wagner fire day for a UTC timestamp.
 
-    local_dates = [
-        _local_date(ts, row["month"]) for ts, row in weather.iterrows()
+        Fire day D spans 14:00 LST on calendar D−1 to 13:59 LST on D.
+        Implemented by shifting local time +10h and flooring to date,
+        matching the static ETL's selection_local_date convention.
+        Uses ZoneInfo for correct DST handling.
+        """
+        local_ts = ts.tz_convert(HALIFAX_TZ)
+        return (local_ts + pd.Timedelta(hours=10)).date()
+
+    def _local_hour(ts: pd.Timestamp) -> float:
+        """Return local hour for a UTC timestamp."""
+        local_ts = ts.tz_convert(HALIFAX_TZ)
+        return local_ts.hour + local_ts.minute / 60.0
+
+    fire_days = [
+        _fire_day(ts) for ts in weather.index
     ]
-    weather["local_date"] = local_dates
+    weather["fire_day"] = fire_days
 
-    # --- Aggregate daily values ---
-    daily_agg: dict["datetime.date", dict] = {}
+    # --- Aggregate daily values (fire-day convention) ---
+    # Collect all hourly rows per fire day, then pick the one closest
+    # to 14:00 LST for temp/RH.  Rain accumulates across the fire day.
+    daily_rows: dict["datetime.date", list[dict]] = {}
     for _, row in weather.iterrows():
-        ld = row["local_date"]
+        fd = row["fire_day"]
         t, rh, r = row["air_temperature_c"], row["relative_humidity_pct"], row["rain_mm"]
-        if ld not in daily_agg:
-            daily_agg[ld] = {"temp": t, "rh": rh, "rain": r, "month": int(row["month"])}
-        else:
-            db = daily_agg[ld]
-            db["rain"] += r
-            if t > db["temp"]:
-                db["temp"] = t
-                db["rh"] = rh
+        lh = _local_hour(row.name)
+        if fd not in daily_rows:
+            daily_rows[fd] = []
+        daily_rows[fd].append({"temp": t, "rh": rh, "rain": r, "local_hour": lh, "month": int(row["month"])})
 
-    # --- Pre-compute DMC/DC chain per local date ---
+    daily_agg: dict["datetime.date", dict] = {}
+    for fd, rows in daily_rows.items():
+        # Pick row closest to 14:00 LST
+        noon_row = min(rows, key=lambda r: abs(r["local_hour"] - 14.0))
+        total_rain = sum(r["rain"] for r in rows)
+        daily_agg[fd] = {
+            "temp": noon_row["temp"],
+            "rh": noon_row["rh"],
+            "rain": total_rain,
+            "month": noon_row["month"],
+        }
+
+    # --- Pre-compute DMC/DC chain per fire day ---
     daily_codes: dict["datetime.date", tuple[float, float]] = {}
     cur_dmc, cur_dc = dmc0, dc0
-    for ld in sorted(daily_agg.keys()):
-        db = daily_agg[ld]
+    for fd in sorted(daily_agg.keys()):
+        db = daily_agg[fd]
         if db["temp"] > 0:
             cur_dmc = fwi_calc.duff_moisture_code(
                 temp=db["temp"], rh=db["rh"], rain=db["rain"], dmc0=cur_dmc,
@@ -349,7 +382,7 @@ def compute_fwi_series(
                 temp=db["temp"], rh=db["rh"], rain=db["rain"], dc0=cur_dc,
                 month=db["month"], lat=station.lat,
             )
-        daily_codes[ld] = (cur_dmc, cur_dc)
+        daily_codes[fd] = (cur_dmc, cur_dc)
 
     # --- Compute hourly FWI ---
     ffmc = ffmc0
@@ -360,8 +393,8 @@ def compute_fwi_series(
         rh = row["relative_humidity_pct"]
         wind = row["wind_speed_kmh"]
         rain = row["rain_mm"]
-        ld = row["local_date"]
-        dmc, dc = daily_codes[ld]
+        fd = row["fire_day"]
+        dmc, dc = daily_codes[fd]
 
         ffmc = fwi_calc.hourly_fine_fuel_moisture_code(
             temp=temp, rh=rh, wind=wind, rain=rain, ffmc0=ffmc

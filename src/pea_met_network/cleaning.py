@@ -720,7 +720,7 @@ def _daily_dmc_dc_calc(
     hourly = hourly.sort_values("timestamp_utc").reset_index(drop=True)
 
     local_ts = hourly["timestamp_utc"].dt.tz_convert(halifax_tz)
-    hourly["source_local_date"] = local_ts.dt.floor("D").dt.date
+    hourly["source_local_date"] = (local_ts + pd.Timedelta(hours=10)).dt.floor("D").dt.date
     hourly["selection_local_date"] = (local_ts + pd.Timedelta(hours=10)).dt.floor("D").dt.date
     hourly["local_hour"] = local_ts.dt.hour
 
