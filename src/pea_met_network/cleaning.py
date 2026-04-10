@@ -546,13 +546,13 @@ def _hffmc_calc(
 
         if chain_broken:
             if consecutive_nulls >= gap_threshold_hours:
+                # Long gap: restart chain from default startup value
                 ffmc_running = ffmc_prev
-                chain_broken = False
-                consecutive_nulls = 0
-            else:
-                ffmc[i] = np.nan
-                consecutive_nulls += 1
-                continue
+            # else: short gap — ffmc_running retains last valid value,
+            # which is fine because hourly FFMC is self-correcting.
+            chain_broken = False
+            consecutive_nulls = 0
+            # Fall through to compute with valid inputs
 
         consecutive_nulls = 0
         rf = 0.0 if np.isnan(r) else float(r)

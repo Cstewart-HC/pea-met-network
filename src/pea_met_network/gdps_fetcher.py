@@ -40,6 +40,14 @@ import requests
 
 logger = logging.getLogger(__name__)
 
+
+def _parse_iso_ts(ts_str: str) -> datetime:
+    """Parse ISO timestamp, handling trailing 'Z' suffix."""
+    if ts_str.endswith("Z"):
+        ts_str = ts_str[:-1] + "+00:00"
+    return datetime.fromisoformat(ts_str)
+
+
 # ---------------------------------------------------------------------------
 # Configuration
 # ---------------------------------------------------------------------------
@@ -101,7 +109,7 @@ def _load_cache(run_time: datetime) -> dict[str, Any] | None:
         logger.warning("Cache read error: %s", e)
         return None
 
-    ts = datetime.fromisoformat(data["_fetched_at"])
+    ts = _parse_iso_ts(data["_fetched_at"])
     age_hours = (datetime.now(timezone.utc) - ts).total_seconds() / 3600
     if age_hours > CACHE_TTL_HOURS:
         logger.info("Cache stale (%.1f h), will re-fetch", age_hours)
@@ -125,7 +133,7 @@ def _clean_old_cache() -> None:
     cutoff = datetime.now(timezone.utc) - timedelta(hours=24)
     for p in CACHE_DIR.glob("gdps_*.json"):
         try:
-            ts = datetime.fromisoformat(json.loads(p.read_text()).get("_fetched_at", ""))
+            ts = _parse_iso_ts(json.loads(p.read_text()).get("_fetched_at", ""))
             if ts < cutoff:
                 p.unlink()
                 logger.debug("Purged old cache: %s", p.name)
@@ -161,7 +169,7 @@ def _discover_latest_run() -> datetime:
         for t_str in timestamps:
             if not (t_str.endswith("T00:00:00Z") or t_str.endswith("T12:00:00Z")):
                 continue
-            t = datetime.fromisoformat(t_str)
+            t = _parse_iso_ts(t_str)
             # Only consider runs that are in the past (with 1h buffer for clock skew)
             if t <= now + timedelta(hours=1):
                 valid.append(t)
@@ -191,8 +199,8 @@ def _fetch_timesteps(run_time: datetime) -> list[datetime]:
             resp.text,
         )
         if match:
-            start = datetime.fromisoformat(match.group(1))
-            end = datetime.fromisoformat(match.group(2))
+            start = _parse_iso_ts(match.group(1))
+            end = _parse_iso_ts(match.group(2))
             period = int(match.group(4))
             steps = []
             t = start

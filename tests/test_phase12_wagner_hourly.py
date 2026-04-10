@@ -429,7 +429,7 @@ class TestHFFMCAgainstCFFDRS:
         assert all(pd.notna(result[30:]))
 
     def test_gap_no_recovery_under_threshold(self):
-        """Chain stays broken for gaps under threshold (default 24h)."""
+        """Chain resumes for short gaps under threshold (default 24h)."""
         from pea_met_network.cleaning import _hffmc_calc
 
         n = 36
@@ -446,9 +446,8 @@ class TestHFFMCAgainstCFFDRS:
         )
 
         assert all(pd.notna(result[:6]))
-        assert all(pd.isna(result[6:20]))
-        # Hour 20 onwards should also be NaN — chain still broken
-        assert all(pd.isna(result[20:]))
+        # Hour 20 onwards should RESUME — short gap (< 24h) is self-correcting
+        assert all(pd.notna(result[20:]))
 
 
 # ---------------------------------------------------------------------------

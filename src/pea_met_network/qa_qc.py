@@ -259,6 +259,8 @@ def generate_qa_qc_report(
             station_snapshot = pre_imputation_missingness.get(
                 station, pre_imputation_missingness
             )
+            if not isinstance(station_snapshot, dict):
+                station_snapshot = {}
             for var in CORE_MET_VARIABLES:
                 key = f"pre_imp_missing_pct_{var}"
                 pre_imp_dict[key] = station_snapshot.get(

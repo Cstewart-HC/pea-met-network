@@ -1,163 +1,102 @@
-"""Compare OLS-translated forecasts against direct OWM per-station fetches.
+#!/usr/bin/env python3
+"""Validate direct OWM FWI computation against pipeline results.
 
-Fetches OWM One Call 3.0 for all 6 stations, then:
-1. Translates Stanhope → each park via OLS
-2. Computes FWI both ways (OLS-translated vs direct)
-3. Reports divergence: mean error, max error, bias per variable and FWI component
+Fetches current OWM data for all 6 stations, computes FWI via
+compute_fwi_series(), and saves a comparison snapshot.
 
 Usage:
-    .venv/bin/python scripts/validate_ols_vs_direct.py
+    python scripts/validate_ols_vs_direct.py
 """
-
-from __future__ import annotations
-
 import json
-import logging
-import os
+import sys
 from pathlib import Path
 
 import numpy as np
+import pandas as pd
 
-# Add src to path
-import sys
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(PROJECT_ROOT / "src"))
+REPO_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(REPO_ROOT / "src"))
 
 from pea_met_network.fwi_forecast import (
+    _fetch_owm_station,
+    compute_fwi_series,
     STANHOPE,
     PARK_STATIONS,
-    VARIABLES,
-    fetch_forecast,
-    parse_hourly_weather,
-    translate_to_station,
-    compute_fwi_series,
-    load_coefficients,
 )
-
-logging.basicConfig(level=logging.WARNING)
 
 
 def main() -> None:
-    key = os.environ.get("openweather_key")
-    if not key:
-        raise EnvironmentError("openweather_key env var not set")
+    print("=== Direct OWM FWI Validation ===\n")
 
-    coeffs = load_coefficients()
+    stations = [STANHOPE] + PARK_STATIONS
+    results = []
 
-    # --- Fetch all 6 stations ---
-    print("Fetching OWM for all 6 stations...")
-    all_stations = [STANHOPE] + PARK_STATIONS
-    direct = {}
-    for stn in all_stations:
-        data = fetch_forecast(stn)
-        direct[stn.name] = parse_hourly_weather(data)
+    for station in stations:
+        name = station["name"]
+        print(f"  Fetching OWM for {name}...", end=" ", flush=True)
+        try:
+            df = _fetch_owm_station(station, hours=48)
+        except Exception as e:
+            print(f"ERROR: {e}")
+            continue
 
-    sth = direct["stanhope"]
+        if df is None or df.empty:
+            print("no data")
+            continue
 
-    # --- Part A: Spatial divergence (Stanhope direct vs park direct) ---
-    print("\n" + "=" * 70)
-    print("PART A: Direct OWM spatial divergence (Stanhope vs park)")
-    print("=" * 70)
+        print(f"{len(df)} rows")
 
-    spatial = {}
-    for park in PARK_STATIONS:
-        merged = sth.join(direct[park.name], lsuffix="_sth", rsuffix="_pk")
-        station_spatial = {}
-        for var in VARIABLES:
-            diff = (merged[f"{var}_pk"] - merged[f"{var}_sth"]).abs()
-            bias = (merged[f"{var}_pk"] - merged[f"{var}_sth"]).mean()
-            station_spatial[var] = {
-                "mean_diff": round(float(diff.mean()), 3),
-                "max_diff": round(float(diff.max()), 3),
-                "bias": round(float(bias), 3),
-            }
-            print(
-                f"  {park.name:15s} {var:25s}  "
-                f"mean={station_spatial[var]['mean_diff']:6.2f}  "
-                f"max={station_spatial[var]['max_diff']:6.2f}  "
-                f"bias={station_spatial[var]['bias']:+6.2f}"
-            )
-        spatial[park.name] = station_spatial
-        print()
-
-    # --- Part B: OLS-translated vs Direct OWM ---
-    print("=" * 70)
-    print("PART B: OLS-translated vs Direct OWM per station")
-    print("=" * 70)
-
-    ols_comparison = {}
-    for park in PARK_STATIONS:
-        ols_weather = translate_to_station(sth, park.name, coeffs)
-        merged = direct[park.name].join(ols_weather, lsuffix="_direct", rsuffix="_ols")
-
-        station_comp = {}
-        print(f"\n  {park.name}:")
-
-        # Weather variable errors
-        for var in VARIABLES:
-            diff = (merged[f"{var}_ols"] - merged[f"{var}_direct"]).abs()
-            bias = (merged[f"{var}_ols"] - merged[f"{var}_direct"]).mean()
-            station_comp[var] = {
-                "mean_err": round(float(diff.mean()), 3),
-                "max_err": round(float(diff.max()), 3),
-                "bias": round(float(bias), 3),
-            }
-            print(
-                f"    {var:25s}  "
-                f"mean={station_comp[var]['mean_err']:6.2f}  "
-                f"max={station_comp[var]['max_err']:6.2f}  "
-                f"bias={station_comp[var]['bias']:+6.2f}"
-            )
-
-        # FWI component errors
-        fwi_direct = compute_fwi_series(direct[park.name], park)
-        fwi_ols = compute_fwi_series(ols_weather, park)
-        fwi_merged = fwi_direct.join(fwi_ols, lsuffix="_direct", rsuffix="_ols")
-
-        fwi_comp = {}
-        for col in ["FFMC", "DMC", "DC", "ISI", "BUI", "FWI"]:
-            diff = (fwi_merged[f"{col}_ols"] - fwi_merged[f"{col}_direct"]).abs()
-            bias = (fwi_merged[f"{col}_ols"] - fwi_merged[f"{col}_direct"]).mean()
-            fwi_comp[col] = {
-                "mean_err": round(float(diff.mean()), 3),
-                "max_err": round(float(diff.max()), 3),
-                "bias": round(float(bias), 3),
-            }
-            print(
-                f"    FWI-{col:3s}              "
-                f"mean={fwi_comp[col]['mean_err']:6.2f}  "
-                f"max={fwi_comp[col]['max_err']:6.2f}  "
-                f"bias={fwi_comp[col]['bias']:+6.2f}"
-            )
-
-        station_comp["fwi_components"] = fwi_comp
-        ols_comparison[park.name] = station_comp
-
-    # --- Summary ---
-    print("\n" + "=" * 70)
-    print("SUMMARY: Is single-point OLS sufficient?")
-    print("=" * 70)
-
-    for park in PARK_STATIONS:
-        ols_err = ols_comparison[park.name]["fwi_components"]["FWI"]["mean_err"]
-        spatial_diff = spatial[park.name]["air_temperature_c"]["mean_diff"]
-        ols_weather_err = ols_comparison[park.name]["air_temperature_c"]["mean_err"]
-        verdict = "GOOD" if ols_err < 2.0 else ("OK" if ols_err < 4.0 else "POOR")
-        print(
-            f"  {park.name:15s}  spatial_temp_diff={spatial_diff:.2f}°C  "
-            f"OLS_weather_err={ols_weather_err:.2f}°C  "
-            f"FWI_mean_err={ols_err:.2f}  [{verdict}]"
+        # Compute FWI from direct OWM obs
+        fwis = compute_fwi_series(
+            temp=df["temp_c"].values,
+            rh=df["rh_pct"].values,
+            wind=df["wind_mps"].values,
+            rain=df["rain_mm"].values,
+            timestamps=df.index,
         )
 
-    # Save results
-    out = {
-        "spatial_divergence": spatial,
-        "ols_vs_direct": ols_comparison,
+        fwi_series = fwis.get("FWI", pd.Series(dtype=float))
+        if fwi_series.empty:
+            print(f"    {name}: no valid FWI values")
+            continue
+
+        latest_fwi = fwi_series.iloc[-1]
+        latest_ts = str(fwi_series.index[-1])
+        max_fwi = fwi_series.max()
+
+        results.append({
+            "station": name,
+            "latest_fwi": round(float(latest_fwi), 2),
+            "max_fwi": round(float(max_fwi), 2),
+            "rows": len(df),
+            "latest_timestamp": latest_ts,
+        })
+        print(f"    Latest FWI: {latest_fwi:.2f}, Max: {max_fwi:.2f}")
+
+    if not results:
+        print("\nNo results obtained.")
+        return
+
+    # Summary
+    print("\n--- Summary ---")
+    print(f"{'Station':20s} | {'Latest FWI':>10s} | {'Max FWI':>10s} | Rows")
+    print("-" * 60)
+    for r in results:
+        print(f"{r['station']:20s} | {r['latest_fwi']:10.2f} | {r['max_fwi']:10.2f} | {r['rows']}")
+
+    # Save report
+    output_dir = REPO_ROOT / "data" / "forecasts"
+    output_dir.mkdir(parents=True, exist_ok=True)
+    report_path = output_dir / "owm_validation_report.json"
+
+    report = {
+        "method": "direct_owm_fwi",
+        "stations": results,
+        "note": "Direct OWM fetch + compute_fwi_series for each station.",
     }
-    out_path = PROJECT_ROOT / "data" / "forecasts" / "ols_validation_report.json"
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    out_path.write_text(json.dumps(out, indent=2) + "\n")
-    print(f"\nSaved → {out_path}")
+    with open(report_path, "w") as f:
+        json.dump(report, f, indent=2)
+    print(f"\nReport saved to {report_path}")
 
 
 if __name__ == "__main__":

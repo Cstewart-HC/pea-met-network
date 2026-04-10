@@ -425,7 +425,7 @@ class LicorAdapter:
             latest_end = datetime(2025, 11, 1, tzinfo=timezone.utc)
 
         now = datetime.now(timezone.utc)
-        start_date = latest_end + timedelta(days=1)
+        start_date = latest_end
 
         # Nothing to fetch
         if start_date.date() >= now.date():
