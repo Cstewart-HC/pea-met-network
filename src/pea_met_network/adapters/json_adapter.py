@@ -137,7 +137,17 @@ class JSONAdapter(BaseAdapter):
         sensor: dict, series_map: dict[str, pd.Series]
     ) -> None:
         """Extract time-series from a single sensor's data entries."""
-        data_entries = sensor.get("data", [])
+        # Handle combined/cached format: records directly on sensor (no "data" wrapper)
+        data_entries = sensor.get("data", None)
+        if data_entries is None and "records" in sensor:
+            # Combined file format: sensor has measurementType, units, records directly
+            data_entries = [{
+                "measurementType": sensor.get("measurementType", ""),
+                "units": sensor.get("units", ""),
+                "records": sensor["records"],
+            }]
+        if data_entries is None:
+            data_entries = []
         if isinstance(data_entries, dict):
             data_entries = [data_entries]
 
