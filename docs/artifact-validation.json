@@ -1,9 +1,0 @@
-{
-  "phase": "12",
-  "timestamp": "2026-03-30T10:54:12.837354+00:00",
-  "verdict": "SKIP",
-  "checks": [],
-  "errors": [],
-  "fingerprints": {},
-  "summary": "Phase 12 has no data artifact expectations"
-}
