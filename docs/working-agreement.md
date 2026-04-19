@@ -47,12 +47,11 @@ Repository topology is a hard rule, not a preference.
 
 Allowed at repo root:
 - `README.md`
+- `AGENTS.md`
 - `pyproject.toml`
 - `requirements.txt`
 - `.gitignore`
-- `IMPLEMENTATION_PLAN.md`
-- `cleaning.py` (assignment-facing entrypoint, if present)
-- directories: `src/`, `tests/`, `docs/`, `data/`, `notebooks/`, `specs/`, `scripts/`
+- directories: `src/`, `tests/`, `docs/`, `data/`, `notebooks/`, `scripts/`, `dashboard/`, `.github/`
 
 Not allowed at repo root:
 - stray markdown or text files

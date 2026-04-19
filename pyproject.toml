@@ -41,7 +41,7 @@ where = ["src"]
 [tool.ruff]
 line-length = 80
 target-version = "py311"
-src = ["src", "tests", "cleaning.py"]
+src = ["src", "tests"]
 
 [tool.ruff.lint.per-file-ignores]
 "*.ipynb" = ["E402"]

@@ -66,3 +66,6 @@ figures/
 
 # Pipeline logs
 *.log
+
+# Type stubs
+typestubs/

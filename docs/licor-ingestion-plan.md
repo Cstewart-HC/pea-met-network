@@ -16,7 +16,7 @@ The clean pipeline (`python -m pea_met_network`) skips all stations when Licor J
 | `cleaning.py` | Add pre-fetch step before `discover_raw_files()` — calls `LicorAdapter.fetch_and_cache()` to refresh cache |
 | New: `licor_cache_manager.py` | Cache compaction logic — consolidate old weekly chunks into monthly combined files |
 | `licor_cache.py` (script) | Refactor to use `LicorAdapter.fetch_and_cache()` internally, eliminating duplication |
-| `fetch_eccc_donors.py` | Add incremental mode — fetch only since last cached file for Stanhope |
+| `fetch_eccc_donors.py` | Add incremental mode — fetch only since last cached file for Stanhope (via `stanhope_cache.py`) |
 
 ### What stays
 

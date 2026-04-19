@@ -80,17 +80,22 @@ make check
 
 ```text
 pea-met-network/
-├── analysis.ipynb          # Analytical narrative notebook
+├── .github/workflows/        # CI/CD (dashboard deploy)
+├── analysis.ipynb            # Analytical narrative notebook
+├── dashboard/                # FWI geospatial dashboard (Phase 16)
 ├── data/
-│   ├── raw/
-│   ├── processed/
-│   └── external/
+│   ├── raw/                  # Raw station data (CSV, JSON, XLSX, XLE)
+│   └── processed/            # Pipeline output (gitignored)
 ├── docs/
-├── notebooks/
-├── specs/
+│   ├── cleaning-config.json  # Pipeline configuration
+│   ├── pipeline/             # Architecture documentation
+│   └── specs/                # Phase specifications (01-16)
+├── notebooks/                # Historical notebooks
+├── scripts/                  # Utility and build scripts
 ├── src/
-├── tests/
-├── IMPLEMENTATION_PLAN.md
+│   └── pea_met_network/      # Pipeline source code
+├── tests/                    # Test suite
+├── AGENTS.md                 # Agent workspace rules
 ├── Makefile
 ├── README.md
 ├── pyproject.toml

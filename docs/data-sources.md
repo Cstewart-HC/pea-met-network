@@ -27,7 +27,7 @@ This project uses multiple data sources for PEI meteorological data and Fire Wea
 #### ECCC Climate API
 - Stanhope station monitored by ECCC
 - Bulk data available at: https://climate.weather.gc.ca/historical_data/search_historic_data_e.html
-- Automated downloader implemented: `scripts/stanhope_cache.py`
+- Automated downloader implemented: `src/pea_met_network/stanhope_cache.py`
 - Pulls hourly meteorological data by month
 
 ## Licor Cloud API
@@ -140,12 +140,12 @@ Canadian Fire Weather Information System API for fire weather station data and c
 
 ### Manual Data Delivery
 - Initial PEINP station data provided as manual CSV files
-- Located in: `data/raw/peinp/PEINP Weather Station Data 2022-2025/`
+- Located in: `data/raw/peinp/` (per-station subdirectories)
 - No automated ingestion pipeline for initial data load
 
-### Automation Potential
-- ECCC Stanhope data: Already automated via `stanhope_cache.py`
-- HOBOlink data: Public URLs available, API integration possible via Licor Cloud API
+### Automation
+- ECCC Stanhope data: Automated via `src/pea_met_network/stanhope_cache.py`
+- PEINP station data: Automated via `src/pea_met_network/licor_adapter.py` (Licor Cloud API)
 - CWFIS data: API available, historical coverage uncertain
 
 ## References
