@@ -1,3 +1,7 @@
+# Deploy FWI Dashboard
+# Triggered on: push to main (dashboard/ or workflow changes), or manual dispatch
+# Updated: 2026-04-20 - Repo renamed to pei-parks-fwi
+
 name: Deploy FWI Dashboard
 
 on:
