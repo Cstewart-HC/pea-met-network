@@ -8,13 +8,15 @@
 
 This project provides:
 - **Automated wildfire risk assessment** across Prince Edward Island National Park
-- **Real-time FWI dashboard** showing current conditions at weather stations
+- **Interactive FWI dashboard** displaying current conditions at weather stations
 - **Station redundancy analysis** to identify optimal sensor placement
 - **Future FWI forecasts** using Environment and Climate Change Canada (ECCC) GDPS model data
 
+> **Note:** The dashboard displays static data generated from the pipeline. For truly live/real-time data, the pipeline must be deployed to a hosted environment with scheduled runs and API credentials configured.
+
 ### Live Dashboard & Reports
 
-🔗 **[Fire Weather Index Dashboard](https://cstewart-hc.github.io/pei-parks-fwi/)** — Interactive map with live FWI values and 7-day forecasts
+🔗 **[Fire Weather Index Dashboard](https://cstewart-hc.github.io/pei-parks-fwi/)** — Interactive map with FWI values and 7-day forecasts (static data, updated on manual pipeline runs)
 
 **Analysis Reports:**
 - [Network Analysis (visuals only)](https://cstewart-hc.github.io/pei-parks-fwi/analysis.html) — Exploratory data analysis, redundancy results, FWI validation
@@ -25,7 +27,7 @@ This project provides:
 
 | Output | Description |
 |--------|-------------|
-| **FWI Dashboard** | Interactive map showing current FWI, DMC, DC, ISI, BUI values at each station |
+| **FWI Dashboard** | Interactive map showing FWI, DMC, DC, ISI, BUI values at each station (static data) |
 | **7-Day Forecasts** | GDPS-driven FWI projections for all park weather stations |
 | **Redundancy Report** | PCA biplot showing which stations provide overlapping vs. unique coverage |
 | **Cleaned Data** | Quality-controlled hourly and daily weather datasets |
@@ -54,7 +56,7 @@ This project implements an end-to-end OSEMN (Obtain, Scrub, Explore, Model, iNte
 2. **FWI calculation engine** — standard Canadian FWI chain (FFMC → DMC → DC → ISI → BUI → FWI)
 3. **Redundancy analysis** (`src/pea_met_network/redundancy.py`) — PCA-based station overlap detection
 4. **Forecast pipeline** — GDPS model ingestion with FWI chain propagation
-5. **Interactive dashboard** — Leaflet.js visualization with real-time data
+5. **Interactive dashboard** — Leaflet.js visualization with static data (can be made live with scheduled deployment)
 6. **Analysis notebook** (`analysis.ipynb`) — full EDA, validation, and uncertainty quantification
 
 ### OSEMN Framework
@@ -176,6 +178,25 @@ pei-parks-fwi/
 ### Environment Variables
 
 No required environment variables for basic pipeline operation. Forecast pipeline may use optional ECCC API credentials (configured via `data/forecasts/startup_state.json`).
+
+### Deployment for Real-Time Updates
+
+The current dashboard displays **static data**. To enable live/real-time updates, you would need:
+
+| Component | Requirement |
+|-----------|-------------|
+| **Hosted environment** | Cloud server (e.g., AWS, GCP, Azure) or on-premise machine |
+| **Scheduler** | Cron job or GitHub Actions workflow to run pipeline hourly/daily |
+| **API credentials** | ECCC GDPS API key (or alternative weather data provider) |
+| **Data publishing** | Workflow to push updated CSVs to `dashboard/data/` and trigger GitHub Pages deploy |
+| **Storage** | Persistent storage for forecast cache (`data/gdps_cache/`) |
+
+Example: A GitHub Actions workflow scheduled every 6 hours could:
+1. Fetch latest GDPS data from ECCC API
+2. Run FWI pipeline
+3. Update `dashboard/data/` files
+4. Commit and push to `main` branch
+5. Trigger automatic Pages deploy
 
 ### Dependencies
 
