@@ -1,91 +1,158 @@
 # PEI National Park FWI
 
-Fire Weather Index pipeline for Parks Canada Agency (PEI Field Unit).
+---
 
-This project determines weather-station redundancy across Prince Edward
-Island National Park and automates Canadian Fire Weather Index (FWI)
-calculation for localized wildfire risk management.
+## For Stakeholders & General Readers
 
-## OSEMN Pipeline Structure
+**Fire Weather Index system for Parks Canada Agency (PEI Field Unit)**
 
-The project follows the **OSEMN** (Obtain, Scrub, Explore, Model, iNterpret)
-framework:
+This project provides:
+- **Automated wildfire risk assessment** across Prince Edward Island National Park
+- **Real-time FWI dashboard** showing current conditions at weather stations
+- **Station redundancy analysis** to identify optimal sensor placement
+- **Future FWI forecasts** using Environment and Climate Change Canada (ECCC) GDPS model data
 
-1. **Obtain** — raw station CSVs inventoried and schema-audited
-2. **Scrub** — ingestion, timestamp normalization, hourly/daily resampling, imputation
-3. **Explore** — EDA, QA/QC summaries, exploratory notebooks
-4. **Model** — Stanhope reference calibration, FWI chain, PCA redundancy analysis
-5. **iNterpret** — probabilistic uncertainty quantification and recommendations
+### Live Dashboard & Reports
 
-## Setup and Installation
+🔗 **[Fire Weather Index Dashboard](https://cstewart-hc.github.io/pei-parks-fwi/)** — Interactive map with live FWI values and 7-day forecasts
+
+**Analysis Reports:**
+- [Network Analysis (visuals only)](https://cstewart-hc.github.io/pei-parks-fwi/analysis.html) — Exploratory data analysis, redundancy results, FWI validation
+- [Network Analysis (with code)](https://cstewart-hc.github.io/pei-parks-fwi/analysis_full.html) — Full analytical notebook including code
+- [Redundancy Module](https://cstewart-hc.github.io/pei-parks-fwi/redundancy.html) — PCA-based station overlap analysis source code
+
+### What We Deliver
+
+| Output | Description |
+|--------|-------------|
+| **FWI Dashboard** | Interactive map showing current FWI, DMC, DC, ISI, BUI values at each station |
+| **7-Day Forecasts** | GDPS-driven FWI projections for all park weather stations |
+| **Redundancy Report** | PCA biplot showing which stations provide overlapping vs. unique coverage |
+| **Cleaned Data** | Quality-controlled hourly and daily weather datasets |
+| **Uncertainty Bounds** | Probabilistic confidence intervals around all FWI calculations |
+
+### Coverage Area
+
+Weather stations across PEI National Park:
+- Cavendish
+- Greenwich
+- North Rustico
+- Stanhope (reference/calibration station)
+- Stanley Bridge
+- Tracadie
+
+---
+
+## For Technical Users
+
+### Overview
+
+This project implements an end-to-end OSEMN (Obtain, Scrub, Explore, Model, iNterpret) pipeline for Fire Weather Index calculation and weather-station redundancy analysis. It processes raw station data, validates against Environment and Climate Change Canada standards, and provides both interactive dashboards and programmatic access to results.
+
+**Key components:**
+1. **Data cleaning pipeline** (`src/pea_met_network/cleaning.py`) — normalization, resampling, imputation
+2. **FWI calculation engine** — standard Canadian FWI chain (FFMC → DMC → DC → ISI → BUI → FWI)
+3. **Redundancy analysis** (`src/pea_met_network/redundancy.py`) — PCA-based station overlap detection
+4. **Forecast pipeline** — GDPS model ingestion with FWI chain propagation
+5. **Interactive dashboard** — Leaflet.js visualization with real-time data
+6. **Analysis notebook** (`analysis.ipynb`) — full EDA, validation, and uncertainty quantification
+
+### OSEMN Framework
+
+| Stage | Implementation |
+|-------|----------------|
+| **Obtain** | Raw station CSVs inventoried and schema-audited; GDPS model data fetched via ECCC API |
+| **Scrub** | Ingestion, timestamp normalization, hourly/daily resampling, missing-value imputation |
+| **Explore** | EDA notebooks, QA/QC summaries, correlation analysis |
+| **Model** | Stanhope reference calibration, FWI chain execution, PCA redundancy analysis |
+| **iNterpret** | Probabilistic uncertainty quantification, station consolidation recommendations |
+
+### Installation
 
 ```bash
+# Clone repository
+git clone https://github.com/Cstewart-HC/pei-parks-fwi.git
+cd pei-parks-fwi
+
+# Create virtual environment
 python3 -m venv .venv
-. .venv/bin/activate
+source .venv/bin/activate  # or `.venv\Scripts\activate` on Windows
+
+# Install dependencies
 pip install -r requirements.txt
 pip install -r requirements-dev.txt
 ```
 
-Or use:
+Or use the Makefile shortcut:
 
 ```bash
 make install
 ```
 
-## Running the Pipeline
+### Running the Pipeline
 
-### Data Cleaning (`pea_met_network.cleaning`)
+#### Data Cleaning Pipeline
 
-`pea_met_network.cleaning` is the end-to-end pipeline entrypoint. It loads raw station
-CSVs from `data/raw/`, normalizes timestamps, resamples to hourly and daily
-frequencies, applies imputation, and writes cleaned datasets to
-`data/processed/`.
+The main entry point is `pea_met_network.cleaning`. It processes raw station CSVs from `data/raw/`, normalizes timestamps, resamples to hourly/daily frequencies, applies imputation, and writes cleaned datasets to `data/processed/`.
 
 ```bash
 python -m pea_met_network
 python -m pea_met_network --output-dir /custom/path
 ```
 
-No manual steps are required between start and finished output. If raw data
-directories are missing, a clear error message is shown.
+No manual steps between start and finished output. Missing raw data directories trigger clear error messages.
 
-### Analysis Notebook (`analysis.ipynb`)
+#### Analysis Notebook
 
-`analysis.ipynb` contains the full analytical narrative with sections for
-EDA, redundancy analysis, FWI logic, and uncertainty quantification. Each
-section includes visualizations and markdown explanations.
-
-To run:
+`analysis.ipynb` contains the full analytical narrative:
+- Exploratory data analysis
+- Redundancy analysis (PCA biplots, clustering)
+- FWI logic validation
+- Uncertainty quantification
 
 ```bash
 jupyter lab analysis.ipynb
 ```
 
-## Key Outputs
-
-- **Cleaned datasets** — hourly and daily resampled data for all PCA stations
-- **FWI values** — full FWI chain (FFMC → DMC → DC → ISI → BUI → FWI)
-- **Redundancy results** — PCA biplot and clustering analysis of station overlap
-- **Uncertainty distributions** — probabilistic quantification of imputation and model uncertainty
-
-## Quality Checks
+#### Running Tests
 
 ```bash
-make lint
-make test
-make check
+make lint    # Ruff linting
+make test    # pytest test suite
+make check   # Type checking + linting + tests
 ```
 
-## Repository Structure
+### Key Technical Outputs
+
+| Output | Location | Description |
+|--------|----------|-------------|
+| Cleaned hourly data | `data/processed/hourly/` | Quality-controlled 1-hour resolution |
+| Cleaned daily data | `data/processed/daily/` | Quality-controlled 24-hour aggregates |
+| FWI values | `data/processed/fwi/` | Full FWI chain (FFMC → DMC → DC → ISI → BUI → FWI) |
+| FWI forecasts | `data/forecasts/*_fwi_forecast.csv` | 7-day GDPS-driven projections |
+| GDPS cache | `data/gdps_cache/` | Raw model data (YYYYMMDDTHH.json format) |
+| Redundancy results | `analysis.ipynb` | PCA biplot, clustering dendrograms |
+| Dashboard HTML | `dashboard/` | Standalone Leaflet.js application |
+
+### Repository Structure
 
 ```text
 pei-parks-fwi/
-├── .github/workflows/        # CI/CD (dashboard deploy)
+├── .github/workflows/        # CI/CD (GitHub Actions, dashboard deploy)
 ├── analysis.ipynb            # Analytical narrative notebook
 ├── dashboard/                # FWI geospatial dashboard (Phase 16)
+│   ├── index.html            # Main dashboard page
+│   ├── analysis.html         # Notebook HTML (outputs only)
+│   ├── analysis_full.html    # Notebook HTML (with code)
+│   ├── redundancy.html       # Redundancy module source
+│   ├── css/                  # Dashboard styles
+│   ├── js/                   # Dashboard JavaScript
+│   └── data/                 # Static data for dashboard
 ├── data/
 │   ├── raw/                  # Raw station data (CSV, JSON, XLSX, XLE)
-│   └── processed/            # Pipeline output (gitignored)
+│   ├── processed/            # Pipeline output (gitignored)
+│   ├── forecasts/            # FWI forecast CSVs + startup_state.json
+│   └── gdps_cache/           # Cached GDPS model data
 ├── docs/
 │   ├── cleaning-config.json  # Pipeline configuration
 │   ├── pipeline/             # Architecture documentation
@@ -94,6 +161,9 @@ pei-parks-fwi/
 ├── scripts/                  # Utility and build scripts
 ├── src/
 │   └── pea_met_network/      # Pipeline source code
+│       ├── cleaning.py       # Main cleaning pipeline
+│       ├── redundancy.py     # PCA redundancy analysis
+│       └── ...
 ├── tests/                    # Test suite
 ├── AGENTS.md                 # Agent workspace rules
 ├── Makefile
@@ -102,6 +172,25 @@ pei-parks-fwi/
 ├── requirements.txt
 └── requirements-dev.txt
 ```
+
+### Environment Variables
+
+No required environment variables for basic pipeline operation. Forecast pipeline may use optional ECCC API credentials (configured via `data/forecasts/startup_state.json`).
+
+### Dependencies
+
+Core:
+- `pandas`, `numpy` — Data manipulation
+- `scipy`, `scikit-learn` — Statistical analysis, PCA, clustering
+- `jupyter`, `nbconvert` — Notebook execution and HTML export
+- `requests` — API calls for GDPS data
+
+Development:
+- `pytest`, `pytest-cov` — Testing
+- `ruff` — Linting
+- `basedpyright` — Type checking
+
+---
 
 ## Assignment Context
 
@@ -114,3 +203,8 @@ Required themes:
 - Station redundancy analysis using PCA and/or clustering
 - FWI calculation and validation
 - Probabilistic uncertainty quantification
+
+---
+
+**License:** See project repository for license information.
+**Contact:** For dashboard issues or questions, contact Parks Canada PEI Field Unit.
