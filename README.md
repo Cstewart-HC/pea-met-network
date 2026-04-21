@@ -39,7 +39,7 @@ Weather stations across PEI National Park:
 - Cavendish
 - Greenwich
 - North Rustico
-- Stanhope (reference/calibration station)
+- Stanhope (reference station, ECCC data source)
 - Stanley Bridge
 - Tracadie
 
@@ -66,7 +66,7 @@ This project implements an end-to-end OSEMN (Obtain, Scrub, Explore, Model, iNte
 | **Obtain** | Raw station CSVs inventoried and schema-audited; GDPS model data fetched via ECCC API |
 | **Scrub** | Ingestion, timestamp normalization, hourly/daily resampling, missing-value imputation |
 | **Explore** | EDA notebooks, QA/QC summaries, correlation analysis |
-| **Model** | Stanhope reference calibration, FWI chain execution, PCA redundancy analysis |
+| **Model** | Stanhope reference data ingestion, FWI chain execution, PCA redundancy analysis |
 | **iNterpret** | Probabilistic uncertainty quantification, station consolidation recommendations |
 
 ### Installation
@@ -99,10 +99,15 @@ The main entry point is `pea_met_network.cleaning`. It processes raw station CSV
 
 ```bash
 python -m pea_met_network
-python -m pea_met_network --output-dir /custom/path
+python -m pea_met_network --stations all
+python -m pea_met_network --stations cavendish,greenwich --force
+python -m pea_met_network --fwi-mode compliant
+python -m pea_met_network --dry-run
 ```
 
-No manual steps between start and finished output. Missing raw data directories trigger clear error messages.
+Options: `--stations` (comma-separated or `all`), `--force` (reprocess), `--dry-run` (report only), `--fwi-mode` (hourly|compliant|extended), `--no-fetch` (skip downloads).
+
+Missing raw data directories trigger clear error messages.
 
 #### Analysis Notebook
 
@@ -128,9 +133,8 @@ make check   # Type checking + linting + tests
 
 | Output | Location | Description |
 |--------|----------|-------------|
-| Cleaned hourly data | `data/processed/hourly/` | Quality-controlled 1-hour resolution |
-| Cleaned daily data | `data/processed/daily/` | Quality-controlled 24-hour aggregates |
-| FWI values | `data/processed/fwi/` | Full FWI chain (FFMC → DMC → DC → ISI → BUI → FWI) |
+| Cleaned hourly data | `data/processed/` | Quality-controlled hourly and daily resampled data |
+| FWI values | `data/processed/` | Full FWI chain (FFMC → DMC → DC → ISI → BUI → FWI) |
 | FWI forecasts | `data/forecasts/*_fwi_forecast.csv` | 7-day GDPS-driven projections |
 | GDPS cache | `data/gdps_cache/` | Raw model data (YYYYMMDDTHH.json format) |
 | Redundancy results | `analysis.ipynb` | PCA biplot, clustering dendrograms |
@@ -142,7 +146,7 @@ make check   # Type checking + linting + tests
 pei-parks-fwi/
 ├── .github/workflows/        # CI/CD (GitHub Actions, dashboard deploy)
 ├── analysis.ipynb            # Analytical narrative notebook
-├── dashboard/                # FWI geospatial dashboard (Phase 16)
+├── dashboard/                # FWI geospatial dashboard
 │   ├── index.html            # Main dashboard page
 │   ├── analysis.html         # Notebook HTML (outputs only)
 │   ├── analysis_full.html    # Notebook HTML (with code)
@@ -157,22 +161,36 @@ pei-parks-fwi/
 │   └── gdps_cache/           # Cached GDPS model data
 ├── docs/
 │   ├── cleaning-config.json  # Pipeline configuration
+│   ├── data-sources.md       # Data source documentation
+│   ├── fwi-forecast-plan.md  # Forecast pipeline design
+│   ├── licor-ingestion-plan.md  # LICOR sensor ingestion design
+│   ├── working-agreement.md  # Project working agreement
 │   ├── pipeline/             # Architecture documentation
 │   └── specs/                # Phase specifications (01-16)
-├── notebooks/                # Historical notebooks
+├��─ notebooks/                # Historical notebooks
 ├── scripts/                  # Utility and build scripts
 ├── src/
 │   └── pea_met_network/      # Pipeline source code
 │       ├── cleaning.py       # Main cleaning pipeline
+│       ├── fwi.py            # FWI chain (vendored cffdrs_py wrapper)
+│       ├── fwi_forecast.py   # GDPS forecast pipeline
+│       ├── gdps_fetcher.py   # ECCC GDPS data fetcher
+│       ├── stanhope_cache.py # Stanhope ECCC data ingestion
 │       ├── redundancy.py     # PCA redundancy analysis
-│       └── ...
+│       ├── uncertainty.py    # Probabilistic uncertainty quantification
+│       ├── qa_qc.py          # QA/QC checks
+│       ├── imputation.py     # Missing value imputation
+│       ├── cross_station_impute.py  # Cross-station imputation
+│       ├── validation.py     # Data validation
+│       ├── vapor_pressure.py # Vapor pressure calculations
+│       └── vendor/cffdrs/    # Vendored cffdrs_py (Van Wagner FWI)
 ├── tests/                    # Test suite
 ├── AGENTS.md                 # Agent workspace rules
 ├── Makefile
 ├── README.md
-├── pyproject.toml
-├── requirements.txt
-└── requirements-dev.txt
+├── pyproject.toml            # Package metadata (source of truth for versions)
+├── requirements.txt          # Pinned runtime dependencies
+└── requirements-dev.txt      # Pinned dev dependencies (pytest, ruff)
 ```
 
 ### Environment Variables
@@ -200,16 +218,21 @@ Example: A GitHub Actions workflow scheduled every 6 hours could:
 
 ### Dependencies
 
+`pyproject.toml` is the source of truth for versions. `requirements.txt` and `requirements-dev.txt` provide minimum pins.
+
 Core:
 - `pandas`, `numpy` — Data manipulation
 - `scipy`, `scikit-learn` — Statistical analysis, PCA, clustering
-- `jupyter`, `nbconvert` — Notebook execution and HTML export
-- `requests` — API calls for GDPS data
+- `matplotlib`, `seaborn` — Visualization
+- `requests`, `httpx` — HTTP clients for ECCC data
+- `openpyxl`, `defusedxml` — Excel/XML format support
+- `arrow`, `PyYAML`, `jsonschema` — Utilities
 
 Development:
-- `pytest`, `pytest-cov` — Testing
-- `ruff` — Linting
-- `basedpyright` — Type checking
+- `pytest` — Testing (e2e, slow, integration markers defined)
+- `ruff` — Linting and formatting
+
+Note: `requirements.txt` contains minimum version pins; `pyproject.toml` defines the full dependency set including `jupyter`, `nbconvert`, `prometheus_client`, `psutil`, `lark`, and `Jinja2`.
 
 ---
 
