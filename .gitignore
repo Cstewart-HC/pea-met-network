@@ -45,6 +45,8 @@ memory/
 -e 
 # Notebook output
 notebooks/figures/
+!notebooks/figures/pca_biplot.png
+!notebooks/figures/redundancy_*.png
 
 # Codesight (generated)
 .codesight/
