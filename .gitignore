@@ -47,6 +47,7 @@ memory/
 notebooks/figures/
 !notebooks/figures/pca_biplot.png
 !notebooks/figures/redundancy_*.png
+!notebooks/figures/temporal_coverage_gantt.png
 
 # Codesight (generated)
 .codesight/
