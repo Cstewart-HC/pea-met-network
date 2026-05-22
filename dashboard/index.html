@@ -3,24 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PEI National Park — Fire Weather Index Dashboard</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <title>PEI National Park — Fire Weather Index Project</title>
     <link rel="stylesheet" href="css/style.css" />
 </head>
-<body>
-    <header id="site-header">
+<body class="landing">
+    <header id="landing-header">
         <h1>PEI National Park</h1>
-        <p class="subtitle">Fire Weather Index Dashboard</p>
+        <p class="subtitle">Fire Weather Index Project</p>
     </header>
 
-    <div id="map"></div>
+    <main id="landing-main">
+        <section class="intro">
+            <p>
+                A Fire Weather Index (FWI) system for the Parks Canada Agency, PEI Field Unit. This site hosts the live FWI map for the park's weather-station network and the supporting analytical reports — data quality, station redundancy, and the recommendation on which stations to keep, defer, or remove.
+            </p>
+        </section>
 
-    <footer id="site-footer">
-        <p>Reports: <a href="analysis.html">Network Analysis</a> &bull; <a href="analysis_full.html">Analysis (with code)</a> &bull; <a href="redundancy.html">Redundancy Module</a></p>
-        <p>Data: Parks Canada Weather Station Network &bull; Built with <a href="https://leafletjs.com" target="_blank" rel="noopener">Leaflet</a> &bull; OpenStreetMap tiles</p>
+        <section class="cards">
+            <a class="card primary" href="dashboard.html">
+                <h2>FWI Map Dashboard</h2>
+                <p>Interactive map of all six stations with current FWI values, sub-indices, and 7-day forecasts.</p>
+                <span class="cta">Open dashboard &rarr;</span>
+            </a>
+
+            <a class="card" href="analysis.html">
+                <h2>Network Analysis Report</h2>
+                <p>Plain-language report: data quality, redundancy findings, and removal recommendations. No code shown.</p>
+                <span class="cta">Read report &rarr;</span>
+            </a>
+
+            <a class="card" href="analysis_full.html">
+                <h2>Network Analysis (with code)</h2>
+                <p>The full analytical notebook including every code cell — for the technical team.</p>
+                <span class="cta">Open notebook &rarr;</span>
+            </a>
+
+            <a class="card" href="redundancy.html">
+                <h2>Redundancy Module Source</h2>
+                <p>Reference rendering of the PCA-based station-overlap module that powers the recommendations.</p>
+                <span class="cta">View source &rarr;</span>
+            </a>
+        </section>
+    </main>
+
+    <footer id="landing-footer">
+        <p>Data: Parks Canada Weather Station Network &bull; Source: <a href="https://github.com/Cstewart-HC/pei-parks-fwi" target="_blank" rel="noopener">github.com/Cstewart-HC/pei-parks-fwi</a></p>
     </footer>
-
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="js/app.js"></script>
 </body>
 </html>
