@@ -7796,7 +7796,7 @@ a.anchor-link {
 <!-- End of mermaid configuration --></head>
 <body class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
 <main>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=2a1fc770">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=0af56625">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7826,7 +7826,7 @@ a.anchor-link {
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=ae06a391">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=bb8770a5">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -10124,8 +10124,9 @@ tracadie            0.006      0.058          0.005     0.031           0.026   
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="7.-Redundancy-Analysis">7. Redundancy Analysis<a class="anchor-link" href="#7.-Redundancy-Analysis">¶</a></h2><p>Combining PCA, clustering, and benchmarking against the Stanhope reference to identify redundant stations.</p>
 <blockquote>
-<p><strong>Caveat — this model is temperature-only.</strong> The station matrix used for PCA, clustering, and the Stanhope benchmark is built from <code>air_temperature_c</code>. Relative humidity, wind, and rainfall — which independently affect FWI — are <strong>not</strong> included in this redundancy model. Stations that look highly redundant on temperature may still contribute uniquely on those other variables. Treat the recommendations below as a starting point that field judgement and (ideally) a multivariate follow-up should refine.</p>
-<p>A second caveat: Stanley Bridge and Tracadie have most of their RH cross-station imputed (see Section 4.1). Their apparent agreement with neighbours partly reflects the imputation, not independent agreement.</p>
+<p><strong>Scope of this section.</strong> The PCA, clustering, and Stanhope-benchmark figures in this section are built from hourly <code>air_temperature_c</code> only. They are kept as the headline view because temperature redundancy is the clearest single-variable picture.</p>
+<p><strong>The multivariate evidence lives in a companion report.</strong> A separate extended redundancy analysis covers (a) correlation, clustering, and scatter across RH, wind, rain, and all six FWI codes (FFMC, DMC, DC, ISI, BUI, FWI); (b) extreme-event correlation on the 95th/99th percentiles and on fire-weather days (FWI ≥ 15); (c) <strong>leave-one-out (LOO) station-removal degradation</strong> measuring how much the network's FWI values shift when each station's contribution to cross-station imputation is removed; (d) block-bootstrap 95% confidence intervals on every correlation; and (e) partial correlation controlling for Stanhope. See <strong><a href="redundancy_extended.html">Extended Redundancy Report</a></strong> (linked from the project landing page) for those results.</p>
+<p><strong>Caveat that still applies.</strong> Stanley Bridge and Tracadie have most of their RH cross-station imputed (see Section 4.1). Their apparent agreement with neighbours partly reflects the imputation, not independent agreement. Read the LOO section of the extended report before acting on any removal of those two stations specifically.</p>
 </blockquote>
 </div>
 </div>
@@ -10372,7 +10373,7 @@ stanley_bridge          stanhope          0.063608  0.010394  0.144060       low
 </table>
 <p>All non-reference stations fall in the <strong>low</strong> risk band.</p>
 <h3 id="9.5-Limits-of-this-recommendation">9.5 Limits of this recommendation<a class="anchor-link" href="#9.5-Limits-of-this-recommendation">¶</a></h3><ol>
-<li><strong>Temperature only.</strong> The redundancy model uses <code>air_temperature_c</code>. RH, wind, and rainfall are not in the PCA / clustering / benchmark calculation. Two of the three <em>remove</em> candidates (Tracadie, and Stanley Bridge if reconsidered) sit on heavily-imputed RH; the apparent agreement with neighbours partly reflects that imputation, not independent measurement agreement.</li>
+<li><strong>Headline table uses temperature; multivariate evidence is in a companion report.</strong> The recommendation table in §9.4 is derived from the temperature-only PCA, clustering, and Stanhope benchmark in §5–§7 of this notebook. The <a href="redundancy_extended.html">Extended Redundancy Report</a> adds (a) multivariate redundancy across RH, wind, rain, and all six FWI codes; (b) extreme-event and fire-weather-day correlation; (c) leave-one-out station-removal degradation; (d) block-bootstrap confidence intervals; and (e) partial correlation controlling for Stanhope. Reviewers should consult that report before acting on any specific station removal — particularly for Tracadie and Stanley Bridge, whose temperature agreement with neighbours partly reflects heavily-imputed RH (see §4.1) rather than independent measurement agreement.</li>
 <li><strong>Pre-removal donor check needed.</strong> If Tracadie or Stanley Bridge is decommissioned, the cross-station imputer will lean harder on the remaining stations. A donor-impact simulation should run before any removal is acted on.</li>
 <li><strong>Reference window asymmetry.</strong> The Stanhope reference ends 2025-12-31; the benchmark scores omit the most recent ~3 months of data from the comparison stations.</li>
 <li><strong>Risk model is a coarse bound.</strong> Uncertainty intervals come from a kernel-density estimate over station-vs-reference divergence samples; they are sized to inform a decision, not to be cited as precise probabilities.</li>

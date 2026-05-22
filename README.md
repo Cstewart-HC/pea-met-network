@@ -22,6 +22,7 @@ This project provides:
 - [FWI Map Dashboard](https://cstewart-hc.github.io/pei-parks-fwi/dashboard.html) — Interactive map with FWI values and 7-day forecasts (static data, updated on manual pipeline runs)
 - [Network Analysis (visuals only)](https://cstewart-hc.github.io/pei-parks-fwi/analysis.html) — Exploratory data analysis, redundancy results, FWI validation
 - [Network Analysis (with code)](https://cstewart-hc.github.io/pei-parks-fwi/analysis_full.html) — Full analytical notebook including code
+- [Extended Redundancy Report](https://cstewart-hc.github.io/pei-parks-fwi/redundancy_extended.html) — Multivariate redundancy across all FWI variables, leave-one-out station degradation, bootstrap CIs, partial correlation
 - [Redundancy Module](https://cstewart-hc.github.io/pei-parks-fwi/redundancy.html) — PCA-based station overlap analysis source code
 
 ### What We Deliver
