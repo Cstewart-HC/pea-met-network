@@ -9210,7 +9210,14 @@ Stations without <code>_qf</code> columns for a variable are shown as N/A.</p>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="5.-Redundancy-Analysis">5. Redundancy Analysis<a class="anchor-link" href="#5.-Redundancy-Analysis">¶</a></h2><blockquote>
-<p><strong>Method.</strong> The previous PR carried three separate redundancy sections — a temperature-only PCA (§5), a temperature-only clustering dendrogram (§6), and a Stanhope-benchmark + recommendations table (§7) — followed by a multivariate consolidation (§7.5). The single-variable temperature view consistently overstates redundancy because PC1 on temperature is dominated by the shared seasonal/diurnal signal that every station records the same way. The substantive redundancy evidence comes from repeating the analysis on all four FWI inputs (temperature, relative humidity, wind speed, precipitation), checking leave-one-out donor impact in the imputation network, partialing out the shared regional weather, and restricting correlation to extreme-event rows. Those four pieces are below; the full per-variable matrices and bootstrap intervals are in the <a href="redundancy_extended.html">Extended Redundancy Report</a>.</p>
+<p><strong>Method.</strong> A single-variable view of redundancy — for example, hourly air temperature — consistently overstates how interchangeable the stations are, because PC1 on temperature is dominated by the shared seasonal/diurnal signal that every station records the same way. The substantive evidence in this section comes from four complementary checks: (i) repeating the PCA on all four FWI inputs (temperature, RH, wind, precipitation); (ii) leave-one-out donor impact in the cross-station imputation network; (iii) partial correlation that removes shared regional weather; (iv) correlation restricted to extreme-event rows. The full per-variable matrices and bootstrap intervals are in the <a href="redundancy_extended.html">Extended Redundancy Report</a>.</p>
+<p><strong>Recommendation framework.</strong> The per-variable matrix below and the per-station recommendation in §7.4 both use the same three-label rubric:</p>
+<ul>
+<li><strong>Keep</strong> — the station carries information no other station provides at the level of confidence we require, or it is a load-bearing donor in the cross-station imputation network. Removal would materially degrade either input data quality or downstream FWI.</li>
+<li><strong>Defer</strong> — the multivariate, LOO, partial-correlation, and extreme-event evidence is <em>mixed</em> for this station. It is not confidently redundant, but it is also not confidently unique. Hold the current configuration and revisit when more data or an operational driver (sensor failure, budget cut) forces a decision.</li>
+<li><strong>Remove</strong> — the station is statistically redundant on this variable / overall: another station predicts it to the 95%-confidence threshold (bootstrap CI lower bound &gt; 0.95 on Pearson r) and it carries no load-bearing donor role. Decommissioning is supported by the evidence.</li>
+</ul>
+<p>The bar for <strong>Remove</strong> is intentionally high — it requires <em>both</em> statistical redundancy <em>and</em> no donor role. <strong>Defer</strong> is the default whenever either condition is borderline.</p>
 </blockquote>
 <h3 id="Single-variable-PCA-%E2%80%94-temperature-is-the-outlier,-not-the-rule">Single-variable PCA — temperature is the outlier, not the rule<a class="anchor-link" href="#Single-variable-PCA-%E2%80%94-temperature-is-the-outlier,-not-the-rule">¶</a></h3><p>Temperature is highly redundant across the network (PC1 = 0.963), but treating all four FWI inputs as if they tracked together overstates the picture. Repeating the PCA on the other FWI inputs:</p>
 <table>
@@ -9483,7 +9490,8 @@ Stations without <code>_qf</code> columns for a variable are shown as N/A.</p>
 <li><strong>Partial correlation controlling for Stanhope</strong> (§5): Greenwich's correlation with every other station collapses from ~0.91 to 0.26–0.41 — its apparent agreement was almost entirely shared regional weather, not local similarity. Cavendish, North Rustico, and Tracadie remain genuinely locally similar (partial r ~0.90).</li>
 <li><strong>Extreme-event correlation</strong> (§5): cross-station agreement degrades by ~1.0–1.1 in Pearson r when restricted to 95th/99th-percentile conditions or FWI ≥ 25 days — exactly the conditions when the dashboard is most consulted.</li>
 </ul>
-<h3 id="7.4-Recommendation">7.4 Recommendation<a class="anchor-link" href="#7.4-Recommendation">¶</a></h3><table>
+<h3 id="7.4-Recommendation">7.4 Recommendation<a class="anchor-link" href="#7.4-Recommendation">¶</a></h3><p>Applying the Keep / Defer / Remove rubric defined at the top of §5:</p>
+<table>
 <thead>
 <tr>
 <th>Station</th>
