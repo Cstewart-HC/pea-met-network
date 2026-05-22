@@ -16,9 +16,10 @@ This project provides:
 
 ### Live Dashboard & Reports
 
-🔗 **[Fire Weather Index Dashboard](https://cstewart-hc.github.io/pei-parks-fwi/)** — Interactive map with FWI values and 7-day forecasts (static data, updated on manual pipeline runs)
+🔗 **[Project Landing Page](https://cstewart-hc.github.io/pei-parks-fwi/)** — Hub with links to the dashboard and all reports
 
-**Analysis Reports:**
+**Direct links:**
+- [FWI Map Dashboard](https://cstewart-hc.github.io/pei-parks-fwi/dashboard.html) — Interactive map with FWI values and 7-day forecasts (static data, updated on manual pipeline runs)
 - [Network Analysis (visuals only)](https://cstewart-hc.github.io/pei-parks-fwi/analysis.html) — Exploratory data analysis, redundancy results, FWI validation
 - [Network Analysis (with code)](https://cstewart-hc.github.io/pei-parks-fwi/analysis_full.html) — Full analytical notebook including code
 - [Redundancy Module](https://cstewart-hc.github.io/pei-parks-fwi/redundancy.html) — PCA-based station overlap analysis source code
@@ -147,7 +148,8 @@ pei-parks-fwi/
 ├── .github/workflows/        # CI/CD (GitHub Actions, dashboard deploy)
 ├── analysis.ipynb            # Analytical narrative notebook
 ├── dashboard/                # FWI geospatial dashboard
-│   ├── index.html            # Main dashboard page
+│   ├── index.html            # Landing page (hub linking to dashboard + reports)
+│   ├── dashboard.html        # Leaflet FWI map (was index.html)
 │   ├── analysis.html         # Notebook HTML (outputs only)
 │   ├── analysis_full.html    # Notebook HTML (with code)
 │   ├── redundancy.html       # Redundancy module source

@@ -306,3 +306,143 @@ html, body {
         min-width: 170px;
     }
 }
+
+/* ============================================================
+   Landing page (index.html)
+   ============================================================ */
+
+body.landing {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background: #f5f5f5;
+}
+
+#landing-header {
+    background: #1a5276;
+    color: #fff;
+    padding: 2.5rem 1rem 2rem;
+    text-align: center;
+}
+
+#landing-header h1 {
+    font-size: 2rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+#landing-header .subtitle {
+    font-size: 1rem;
+    opacity: 0.85;
+    margin-top: 0.25rem;
+}
+
+#landing-main {
+    flex: 1;
+    max-width: 960px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 2rem 1.25rem 3rem;
+}
+
+#landing-main .intro {
+    margin-bottom: 2rem;
+    color: #34495e;
+    line-height: 1.55;
+    font-size: 1.02rem;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.25rem;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border: 1px solid #e1e6ea;
+    border-radius: 8px;
+    padding: 1.5rem 1.4rem 1.4rem;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    border-color: #1a5276;
+    box-shadow: 0 6px 18px rgba(26, 82, 118, 0.15);
+}
+
+.card.primary {
+    border-left: 4px solid #1a5276;
+}
+
+.card h2 {
+    font-size: 1.1rem;
+    color: #1a5276;
+    margin-bottom: 0.5rem;
+}
+
+.card p {
+    color: #555;
+    font-size: 0.92rem;
+    line-height: 1.45;
+    flex: 1;
+    margin-bottom: 0.9rem;
+}
+
+.card .cta {
+    font-size: 0.88rem;
+    color: #1a5276;
+    font-weight: 600;
+}
+
+#landing-footer {
+    background: #ecf0f1;
+    border-top: 1px solid #d8dde1;
+    padding: 1rem;
+    text-align: center;
+    font-size: 0.82rem;
+    color: #555;
+}
+
+#landing-footer a {
+    color: #1a5276;
+    text-decoration: none;
+}
+
+#landing-footer a:hover {
+    text-decoration: underline;
+}
+
+/* Breadcrumb on inner pages (e.g., dashboard.html) */
+#site-header .breadcrumb {
+    position: absolute;
+    top: 0.5rem;
+    left: 1rem;
+    font-size: 0.85rem;
+    margin: 0;
+}
+
+#site-header .breadcrumb a {
+    color: #fff;
+    text-decoration: none;
+    opacity: 0.85;
+}
+
+#site-header .breadcrumb a:hover {
+    opacity: 1;
+    text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+    #landing-header { padding: 1.75rem 1rem 1.25rem; }
+    #landing-header h1 { font-size: 1.5rem; }
+    #landing-main { padding: 1.25rem 1rem 2rem; }
+    .cards { grid-template-columns: 1fr; }
+    #site-header .breadcrumb { position: static; text-align: left; margin-bottom: 0.25rem; }
+}

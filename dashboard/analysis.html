@@ -7795,7 +7795,127 @@ a.anchor-link {
 </style>
 <!-- End of mermaid configuration --></head>
 <body class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
-<main><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noInput" id="cell-id=9ca1554c">
+<main>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=e449ad2d">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h1 id="PEI-National-Park-%E2%80%94-Fire-Weather-Index-Network-Analysis">PEI National Park — Fire Weather Index Network Analysis<a class="anchor-link" href="#PEI-National-Park-%E2%80%94-Fire-Weather-Index-Network-Analysis">¶</a></h1><p><strong>Client:</strong> Parks Canada Agency, PEI Field Unit
+<strong>Audience:</strong> Field unit managers, fire-program leads, and the technical team supporting the FWI dashboard.
+<strong>Scope:</strong> Three-year hourly record (2023-04-01 → 2026-03-23) across six weather stations in PEI National Park.</p>
+<hr/>
+<h2 id="Executive-Summary">Executive Summary<a class="anchor-link" href="#Executive-Summary">¶</a></h2><p><strong>What this report does.</strong> It (1) inventories the weather data feeding the Fire Weather Index (FWI) dashboard, (2) measures how much of that data is real versus reconstructed, and (3) recommends which stations are essential versus candidates for consolidation.</p>
+<p><strong>Headline findings</strong></p>
+<blockquote>
+<p><strong>Network is computable end-to-end.</strong> All six stations produce a complete FWI chain (FFMC → DMC → DC → ISI → BUI → FWI) on every analysis day after pipeline processing.</p>
+<p><strong>Two stations rely heavily on imputed humidity.</strong> Stanley Bridge and Tracadie are missing ~100% of their relative-humidity (RH) values pre-imputation. Post-imputation, the pipeline fills ~83% of Stanley Bridge RH and ~87% of Tracadie RH using neighbouring stations. FWI values at those two sites should be treated as <strong>network-blended estimates</strong>, not independent measurements.</p>
+<p><strong>Greenwich and Stanhope have the most FWI chain breaks</strong> (42 and 44 respectively), almost all caused by missing RH.</p>
+<p><strong>Temperature redundancy is high.</strong> A principal-component analysis of hourly temperature shows 96% of the variance is a single shared signal across all six stations, indicating substantial overlap. Greenwich is the only station that carries a distinct secondary signal.</p>
+<p><strong>Removal recommendation (temperature-only model):</strong> <em>remove</em> Cavendish, North Rustico, and Tracadie; <em>defer</em> Greenwich and Stanley Bridge; <em>keep</em> Stanhope as reference. All removal-risk bands are <strong>low</strong> (modelled probability of meaningful coverage loss: 3% – 13%).</p>
+</blockquote>
+<p><strong>Important caveats before acting on the removal recommendation</strong></p>
+<ol>
+<li>The redundancy model uses <strong>temperature only</strong>. RH, wind, and rainfall — which are equally important to FWI — are not modelled here.</li>
+<li><strong>Tracadie and Stanley Bridge are flagged for removal or deferral despite carrying mostly synthesised RH</strong>, meaning their value to the network is already partially supplied by other stations. This is a real signal, not noise — but field judgement should weigh whether removing them then leaves the donor stations doing more imputation work.</li>
+<li>The Stanhope reference covers a slightly shorter window (ends 2025-12-31) than the comparison stations.</li>
+</ol>
+<p><strong>How to read the rest of this report.</strong> Section 2 is data inventory. Section 3 is the FWI itself. Section 4 is data-quality detail. Sections 5–8 build up the redundancy and removal-risk analysis. Section 9 is the synthesis.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=862e17a6">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="Glossary-&amp;-Legend">Glossary &amp; Legend<a class="anchor-link" href="#Glossary-&amp;-Legend">¶</a></h2><h3 id="Fire-Weather-Index-codes">Fire Weather Index codes<a class="anchor-link" href="#Fire-Weather-Index-codes">¶</a></h3><p>The Canadian FWI system is a chain of six values. Each one builds on the previous and reacts to a different aspect of fuel moisture or fire spread.</p>
+<table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Name</th>
+<th>What it measures</th>
+<th>Reacts to</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>FFMC</strong></td>
+<td>Fine Fuel Moisture Code</td>
+<td>Moisture in surface litter (needles, grass)</td>
+<td>Recent hours of temperature, RH, wind, rain</td>
+</tr>
+<tr>
+<td><strong>DMC</strong></td>
+<td>Duff Moisture Code</td>
+<td>Moisture in loosely-compacted organic layer</td>
+<td>Multi-day weather</td>
+</tr>
+<tr>
+<td><strong>DC</strong></td>
+<td>Drought Code</td>
+<td>Moisture in deep, compact organic layer</td>
+<td>Long-term drying</td>
+</tr>
+<tr>
+<td><strong>ISI</strong></td>
+<td>Initial Spread Index</td>
+<td>Expected rate of fire spread</td>
+<td>FFMC + wind</td>
+</tr>
+<tr>
+<td><strong>BUI</strong></td>
+<td>Buildup Index</td>
+<td>Total fuel available to burn</td>
+<td>DMC + DC</td>
+</tr>
+<tr>
+<td><strong>FWI</strong></td>
+<td>Fire Weather Index</td>
+<td>Overall fire intensity potential</td>
+<td>ISI + BUI</td>
+</tr>
+</tbody>
+</table>
+<p>Higher values = greater fire danger. The FWI scale is open-ended but Canadian forest agencies typically treat FWI &gt; 20 as high and &gt; 30 as extreme.</p>
+<h3 id="Quality-flags-(qf)">Quality flags (<code>qf</code>)<a class="anchor-link" href="#Quality-flags-(qf)">¶</a></h3><p>Every cleaned weather value in this report carries a quality flag that records how it was obtained:</p>
+<table>
+<thead>
+<tr>
+<th><code>qf</code></th>
+<th>Meaning</th>
+<th>Use with</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>0</strong></td>
+<td>Observed value, passed QA/QC</td>
+<td>High confidence</td>
+</tr>
+<tr>
+<td><strong>1</strong></td>
+<td>Synthetic — imputed from same station's neighbours in time, or from cross-station fill</td>
+<td>Treat as estimate</td>
+</tr>
+<tr>
+<td><strong>9</strong></td>
+<td>Chain-break gap-fill — fallback used when no donor was available and the FWI chain could not be advanced from observed data</td>
+<td>Use with caution; check Section 3.4</td>
+</tr>
+</tbody>
+</table>
+<p>In charts that follow:</p>
+<ul>
+<li><strong>Yellow background bands</strong> flag days where at least one FWI input was <code>qf == 1</code> (synthetic).</li>
+<li><strong>Red background bands</strong> flag days where at least one FWI input was <code>qf == 9</code> (chain-break fallback).</li>
+</ul>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noInput" id="cell-id=9ca1554c">
 <div class="jp-Cell-outputWrapper">
 <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
 </div>
@@ -8106,6 +8226,9 @@ preserve                142
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h3 id="3.1-FWI-Component-Time-Series">3.1 FWI Component Time Series<a class="anchor-link" href="#3.1-FWI-Component-Time-Series">¶</a></h3><p>Daily-mean FWI components for all stations. FFMC uses hourly values; DMC, DC, BUI, FWI use daily means.</p>
+<blockquote>
+<p><strong>Finding.</strong> All six stations show the expected seasonal pattern: FFMC and FWI ride near zero through the cold/wet months and spike into the high-danger range across summer. The slow codes (DMC, DC) climb gradually through the warm season and decay over winter, consistent with the Canadian FWI system behaving correctly. No station shows obviously anomalous values relative to its neighbours.</p>
+</blockquote>
 </div>
 </div>
 </div>
@@ -8222,20 +8345,7 @@ Saved: notebooks/figures/fwi_mode_comparison.png
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noInput" id="cell-id=3ffc0de4">
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>QA/QC report exists but has no fwi_stat_ columns.
-Columns available: ['station', 'hourly_rows', 'daily_rows', 'date_range_start', 'date_range_end', 'completeness', 'fwi_mode', 'pre_imp_missing_pct_air_temperature_c', 'pre_imp_missing_pct_relative_humidity_pct', 'pre_imp_missing_pct_wind_speed_kmh', 'pre_imp_missing_pct_rain_mm', 'post_imp_missing_pct_air_temperature_c', 'post_imp_missing_pct_air_temperature_c_qf', 'post_imp_missing_pct_barometric_pressure_kpa', 'post_imp_missing_pct_bui', 'post_imp_missing_pct_bui_qf', 'post_imp_missing_pct_dc', 'post_imp_missing_pct_dc_qf', 'post_imp_missing_pct_dew_point_c', 'post_imp_missing_pct_dmc', 'post_imp_missing_pct_dmc_qf', 'post_imp_missing_pct_ffmc', 'post_imp_missing_pct_ffmc_qf', 'post_imp_missing_pct_fwi', 'post_imp_missing_pct_fwi_qf', 'post_imp_missing_pct_isi', 'post_imp_missing_pct_isi_qf', 'post_imp_missing_pct_rain_mm', 'post_imp_missing_pct_rain_mm_qf', 'post_imp_missing_pct_relative_humidity_pct', 'post_imp_missing_pct_relative_humidity_pct_qf', 'post_imp_missing_pct_solar_radiation_w_m2', 'post_imp_missing_pct_wind_direction_deg', 'post_imp_missing_pct_wind_gust_speed_kmh', 'post_imp_missing_pct_wind_speed_kmh', 'post_imp_missing_pct_wind_speed_kmh_qf', 'duplicate_count', 'out_of_range_temp_count', 'out_of_range_rh_count', 'out_of_range_wind_count', 'quality_enforced_count', 'quality_flagged_count', 'out_of_range_pre_enforcement', 'out_of_range_post_enforcement', 'fwi_chain_breaks', 'carry_forward_days', 'carry_forward_pct', 'ffmc_min', 'ffmc_max', 'ffmc_mean', 'ffmc_std', 'dmc_min', 'dmc_max', 'dmc_mean', 'dmc_std', 'dc_min', 'dc_max', 'dc_mean', 'dc_std', 'isi_min', 'isi_max', 'isi_mean', 'isi_std', 'bui_min', 'bui_max', 'bui_mean', 'bui_std', 'fwi_min', 'fwi_max', 'fwi_mean', 'fwi_std']
-</pre>
-</div>
-</div>
-</div>
-</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs jp-mod-noInput" id="cell-id=3ffc0de4">
 </div>
 <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=87b7a5ef">
 <div class="jp-Cell-inputWrapper" tabindex="0">
@@ -8403,6 +8513,9 @@ tracadie              136       89
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h3 id="4.3-Out-of-Range-Summary">4.3 Out-of-Range Summary<a class="anchor-link" href="#4.3-Out-of-Range-Summary">¶</a></h3><p>Out-of-range counts for temperature, RH, and wind per station from the QA/QC report.</p>
+<blockquote>
+<p><strong>Why these counts are zero.</strong> Out-of-range values are corrected upstream by the quality-enforcement pass (see Section 4.2). The columns shown here are the <em>post-enforcement</em> state, so a clean run is expected to report all zeros. The pre-enforcement column (<code>out_of_range_pre_enforcement</code>) shows what was caught and fixed.</p>
+</blockquote>
 </div>
 </div>
 </div>
@@ -8598,6 +8711,10 @@ Columns: ['station', 'timestamp_utc', 'variable', 'imputed_value', 'quality_flag
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="5.-Principal-Component-Analysis">5. Principal Component Analysis<a class="anchor-link" href="#5.-Principal-Component-Analysis">¶</a></h2><p>PCA on hourly temperature to identify station similarity patterns.</p>
+<blockquote>
+<p><strong>What this section is for (non-technical).</strong> PCA asks: if we had to summarise the six stations' temperature series with one number per hour, how much information would we lose? If the answer is "almost none", the network is highly redundant.</p>
+<p><strong>Finding.</strong> PC1 explains <strong>96.3%</strong> of total variance, with near-equal loadings (~0.40) from every station. In plain language: nearly all temperature variation is a single shared seasonal/diurnal signal that every station records the same way. <strong>PC2</strong> is responsible for only ~1.9% of variance but is dominated by <strong>Greenwich</strong> (loading 0.90 vs ~0 for the others) — Greenwich is the only station carrying a distinct secondary temperature signature.</p>
+</blockquote>
 </div>
 </div>
 </div>
@@ -8695,6 +8812,9 @@ Explained variance ratios: [0.9635, 0.0186, 0.0098, 0.0062, 0.0011, 0.0008]
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="6.-Hierarchical-Clustering">6. Hierarchical Clustering<a class="anchor-link" href="#6.-Hierarchical-Clustering">¶</a></h2><p>Stations clustered by temperature correlation to identify redundancy groups.</p>
+<blockquote>
+<p><strong>Finding.</strong> Pairwise distances (1 − correlation) are very small overall — Cavendish, North Rustico, and Tracadie sit within 0.006 of each other (effectively interchangeable on temperature). Greenwich is the most distant station from the others (distances 0.06 – 0.10), reinforcing the PC2 result above.</p>
+</blockquote>
 </div>
 </div>
 </div>
@@ -8757,6 +8877,10 @@ tracadie            0.006      0.058          0.005     0.031           0.026   
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="7.-Redundancy-Analysis">7. Redundancy Analysis<a class="anchor-link" href="#7.-Redundancy-Analysis">¶</a></h2><p>Combining PCA, clustering, and benchmarking against the Stanhope reference to identify redundant stations.</p>
+<blockquote>
+<p><strong>Caveat — this model is temperature-only.</strong> The station matrix used for PCA, clustering, and the Stanhope benchmark is built from <code>air_temperature_c</code>. Relative humidity, wind, and rainfall — which independently affect FWI — are <strong>not</strong> included in this redundancy model. Stations that look highly redundant on temperature may still contribute uniquely on those other variables. Treat the recommendations below as a starting point that field judgement and (ideally) a multivariate follow-up should refine.</p>
+<p>A second caveat: Stanley Bridge and Tracadie have most of their RH cross-station imputed (see Section 4.1). Their apparent agreement with neighbours partly reflects the imputation, not independent agreement.</p>
+</blockquote>
 </div>
 </div>
 </div>
@@ -8779,25 +8903,7 @@ stanley_bridge          stanhope          24066       2.099542     0.942855     
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noInput" id="cell-id=edf2c6f2">
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Station Recommendations:
-       station reference_station recommendation  risk_probability  ci_lower  ci_upper risk_band                                                                                                    evidence                                                                                                                                                                                                                                                                                  assumptions                                                limitations
-     cavendish          stanhope         remove          0.121140  0.012887  0.288408       low benchmark correlation=0.967; uncertainty=low (0.01-0.29); pca=[PC1=0.414, PC2=-0.168]; cluster=position 3/6 Distributional uncertainty is estimated with scipy.stats.gaussian_kde over observation-derived station-reference divergence samples; when benchmark fixtures omit raw observations, a documented synthetic distribution is generated from mean difference, correlation, and overlap support. Sample support is adequate for a coarse uncertainty bound.
-     greenwich          stanhope          defer          0.028022  0.000000  0.060345       low  benchmark correlation=0.905; uncertainty=low (0.00-0.06); pca=[PC1=0.396, PC2=0.901]; cluster=position 6/6 Distributional uncertainty is estimated with scipy.stats.gaussian_kde over observation-derived station-reference divergence samples; when benchmark fixtures omit raw observations, a documented synthetic distribution is generated from mean difference, correlation, and overlap support. Sample support is adequate for a coarse uncertainty bound.
- north_rustico          stanhope         remove          0.110791  0.013123  0.265487       low benchmark correlation=0.965; uncertainty=low (0.01-0.27); pca=[PC1=0.413, PC2=-0.171]; cluster=position 4/6 Distributional uncertainty is estimated with scipy.stats.gaussian_kde over observation-derived station-reference divergence samples; when benchmark fixtures omit raw observations, a documented synthetic distribution is generated from mean difference, correlation, and overlap support. Sample support is adequate for a coarse uncertainty bound.
-stanley_bridge          stanhope          defer          0.063608  0.010394  0.144060       low benchmark correlation=0.943; uncertainty=low (0.01-0.14); pca=[PC1=0.406, PC2=-0.323]; cluster=position 5/6 Distributional uncertainty is estimated with scipy.stats.gaussian_kde over observation-derived station-reference divergence samples; when benchmark fixtures omit raw observations, a documented synthetic distribution is generated from mean difference, correlation, and overlap support. Sample support is adequate for a coarse uncertainty bound.
-      tracadie          stanhope         remove          0.123004  0.014229  0.279774       low benchmark correlation=0.969; uncertainty=low (0.01-0.28); pca=[PC1=0.413, PC2=-0.154]; cluster=position 2/6 Distributional uncertainty is estimated with scipy.stats.gaussian_kde over observation-derived station-reference divergence samples; when benchmark fixtures omit raw observations, a documented synthetic distribution is generated from mean difference, correlation, and overlap support. Sample support is adequate for a coarse uncertainty bound.
-</pre>
-</div>
-</div>
-</div>
-</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs jp-mod-noInput" id="cell-id=edf2c6f2">
 </div>
 <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=92a9a586">
 <div class="jp-Cell-inputWrapper" tabindex="0">
@@ -8805,6 +8911,10 @@ stanley_bridge          stanhope          defer          0.063608  0.010394  0.1
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="8.-Uncertainty-Quantification">8. Uncertainty Quantification<a class="anchor-link" href="#8.-Uncertainty-Quantification">¶</a></h2><p>Risk probabilities and confidence intervals for station removal.</p>
+<blockquote>
+<p><strong>What this section is for (non-technical).</strong> For each station, we estimate the probability that removing it would meaningfully degrade the network's coverage. The probability is computed from how often that station diverges from the Stanhope reference; the 95% confidence interval captures how much sample noise affects that estimate.</p>
+<p><strong>Finding.</strong> All five non-reference stations fall in the <strong>low risk band</strong> (risk probability 3% – 13%). Greenwich is the <em>lowest-risk-to-remove on this metric</em> (3%) but the PCA shows Greenwich is the most distinctive station — so this is a case where the redundancy logic and the temperature-divergence logic disagree, and the redundancy logic correctly overrides into a <em>defer</em> recommendation.</p>
+</blockquote>
 </div>
 </div>
 </div>
@@ -8849,7 +8959,81 @@ stanley_bridge          stanhope          0.063608  0.010394  0.144060       low
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h1 id="Conclusion">Conclusion<a class="anchor-link" href="#Conclusion">¶</a></h1><p><em>TBD — fill in after review.</em></p>
+<h1 id="9.-Conclusion">9. Conclusion<a class="anchor-link" href="#9.-Conclusion">¶</a></h1><h3 id="9.1-Network-status">9.1 Network status<a class="anchor-link" href="#9.1-Network-status">¶</a></h3><p>Six stations operated across the analysis window (<strong>2023-04-01 → 2026-03-23</strong>, with Stanhope ending 2025-12-31 and Tracadie starting 2023-06-29). Hourly completeness for the four FWI core inputs (temperature, RH, wind, rain) ranged from <strong>99.7%</strong> at Stanhope to <strong>~82%</strong> at Stanley Bridge and Tracadie before imputation. After the pipeline's quality enforcement, in-time imputation, and cross-station fill, the FWI chain is computable for every station on every analysis day.</p>
+<h3 id="9.2-Data-quality-caveats">9.2 Data-quality caveats<a class="anchor-link" href="#9.2-Data-quality-caveats">¶</a></h3><ul>
+<li><strong>Relative humidity is the dominant gap.</strong> It accounts for the majority of FWI chain breaks (62 of 143 are RH-only, with another 47 involving RH plus other inputs).</li>
+<li><strong>Stanley Bridge and Tracadie RH is almost entirely synthesised.</strong> ~83% of Stanley Bridge RH and ~87% of Tracadie RH is cross-station imputed. FWI values at these two stations should be reported as <strong>network-blended</strong> rather than as independent station observations.</li>
+<li><strong>Stanhope is the most complete station but is not multi-sensor</strong>: barometric pressure, solar radiation, and wind gust are not measured there (100% missing on those channels). Treat Stanhope as a reliable temperature/RH/wind/rain reference, not as a general-purpose station.</li>
+<li><strong>Out-of-range counts are zero post-enforcement.</strong> This is the expected state after the pipeline's quality-enforcement pass — not a sign of perfect upstream data. Cross-reference with <code>out_of_range_pre_enforcement</code> for the raw-data view.</li>
+</ul>
+<h3 id="9.3-Redundancy-results-(temperature)">9.3 Redundancy results (temperature)<a class="anchor-link" href="#9.3-Redundancy-results-(temperature)">¶</a></h3><ul>
+<li>PC1 explains <strong>96.3%</strong> of hourly-temperature variance with effectively equal loadings across all six stations. The dominant signal — seasonal and diurnal temperature — is fully shared.</li>
+<li>PC2 (1.9% of variance) is carried almost entirely by <strong>Greenwich</strong> (loading 0.90). Greenwich is the only station with a meaningfully distinct temperature signature.</li>
+<li>Pairwise distance between Cavendish, North Rustico, and Tracadie is ≤ 0.006 — they are effectively interchangeable on temperature alone.</li>
+<li>Benchmark correlations to Stanhope are 0.90 (Greenwich) to 0.97 (Tracadie); mean absolute differences are all under 2.2 °C.</li>
+</ul>
+<h3 id="9.4-Recommendation">9.4 Recommendation<a class="anchor-link" href="#9.4-Recommendation">¶</a></h3><p>Against the Stanhope reference, using the temperature-only redundancy model:</p>
+<table>
+<thead>
+<tr>
+<th>Station</th>
+<th>Recommendation</th>
+<th>Modelled removal risk</th>
+<th>Reason</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cavendish</td>
+<td><strong>Remove</strong></td>
+<td>12% (CI 1% – 29%)</td>
+<td>High redundancy with Tracadie and North Rustico on temperature</td>
+</tr>
+<tr>
+<td>North Rustico</td>
+<td><strong>Remove</strong></td>
+<td>11% (CI 1% – 27%)</td>
+<td>Same cluster as Cavendish; carries no unique PC signal</td>
+</tr>
+<tr>
+<td>Tracadie</td>
+<td><strong>Remove</strong></td>
+<td>12% (CI 1% – 28%)</td>
+<td>Highest correlation to Stanhope; temperature signal duplicated by Cavendish/N. Rustico</td>
+</tr>
+<tr>
+<td>Greenwich</td>
+<td><strong>Defer</strong></td>
+<td>3% (CI 0% – 6%)</td>
+<td>Carries the only unique secondary temperature signal (PC2 dominant); also has the highest chain-break count</td>
+</tr>
+<tr>
+<td>Stanley Bridge</td>
+<td><strong>Defer</strong></td>
+<td>6% (CI 1% – 14%)</td>
+<td>Distinct cluster position; RH already heavily synthetic — removing it shifts more imputation load onto donors</td>
+</tr>
+<tr>
+<td>Stanhope</td>
+<td><strong>Keep</strong></td>
+<td>n/a</td>
+<td>Reference station; lowest missingness; most complete observed record</td>
+</tr>
+</tbody>
+</table>
+<p>All non-reference stations fall in the <strong>low</strong> risk band.</p>
+<h3 id="9.5-Limits-of-this-recommendation">9.5 Limits of this recommendation<a class="anchor-link" href="#9.5-Limits-of-this-recommendation">¶</a></h3><ol>
+<li><strong>Temperature only.</strong> The redundancy model uses <code>air_temperature_c</code>. RH, wind, and rainfall are not in the PCA / clustering / benchmark calculation. Two of the three <em>remove</em> candidates (Tracadie, and Stanley Bridge if reconsidered) sit on heavily-imputed RH; the apparent agreement with neighbours partly reflects that imputation, not independent measurement agreement.</li>
+<li><strong>Pre-removal donor check needed.</strong> If Tracadie or Stanley Bridge is decommissioned, the cross-station imputer will lean harder on the remaining stations. A donor-impact simulation should run before any removal is acted on.</li>
+<li><strong>Reference window asymmetry.</strong> The Stanhope reference ends 2025-12-31; the benchmark scores omit the most recent ~3 months of data from the comparison stations.</li>
+<li><strong>Risk model is a coarse bound.</strong> Uncertainty intervals come from a kernel-density estimate over station-vs-reference divergence samples; they are sized to inform a decision, not to be cited as precise probabilities.</li>
+</ol>
+<h3 id="9.6-Next-steps">9.6 Next steps<a class="anchor-link" href="#9.6-Next-steps">¶</a></h3><ol>
+<li>Field validation of the <em>remove</em> candidates against operational fire-behaviour needs (access, response time, dual-use sensors).</li>
+<li>Re-run the redundancy model with RH, wind, and precipitation added (multivariate PCA on a four-variable matrix).</li>
+<li>If the dashboard is hosted for live updates, add an automated alert when any station's daily FWI inputs cross from <code>qf == 1</code> to <code>qf == 9</code> for two consecutive days.</li>
+<li>Backfill or rehabilitate the RH sensors at Stanley Bridge and Tracadie if those stations are retained — they are the network's single largest data-quality risk to FWI accuracy.</li>
+</ol>
 </div>
 </div>
 </div>
