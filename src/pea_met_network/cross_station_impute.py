@@ -267,6 +267,13 @@ def _get_donor_df(
                 return _eccc_donor_cache[cache_path_str]
             if cache_path.exists():
                 df = pd.read_csv(cache_path, parse_dates=["timestamp_utc"])
+                if df.empty:
+                    return None
+                # Match the internal-donor contract: index by timestamp so
+                # downstream `ts in donor_df.index` lookups work. Without
+                # this, every external lookup silently misses and the
+                # imputer falls through to the next-priority donor.
+                df = df.set_index("timestamp_utc")
                 _eccc_donor_cache[cache_path_str] = df
                 return df
         return None
@@ -360,6 +367,19 @@ def impute_cross_station(
             continue
         var_assignments.setdefault(da.variable, []).append(da)
         var_assignments[da.variable].sort(key=lambda x: x.priority)
+
+    # Process air_temperature_c first: RH imputation reads target's own
+    # temperature (for the dew-point-transfer method), so the temp column
+    # must be populated before the RH pass runs. Without this, every RH
+    # imputation at a row where target temp is also missing silently skips.
+    _processing_order = ["air_temperature_c", "wind_speed_kmh", "relative_humidity_pct"]
+    var_assignments = {
+        v: var_assignments[v]
+        for v in _processing_order if v in var_assignments
+    } | {
+        v: assigns for v, assigns in var_assignments.items()
+        if v not in _processing_order
+    }
 
     for var, assignments in var_assignments.items():
         qf_col = f"{var}_qf"
