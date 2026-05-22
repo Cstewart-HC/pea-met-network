@@ -7801,6 +7801,7 @@ a.anchor-link {
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p><a href="index.html">← Home</a></p>
 <h1 id="PEI-National-Park-%E2%80%94-Fire-Weather-Index-Network-Analysis">PEI National Park — Fire Weather Index Network Analysis<a class="anchor-link" href="#PEI-National-Park-%E2%80%94-Fire-Weather-Index-Network-Analysis">¶</a></h1><p><strong>Client:</strong> Parks Canada Agency, PEI Field Unit
 <strong>Audience:</strong> Field unit managers, fire-program leads, and the technical team supporting the FWI dashboard.
 <strong>Scope:</strong> Three-year hourly record (2023-04-01 → 2026-03-23) across six weather stations in PEI National Park.</p>
@@ -7822,11 +7823,11 @@ a.anchor-link {
 </blockquote>
 <p><strong>Important caveats</strong></p>
 <ol>
-<li><strong>The cross-station imputation network is load-bearing.</strong> Decommissioning Stanley Bridge or Tracadie deletes the small share of <em>real</em> RH observations they currently produce; decommissioning Cavendish or North Rustico breaks the imputation that keeps Stanley Bridge and Tracadie computable. Read §7.5 before acting.</li>
+<li><strong>The cross-station imputation network is load-bearing.</strong> Decommissioning Stanley Bridge or Tracadie deletes the small share of <em>real</em> RH observations they currently produce; decommissioning Cavendish or North Rustico breaks the imputation that keeps Stanley Bridge and Tracadie computable. Read §5 before acting.</li>
 <li><strong>Out-of-range counts are zero post-enforcement.</strong> This is the expected state after the pipeline's quality-enforcement pass — not a sign of perfect upstream data.</li>
 <li><strong>The Stanhope reference window is shorter</strong> (ends 2025-12-31) than the comparison stations.</li>
 </ol>
-<p><strong>How to read the rest of this report.</strong> §2 is data inventory. §3 is the FWI itself. §4 is data-quality detail. §5–§7 set up the redundancy analysis on temperature. <strong>§7.5 folds in the other three FWI inputs, leave-one-out donor impact, partial correlation, and extreme-event behaviour — it drives §9.4.</strong> §8 is the temperature-divergence uncertainty bound. §9 is the synthesis. The <a href="redundancy_extended.html">Extended Redundancy Report</a> (linked from the project landing page) carries the full evidence for §7.5.</p>
+<p><strong>How to read the rest of this report.</strong> §1 sets the data window and station roster. §2 inventories coverage and gaps in the input record. §3 walks the FWI chain itself (components, mode comparison, chain breaks). §4 is data-quality detail — pre/post-imputation missingness, quality enforcement, cross-station donor audit. <strong>§5 is the redundancy analysis: PCA on all four FWI inputs, leave-one-out donor impact, partial correlation, extreme-event correlation, and the per-station Keep/Defer/Remove verdict.</strong> §6 is the temperature-divergence uncertainty bound. §7 is the synthesis (network status, caveats, redundancy read-across, recommendation in §7.4, limits in §7.5). The <a href="redundancy_extended.html">Extended Redundancy Report</a> (linked from the project landing page) carries the full per-variable matrices and bootstrap intervals.</p>
 </div>
 </div>
 </div>
@@ -7918,6 +7919,62 @@ a.anchor-link {
 <li><strong>Yellow background bands</strong> flag days where at least one FWI input was <code>qf == 1</code> (synthetic).</li>
 <li><strong>Red background bands</strong> flag days where at least one FWI input was <code>qf == 9</code> (chain-break fallback).</li>
 </ul>
+<h3 id="Cross-station-imputation-methods">Cross-station imputation methods<a class="anchor-link" href="#Cross-station-imputation-methods">¶</a></h3><p>When a station is missing a core FWI input at a given hour, the pipeline can fill the value from a donor station. The audit in <code>data/processed/cross_station_imputation_audit.csv</code> records the method used for each filled value:</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Description</th>
+<th>Variables</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><code>DIRECT_RH</code></strong></td>
+<td>Donor's RH copied directly to the target (validated to outperform vapour-pressure continuity by 1–2% MAE in FFMC across all seasons)</td>
+<td><code>relative_humidity_pct</code> (internal donors)</td>
+</tr>
+<tr>
+<td><strong><code>SPATIAL_PROXY</code></strong></td>
+<td>Donor's value transferred with a height correction (anemometer-height ratio for wind, none for temperature)</td>
+<td><code>wind_speed_kmh</code>, <code>air_temperature_c</code></td>
+</tr>
+<tr>
+<td><strong><code>SPATIAL_PROXY_RAW</code></strong></td>
+<td>Donor's value transferred unchanged (donor and target sensors are at the same height)</td>
+<td>any</td>
+</tr>
+</tbody>
+</table>
+<p>Source labels in the audit are prefixed <code>INTERNAL:</code> for in-network donors (the six PEA stations) and <code>ECCC:</code> for external Environment and Climate Change Canada stations (<code>st_peters</code>, <code>charlottetown_a</code>, <code>harrington_cda</code>).</p>
+<h3 id="Recommendation-rubric-(Keep-/-Defer-/-Remove)">Recommendation rubric (Keep / Defer / Remove)<a class="anchor-link" href="#Recommendation-rubric-(Keep-/-Defer-/-Remove)">¶</a></h3><p>§5 and §7.4 use a three-label rubric for whether a station should remain in the network:</p>
+<table>
+<thead>
+<tr>
+<th>Label</th>
+<th>Bar</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Keep</strong></td>
+<td>Carries unique information at the required confidence, <em>or</em> is load-bearing as a donor in the cross-station imputation network</td>
+<td>Removal would degrade input data quality or downstream FWI</td>
+</tr>
+<tr>
+<td><strong>Defer</strong></td>
+<td>Multivariate, LOO, partial-correlation, and extreme-event evidence is <strong>mixed</strong></td>
+<td>Not confidently redundant, not confidently unique — hold and revisit when more data or an operational driver forces a decision</td>
+</tr>
+<tr>
+<td><strong>Remove</strong></td>
+<td>Statistically redundant (another station predicts it with bootstrap CI lower bound &gt; 0.95 on Pearson r) <em>and</em> carries no load-bearing donor role</td>
+<td>Decommissioning is supported by the evidence</td>
+</tr>
+</tbody>
+</table>
+<p>The bar for <strong>Remove</strong> is intentionally high — it requires both conditions; <strong>Defer</strong> is the default whenever either is borderline.</p>
 </div>
 </div>
 </div>
@@ -8593,7 +8650,7 @@ Stations without <code>_qf</code> columns for a variable are shown as N/A.</p>
 <h1 id="7.-Conclusion">7. Conclusion<a class="anchor-link" href="#7.-Conclusion">¶</a></h1><h3 id="7.1-Network-status">7.1 Network status<a class="anchor-link" href="#7.1-Network-status">¶</a></h3><p>Six stations operated across the analysis window (<strong>2023-04-01 → 2026-03-23</strong>, with Stanhope ending 2025-12-31 and Tracadie starting 2023-06-29). Hourly completeness for the four FWI core inputs (temperature, RH, wind, rain) ranged from <strong>99.7%</strong> at Stanhope to <strong>~82%</strong> at Stanley Bridge and Tracadie before imputation. After the pipeline's quality enforcement, in-time imputation, and cross-station fill, the FWI chain is computable for every station on every analysis day.</p>
 <h3 id="7.2-Data-quality-caveats">7.2 Data-quality caveats<a class="anchor-link" href="#7.2-Data-quality-caveats">¶</a></h3><ul>
 <li><strong>Relative humidity is the dominant gap.</strong> It accounts for the majority of FWI chain breaks (62 of 143 are RH-only, with another 47 involving RH plus other inputs).</li>
-<li><strong>Stanley Bridge and Tracadie RH is almost entirely synthesised.</strong> ~72% of Stanley Bridge RH and ~72% of Tracadie RH is cross-station imputed. FWI values at these two stations should be reported as <strong>network-blended</strong> rather than as independent station observations.</li>
+<li><strong>Stanley Bridge and Tracadie RH is almost entirely synthesised.</strong> ~83% of Stanley Bridge RH and ~87% of Tracadie RH is cross-station imputed. FWI values at these two stations should be reported as <strong>network-blended</strong> rather than as independent station observations.</li>
 <li><strong>Stanhope is the most complete station but is not multi-sensor</strong>: barometric pressure, solar radiation, and wind gust are not measured there (100% missing on those channels). Treat Stanhope as a reliable temperature/RH/wind/rain reference, not as a general-purpose station.</li>
 <li><strong>Out-of-range counts are zero post-enforcement.</strong> This is the expected state after the pipeline's quality-enforcement pass — not a sign of perfect upstream data.</li>
 </ul>
