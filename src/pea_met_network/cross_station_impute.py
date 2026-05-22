@@ -366,6 +366,12 @@ def impute_cross_station(
         src_col = f"{var}_src"
         method_col = f"{var}_method"
 
+        # Recipient may not carry this column at all (100% missing dropped
+        # during resampling). Initialise it so the downstream imputation
+        # logic can populate from donors.
+        if var not in result.columns:
+            result[var] = np.nan
+
         # Initialize audit columns
         if qf_col not in result.columns:
             result[qf_col] = np.nan
