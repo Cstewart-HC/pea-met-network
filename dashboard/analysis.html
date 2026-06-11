@@ -7812,10 +7812,10 @@ a.anchor-link {
 <p><strong>Network is computable end-to-end.</strong> All six stations produce a complete FWI chain (FFMC → DMC → DC → ISI → BUI → FWI) on every analysis day after pipeline processing.</p>
 <p><strong>Two stations rely heavily on imputed humidity.</strong> Stanley Bridge and Tracadie are missing ~100% of their relative-humidity (RH) values pre-imputation. Post-imputation, the pipeline fills ~83% of Stanley Bridge RH and ~87% of Tracadie RH using neighbouring stations. FWI values at those two sites should be treated as <strong>network-blended estimates</strong>, not independent measurements.</p>
 <p><strong>Greenwich and Stanhope have the most FWI chain breaks</strong> (42 and 44 respectively), almost all caused by missing RH.</p>
-<p><strong>Temperature redundancy is high, but only on temperature.</strong> PCA on hourly temperature shows 96% of the variance is a single shared signal across all six stations. The same analysis on RH, wind, and precipitation tells a very different story: PC1 explains 79%, 71%, and 55% of variance respectively, and <strong>0 of 60 station pairs are confidently redundant on any non-temperature variable</strong> at the 95%-bootstrap-CI level.</p>
+<p><strong>Temperature redundancy is high, but only on temperature.</strong> PCA on hourly temperature shows 96% of the variance is a single shared signal across all six stations. The same analysis on RH, wind, and precipitation tells a very different story: PC1 explains 79%, 71%, and 55% of variance respectively, and <strong>0 of the 45 non-temperature station-pair comparisons (15 pairs each on RH, wind, and precipitation) are confidently redundant</strong> at the 95%-bootstrap-CI level — whereas 6 of the 15 temperature pairs are.</p>
 <p><strong>Removal recommendation: keep all six stations.</strong> No station passes the bar for confident decommissioning once multivariate redundancy, leave-one-out (LOO) donor impact, partial correlation, and extreme-event behaviour are folded in. Specifically:</p>
 <ul>
-<li><strong>Cavendish must be kept</strong> — it is the largest single donor in the cross-station imputation network. Removing it would degrade ~38,600 downstream FWI rows at Stanley Bridge and Tracadie by up to 3.57 FWI points.</li>
+<li><strong>Cavendish must be kept</strong> — it is the largest single donor in the cross-station imputation network. Removing it would degrade ~38,600 downstream FWI rows at Stanley Bridge and Tracadie by up to 3.57 FWI points (upper bound).</li>
 <li><strong>Greenwich must be kept</strong> — partial correlation (controlling for Stanhope) collapses Greenwich's apparent agreement with every other station from ~0.91 to 0.26–0.41. It is the most uniquely-sited station in the network.</li>
 <li><strong>Stanhope must be kept</strong> — reference station; only station with complete observed records for all four FWI core inputs.</li>
 <li><strong>North Rustico, Stanley Bridge, and Tracadie</strong> are <em>deferred</em> pending field assessment. Stanley Bridge and Tracadie are the only operationally plausible decommission candidates (net receivers in the imputation network), but both already produce mostly-synthetic RH and removing either would shift more imputation load onto the remaining stations.</li>
@@ -7825,7 +7825,7 @@ a.anchor-link {
 <ol>
 <li><strong>The cross-station imputation network is load-bearing.</strong> Decommissioning Stanley Bridge or Tracadie deletes the small share of <em>real</em> RH observations they currently produce; decommissioning Cavendish or North Rustico breaks the imputation that keeps Stanley Bridge and Tracadie computable. Read §5 before acting.</li>
 <li><strong>Out-of-range counts are zero post-enforcement.</strong> This is the expected state after the pipeline's quality-enforcement pass — not a sign of perfect upstream data.</li>
-<li><strong>The Stanhope reference window is shorter</strong> (ends 2025-12-31) than the comparison stations.</li>
+<li><strong>The Stanhope reference series ends 2025-12-31</strong> — a processing-window cutoff, not a data gap (ECCC has Stanhope observations past that date). Cross-station comparisons against Stanhope therefore omit the most recent ~3 months.</li>
 </ol>
 <p><strong>How to read the rest of this report.</strong> §1 sets the data window and station roster. §2 inventories coverage and gaps in the input record. §3 walks the FWI chain itself (components, mode comparison, chain breaks). §4 is data-quality detail — pre/post-imputation missingness, quality enforcement, cross-station donor audit. <strong>§5 is the redundancy analysis: PCA on all four FWI inputs, leave-one-out donor impact, partial correlation, extreme-event correlation, and the per-station Keep/Defer/Remove verdict.</strong> §6 is the temperature-divergence uncertainty bound. §7 is the synthesis (network status, caveats, redundancy read-across, recommendation in §7.4, limits in §7.5). The <a href="redundancy_extended.html">Extended Redundancy Report</a> (linked from the project landing page) carries the full per-variable matrices and bootstrap intervals.</p>
 </div>
@@ -7931,7 +7931,7 @@ a.anchor-link {
 <tbody>
 <tr>
 <td><strong><code>DIRECT_RH</code></strong></td>
-<td>Donor's RH copied directly to the target (validated to outperform vapour-pressure continuity by 1–2% MAE in FFMC across all seasons)</td>
+<td>Donor's RH copied directly to the target</td>
 <td><code>relative_humidity_pct</code> (internal donors)</td>
 </tr>
 <tr>
@@ -8491,7 +8491,7 @@ Stations without <code>_qf</code> columns for a variable are shown as N/A.</p>
 <th>Station removed</th>
 <th>Rows affected elsewhere</th>
 <th>Rows with FWI affected</th>
-<th>Max MAE on a downstream station</th>
+<th>Max upper-bound MAE on a downstream station*</th>
 </tr>
 </thead>
 <tbody>
@@ -8533,7 +8533,8 @@ Stations without <code>_qf</code> columns for a variable are shown as N/A.</p>
 </tr>
 </tbody>
 </table>
-<p><strong>Cavendish is the network's largest single donor.</strong> Removing it would shift 38,631 downstream hourly FWI values by up to 3.57 FWI points — material for fire-weather decisions. North Rustico is a secondary donor (13,622 rows). Stanley Bridge, Tracadie, and Greenwich donate nothing to the rest of the network — removing any of the three has zero LOO impact on the other stations.</p>
+<p><em>\</em>Upper bound: the mean |FWI| on the affected rows — the largest the post-removal error could be if those donor values were lost entirely. The true MAE is no larger.*</p>
+<p><strong>Cavendish is the network's largest single donor.</strong> Removing it would shift 38,631 downstream hourly FWI values by up to 3.57 FWI points — material for fire-weather decisions. North Rustico is a secondary donor (5,144 downstream FWI rows). Stanley Bridge, Tracadie, and Greenwich donate nothing to the rest of the network — removing any of the three has zero LOO impact on the other stations.</p>
 <h3 id="Partial-correlation:-which-agreement-is-%22real%22?">Partial correlation: which agreement is "real"?<a class="anchor-link" href="#Partial-correlation:-which-agreement-is-%22real%22?">¶</a></h3><p>When two PEI stations both correlate strongly with the same regional weather, they will correlate strongly with each other regardless of whether they sit on the same fire ground. Partial correlation controlling for Stanhope removes that shared-airmass effect. The result on air temperature:</p>
 <ul>
 <li>Cavendish ↔ North Rustico: marginal r = 0.994 → partial r = <strong>0.914</strong> (only 8% regional)</li>
@@ -8549,12 +8550,12 @@ Stations without <code>_qf</code> columns for a variable are shown as N/A.</p>
 <li>Precipitation: regional dependence 1.4%–7.9% across all pairs.</li>
 </ul>
 <p>Rain is essentially independent station-to-station — no station provides redundant precipitation data.</p>
-<h3 id="Extreme-event-correlation">Extreme-event correlation<a class="anchor-link" href="#Extreme-event-correlation">¶</a></h3><p>Stations agree on calm days; the question is whether they agree when conditions are dangerous. Restricting the correlation calculation to the 95th/99th percentile rows (or fire-weather days, FWI ≥ 15 or ≥ 25) shows substantial degradation:</p>
+<h3 id="Extreme-event-correlation">Extreme-event correlation<a class="anchor-link" href="#Extreme-event-correlation">¶</a></h3><p>Stations agree on calm days; the question is whether they agree when conditions are dangerous. Restricting the correlation to the 95th/99th percentile rows (or fire-weather days, FWI ≥ 15 or ≥ 25) shows the agreement effectively collapses. The drop in mean Pearson <em>r</em> is measured on a [−1, 1] scale, so a drop near 1.0 is severe: temperature pairs that track at <em>r</em> ≈ 0.96 across the full record fall to <em>r</em> ≈ 0 — effectively uncorrelated — on extreme rows.</p>
 <table>
 <thead>
 <tr>
 <th>Variable</th>
-<th>Drop in Pearson r when restricted to extremes</th>
+<th>Mean drop in Pearson r on extreme rows</th>
 </tr>
 </thead>
 <tbody>
@@ -8576,7 +8577,7 @@ Stations without <code>_qf</code> columns for a variable are shown as N/A.</p>
 </tr>
 </tbody>
 </table>
-<p>The 96% temperature redundancy is dominated by the ~90% of "normal" hours. On the ~10% of hours that matter for fire decisions, stations disagree much more.</p>
+<p>The 96% temperature redundancy is dominated by the ~90% of "normal" hours. On the ~10% of hours that matter for fire decisions, the stations are effectively uncorrelated.</p>
 <h3 id="Recommendation-(carried-into-%C2%A77.4)">Recommendation (carried into §7.4)<a class="anchor-link" href="#Recommendation-(carried-into-%C2%A77.4)">¶</a></h3><table>
 <thead>
 <tr>
@@ -8621,10 +8622,11 @@ Stations without <code>_qf</code> columns for a variable are shown as N/A.</p>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="6.-Uncertainty-Quantification">6. Uncertainty Quantification<a class="anchor-link" href="#6.-Uncertainty-Quantification">¶</a></h2><p>Risk probabilities and confidence intervals for station removal.</p>
+<h2 id="6.-Uncertainty-Quantification">6. Uncertainty Quantification<a class="anchor-link" href="#6.-Uncertainty-Quantification">¶</a></h2><p>Relative risk ordering for station removal, from temperature divergence.</p>
 <blockquote>
-<p><strong>What this section is for (non-technical).</strong> For each station, we estimate the probability that removing it would meaningfully degrade the network's coverage. The probability is computed from how often that station diverges from the Stanhope reference; the 95% confidence interval captures how much sample noise affects that estimate. <strong>This metric is built from temperature divergence only</strong> — the recommendation in §5 and §7.4 incorporates the multivariate and LOO evidence as well.</p>
-<p><strong>Finding.</strong> All five non-reference stations fall in the <strong>low risk band</strong> by this temperature-divergence metric (3%–13%). Greenwich scores lowest (3%), but the PCA, the cluster distance matrix, and the partial-correlation analysis in the <a href="redundancy_extended.html">Extended Redundancy Report</a> all flag Greenwich as the most uniquely-sited station in the network. The recommendation in §5 and §7.4 keeps Greenwich on that basis.</p>
+<p><strong>What this section is for (non-technical).</strong> For each station, this metric gives a <em>relative</em> sense of how often that station diverges from the Stanhope reference — a rough ordering of which stations track the reference most closely. It is a secondary, illustrative check; the actual recommendation in §5 and §7.4 rests on the multivariate, leave-one-out, and partial-correlation evidence, <strong>not</strong> on this metric.</p>
+<p><strong>Finding.</strong> All five non-reference stations fall in the <strong>low risk band</strong> on this temperature-divergence metric, with Greenwich tracking the Stanhope reference most closely. Note that "closest to Stanhope on temperature" is <em>not</em> the same as "most redundant": the partial-correlation analysis in §5 and the <a href="redundancy_extended.html">Extended Redundancy Report</a> flag Greenwich as the <strong>most uniquely-sited</strong> station once shared regional weather is removed. The recommendation keeps Greenwich on that basis.</p>
+<p><strong>How to read this metric — and its limits.</strong> The risk score is built from <strong>temperature divergence only</strong>; it does not see RH, wind, or precipitation. The low/medium/high band thresholds are <strong>heuristic, not calibrated</strong> against any operational outcome, and the score is normalised against each station's own divergence range, which can <em>understate</em> the risk from a station that diverges rarely but severely. Treat the band as <strong>indicative ordering, not a calibrated probability</strong>, and do not quote the percentages as risk estimates. A more rigorous version (calibrated thresholds, a bootstrap interval on the risk probability itself, bandwidth sensitivity, and a divergence basis beyond temperature) is logged as future work in §7.6.</p>
 </blockquote>
 </div>
 </div>
@@ -8647,7 +8649,7 @@ Stations without <code>_qf</code> columns for a variable are shown as N/A.</p>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h1 id="7.-Conclusion">7. Conclusion<a class="anchor-link" href="#7.-Conclusion">¶</a></h1><h3 id="7.1-Network-status">7.1 Network status<a class="anchor-link" href="#7.1-Network-status">¶</a></h3><p>Six stations operated across the analysis window (<strong>2023-04-01 → 2026-03-23</strong>, with Stanhope ending 2025-12-31 and Tracadie starting 2023-06-29). Hourly completeness for the four FWI core inputs (temperature, RH, wind, rain) ranged from <strong>99.7%</strong> at Stanhope to <strong>~82%</strong> at Stanley Bridge and Tracadie before imputation. After the pipeline's quality enforcement, in-time imputation, and cross-station fill, the FWI chain is computable for every station on every analysis day.</p>
+<h1 id="7.-Conclusion">7. Conclusion<a class="anchor-link" href="#7.-Conclusion">¶</a></h1><h3 id="7.1-Network-status">7.1 Network status<a class="anchor-link" href="#7.1-Network-status">¶</a></h3><p>Six stations operated across the analysis window (<strong>2023-04-01 → 2026-03-23</strong>, with the Stanhope reference series cut off at 2025-12-31 — a processing-window boundary, not a data-availability limit — and Tracadie starting 2023-06-29). Hourly completeness for the four FWI core inputs (temperature, RH, wind, rain) ranged from <strong>99.7%</strong> at Stanhope to <strong>~82%</strong> at Stanley Bridge and Tracadie before imputation. After the pipeline's quality enforcement, in-time imputation, and cross-station fill, the FWI chain is computable for every station on every analysis day.</p>
 <h3 id="7.2-Data-quality-caveats">7.2 Data-quality caveats<a class="anchor-link" href="#7.2-Data-quality-caveats">¶</a></h3><ul>
 <li><strong>Relative humidity is the dominant gap.</strong> It accounts for the majority of FWI chain breaks (62 of 143 are RH-only, with another 47 involving RH plus other inputs).</li>
 <li><strong>Stanley Bridge and Tracadie RH is almost entirely synthesised.</strong> ~83% of Stanley Bridge RH and ~87% of Tracadie RH is cross-station imputed. FWI values at these two stations should be reported as <strong>network-blended</strong> rather than as independent station observations.</li>
@@ -8655,11 +8657,11 @@ Stations without <code>_qf</code> columns for a variable are shown as N/A.</p>
 <li><strong>Out-of-range counts are zero post-enforcement.</strong> This is the expected state after the pipeline's quality-enforcement pass — not a sign of perfect upstream data.</li>
 </ul>
 <h3 id="7.3-Redundancy-results">7.3 Redundancy results<a class="anchor-link" href="#7.3-Redundancy-results">¶</a></h3><ul>
-<li><strong>Temperature</strong> (§5): PC1 explains 96.3% of hourly-temperature variance with effectively equal loadings across all six stations. Pairwise distances between Cavendish, North Rustico, and Tracadie are ≤ 0.006 — they are effectively interchangeable on temperature alone. Benchmark correlations to Stanhope are 0.90 (Greenwich) to 0.97 (Tracadie).</li>
-<li><strong>RH, wind, and precipitation</strong> (§5 and <a href="redundancy_extended.html">Extended Redundancy Report</a>): PC1 explains only 79%, 71%, and 55% of variance respectively, and 0 of 60 station pairs cross the 95%-confident-redundant bootstrap threshold on any non-temperature variable.</li>
-<li><strong>Leave-one-out donor impact</strong> (§5): Cavendish is by far the largest donor in the cross-station imputation network (38,631 downstream FWI rows affected on removal, MAE up to 3.57 FWI points); North Rustico is second (5,144 rows). Greenwich, Stanley Bridge, and Tracadie are net receivers and donate nothing to the rest of the network.</li>
-<li><strong>Partial correlation controlling for Stanhope</strong> (§5): Greenwich's correlation with every other station collapses from ~0.91 to 0.26–0.41 — its apparent agreement was almost entirely shared regional weather, not local similarity. Cavendish, North Rustico, and Tracadie remain genuinely locally similar (partial r ~0.90).</li>
-<li><strong>Extreme-event correlation</strong> (§5): cross-station agreement degrades by ~1.0–1.1 in Pearson r when restricted to 95th/99th-percentile conditions or FWI ≥ 25 days — exactly the conditions when the dashboard is most consulted.</li>
+<li><strong>Temperature</strong> (§5): PC1 explains 96.3% of hourly-temperature variance with effectively equal loadings across all six stations. Pairwise distances between Cavendish, North Rustico, and Tracadie are ≤ 0.006 — they are effectively interchangeable on temperature alone. Benchmark correlations to Stanhope are 0.92 (Greenwich) to 0.97 (Tracadie).</li>
+<li><strong>RH, wind, and precipitation</strong> (§5 and <a href="redundancy_extended.html">Extended Redundancy Report</a>): PC1 explains only 79%, 71%, and 55% of variance respectively, and 0 of the 45 non-temperature station-pair comparisons (15 pairs each on RH, wind, and precipitation) cross the 95%-confident-redundant bootstrap threshold — whereas 6 of the 15 temperature pairs do.</li>
+<li><strong>Leave-one-out donor impact</strong> (§5): Cavendish is by far the largest donor in the cross-station imputation network (38,631 downstream FWI rows affected on removal, upper-bound MAE up to 3.57 FWI points); North Rustico is second (5,144 downstream FWI rows). Greenwich, Stanley Bridge, and Tracadie are net receivers and donate nothing to the rest of the network.</li>
+<li><strong>Partial correlation controlling for Stanhope</strong> (§5): Greenwich's correlation with every other station collapses from ~0.91 to 0.26–0.41 — its apparent agreement was almost entirely shared regional weather, not local similarity. Cavendish, North Rustico, and Tracadie remain genuinely locally similar (partial r ~0.90). <em>(The ~0.91 baseline here is the partial-correlation block's own marginal r, computed on the Stanhope-overlapping subset; it runs slightly below the full-record pairwise r of ~0.93 in §5 because partial correlation drops the hours where Stanhope is missing.)</em></li>
+<li><strong>Extreme-event correlation</strong> (§5): on 95th/99th-percentile conditions and FWI ≥ 25 days, mean cross-station Pearson r drops by ~1.0–1.1 on a [−1, 1] scale — i.e. pairs that track at r ≈ 0.96 across the full record fall to roughly zero, becoming effectively uncorrelated on the days fire decisions are made.</li>
 </ul>
 <h3 id="7.4-Recommendation">7.4 Recommendation<a class="anchor-link" href="#7.4-Recommendation">¶</a></h3><p>Applying the Keep / Defer / Remove rubric defined at the top of §5:</p>
 <table>
@@ -8679,7 +8681,7 @@ Stations without <code>_qf</code> columns for a variable are shown as N/A.</p>
 <tr>
 <td><strong>Cavendish</strong></td>
 <td><strong>Keep</strong></td>
-<td>Largest single donor in the cross-station imputation network — removal would degrade 38,631 downstream FWI values by up to 3.57 points</td>
+<td>Largest single donor in the cross-station imputation network — removal would degrade 38,631 downstream FWI values by up to 3.57 points (upper bound)</td>
 </tr>
 <tr>
 <td><strong>Greenwich</strong></td>
@@ -8689,7 +8691,7 @@ Stations without <code>_qf</code> columns for a variable are shown as N/A.</p>
 <tr>
 <td><strong>North Rustico</strong></td>
 <td><strong>Defer</strong></td>
-<td>Second-largest donor (13,622 downstream rows); locally similar to Cavendish and Tracadie on temperature and RH</td>
+<td>Second-largest donor (5,144 downstream FWI rows); locally similar to Cavendish and Tracadie on temperature and RH</td>
 </tr>
 <tr>
 <td><strong>Stanley Bridge</strong></td>
@@ -8707,7 +8709,7 @@ Stations without <code>_qf</code> columns for a variable are shown as N/A.</p>
 <h3 id="7.5-Limits-of-this-recommendation">7.5 Limits of this recommendation<a class="anchor-link" href="#7.5-Limits-of-this-recommendation">¶</a></h3><ol>
 <li><strong>The §7.4 recommendation is conservative.</strong> No station passes the bar for confident decommissioning on the multivariate + LOO evidence. If field-unit operational pressures require a decommission regardless, Stanley Bridge and Tracadie are the only candidates that survive that evidence — both are net receivers in the cross-station imputation network and both already have heavily-imputed RH. Even those decisions should weigh (i) the loss of the small share of real RH observations the station produces, and (ii) the resulting increase in imputation load on the remaining stations.</li>
 <li><strong>Pre-removal donor check needed.</strong> If Stanley Bridge or Tracadie is decommissioned, the cross-station imputer will lean harder on the remaining stations — particularly Cavendish, which is already the largest donor. A donor-impact simulation should run before any removal is acted on.</li>
-<li><strong>Reference window asymmetry.</strong> The Stanhope reference ends 2025-12-31; the partial-correlation and benchmark scores omit the most recent ~3 months of data from the comparison stations.</li>
+<li><strong>Reference window asymmetry.</strong> The Stanhope reference series is cut off at 2025-12-31 in this analysis — a processing-window boundary, not a source-data limit (ECCC has Stanhope observations past that date). The partial-correlation and benchmark scores therefore omit the most recent ~3 months when comparing the other stations against Stanhope.</li>
 <li><strong>Extreme-event correlation matters more than full-record correlation.</strong> The §7.4 recommendation favours retention partly because cross-station agreement degrades on fire-weather days — exactly when the dashboard is consulted. This argument is independent of imputation-network role and should not be relaxed if a decommission decision is later revisited.</li>
 </ol>
 <h3 id="7.6-Next-steps">7.6 Next steps<a class="anchor-link" href="#7.6-Next-steps">¶</a></h3><ol>
@@ -8715,6 +8717,7 @@ Stations without <code>_qf</code> columns for a variable are shown as N/A.</p>
 <li><strong>If any station is decommissioned</strong>, re-run §5 with that station removed from the donor set before deploying — confirm the remaining stations can carry the imputation load.</li>
 <li>If the dashboard is hosted for live updates, add an automated alert when any station's daily FWI inputs cross from <code>qf == 1</code> to <code>qf == 9</code> for two consecutive days.</li>
 <li>Backfill or rehabilitate the RH sensors at Stanley Bridge and Tracadie — they are the network's single largest data-quality risk to FWI accuracy and the primary reason the recommendation defers (rather than removes) these stations.</li>
+<li><strong>Harden the §6 uncertainty metric before its numbers are quoted.</strong> Replace the heuristic low/medium/high band thresholds with values calibrated against an operational degradation outcome; attach a bootstrap confidence interval to the risk probability itself; test KDE-bandwidth sensitivity; fix the normalisation so a station that diverges rarely but severely is not masked; and extend the divergence basis beyond temperature. Until then, §6 should be read as an illustrative ordering, not a calibrated risk.</li>
 </ol>
 </div>
 </div>
